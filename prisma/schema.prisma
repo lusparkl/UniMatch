@@ -1,0 +1,258 @@
+generator client {
+  provider = "prisma-client"
+  output = "../generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+enum VerificationStatus {
+  SOURCE_BACKED
+  NEEDS_REVIEW
+  ADMIN_VERIFIED
+  CONFLICTING
+  OUTDATED
+  UNKNOWN
+}
+enum DegreeLevel {
+  BACHELOR
+  MASTER
+}
+model University {
+  id String @id @default(cuid())
+  name String
+  country String
+  city String
+  officialWebsite String
+  researchStatus String @default("NOT_RESEARCHED")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sources ApprovedSource[]
+  programs DegreeProgram[]
+  costs CostEstimate[]
+  scholarships ScholarshipEligibility[]
+  jobs ResearchJob[]
+  documents SourceDocument[]
+}
+model ApprovedSource {
+  id String @id @default(cuid())
+  universityId String
+  university University @relation(fields:[universityId], references:[id], onDelete:Cascade)
+  hostname String
+  startUrl String
+  purpose String @default("admissions")
+  allowSubdomains Boolean @default(false)
+  browserRendering Boolean @default(false)
+  @@unique([universityId, startUrl])
+}
+model DegreeProgram {
+  id String @id @default(cuid())
+  universityId String
+  university University @relation(fields:[universityId], references:[id], onDelete:Cascade)
+  title String
+  degreeLevel DegreeLevel
+  fieldOfStudy String
+  teachingLanguage String?
+  duration String?
+  officialUrl String
+  published Boolean @default(false)
+  requirementsComplete Boolean @default(false)
+  intakes ApplicationIntake[]
+  requirements AdmissionRequirement[]
+  scholarships ScholarshipEligibility[]
+  costs CostEstimate[]
+  documents RequiredDocument[]
+  @@unique([universityId, title, degreeLevel])
+}
+model ApplicationIntake {
+  id String @id @default(cuid())
+  programId String
+  program DegreeProgram @relation(fields:[programId], references:[id], onDelete:Cascade)
+  academicYear String
+  intakeTerm String
+  applicationRoute String
+  openDate DateTime?
+  deadline DateTime?
+  deadlineTimezone String?
+  status String @default("UNKNOWN")
+  verificationStatus VerificationStatus @default(UNKNOWN)
+  sourceEvidenceId String?
+  evidence SourceEvidence? @relation(fields:[sourceEvidenceId], references:[id])
+  requirements AdmissionRequirement[]
+  documents RequiredDocument[]
+}
+model AdmissionRequirement {
+  id String @id @default(cuid())
+  programId String
+  program DegreeProgram @relation(fields:[programId], references:[id], onDelete:Cascade)
+  intakeId String?
+  intake ApplicationIntake? @relation(fields:[intakeId], references:[id], onDelete:Cascade)
+  requirementType String
+  conditions Json
+  thresholds Json
+  applicableNationalities String[]
+  applicableQualifications String[]
+  verificationStatus VerificationStatus @default(NEEDS_REVIEW)
+  sourceEvidenceId String
+  evidence SourceEvidence @relation(fields:[sourceEvidenceId], references:[id])
+}
+model Scholarship {
+  id String @id @default(cuid())
+  name String
+  provider String
+  officialUrl String
+  degreeLevels DegreeLevel[]
+  nationalityRestrictions String[]
+  qualificationConditions Json
+  tuitionCoverage Float?
+  stipendAmount Float?
+  stipendCurrency String? @db.VarChar(3)
+  accommodationCoverage String?
+  travelCoverage String?
+  insuranceCoverage String?
+  applicationDeadline DateTime?
+  renewalConditions String?
+  fundingCategory String
+  verificationStatus VerificationStatus @default(NEEDS_REVIEW)
+  sourceEvidenceId String
+  evidence SourceEvidence @relation(fields:[sourceEvidenceId], references:[id])
+  eligibility ScholarshipEligibility[]
+}
+model ScholarshipEligibility {
+  id String @id @default(cuid())
+  scholarshipId String
+  scholarship Scholarship @relation(fields:[scholarshipId], references:[id], onDelete:Cascade)
+  universityId String
+  university University @relation(fields:[universityId], references:[id], onDelete:Cascade)
+  programId String?
+  program DegreeProgram? @relation(fields:[programId], references:[id], onDelete:Cascade)
+  rules Json
+}
+model CostEstimate {
+  id String @id @default(cuid())
+  universityId String
+  university University @relation(fields:[universityId], references:[id], onDelete:Cascade)
+  programId String?
+  program DegreeProgram? @relation(fields:[programId], references:[id], onDelete:Cascade)
+  tuitionAmount Float?
+  livingCostAmount Float?
+  additionalCosts Float?
+  currency String @db.VarChar(3)
+  period String @default("ANNUAL")
+  estimateType String @default("ESTIMATE")
+  verificationStatus VerificationStatus @default(NEEDS_REVIEW)
+  sourceEvidenceId String
+  evidence SourceEvidence @relation(fields:[sourceEvidenceId], references:[id])
+}
+model RequiredDocument {
+  id String @id @default(cuid())
+  programId String
+  program DegreeProgram @relation(fields:[programId], references:[id], onDelete:Cascade)
+  intakeId String?
+  intake ApplicationIntake? @relation(fields:[intakeId], references:[id], onDelete:Cascade)
+  documentType String
+  applicabilityRules Json
+  mandatory Boolean
+  sourceEvidenceId String
+  evidence SourceEvidence @relation(fields:[sourceEvidenceId], references:[id])
+}
+model SourceDocument {
+  id String @id @default(cuid())
+  universityId String
+  university University @relation(fields:[universityId], references:[id], onDelete:Cascade)
+  url String
+  title String
+  text String
+  contentHash String
+  documentType String
+  retrievedAt DateTime @default(now())
+  lastCheckedAt DateTime @default(now())
+  extractedAt DateTime?
+  previousVersionId String?
+  evidence SourceEvidence[]
+  candidates ExtractionCandidate[]
+  @@unique([universityId, url, contentHash])
+}
+model SourceEvidence {
+  id String @id @default(cuid())
+  documentId String
+  document SourceDocument @relation(fields:[documentId], references:[id])
+  url String
+  title String
+  excerpt String
+  startOffset Int?
+  retrievedAt DateTime
+  verifiedAt DateTime?
+  contentHash String
+  relevantAcademicYear String?
+  verificationStatus VerificationStatus @default(SOURCE_BACKED)
+  requirements AdmissionRequirement[]
+  scholarships Scholarship[]
+  costs CostEstimate[]
+  intakes ApplicationIntake[]
+  documents RequiredDocument[]
+}
+model ResearchJob {
+  id String @id @default(cuid())
+  universityId String
+  university University @relation(fields:[universityId], references:[id])
+  targets String[]
+  stage String @default("Queued")
+  status String @default("QUEUED")
+  createdAt DateTime @default(now())
+  startedAt DateTime?
+  completedAt DateTime?
+  pagesProcessed Int @default(0)
+  modelCalls Int @default(0)
+  tokenUsage Int @default(0)
+  errors String[]
+  logs ResearchLog[]
+  candidates ExtractionCandidate[]
+  usage ModelUsage[]
+}
+model ResearchLog {
+  id String @id @default(cuid())
+  jobId String
+  job ResearchJob @relation(fields:[jobId], references:[id], onDelete:Cascade)
+  createdAt DateTime @default(now())
+  level String
+  message String
+}
+model ExtractionCandidate {
+  id String @id @default(cuid())
+  jobId String
+  job ResearchJob @relation(fields:[jobId], references:[id])
+  documentId String
+  document SourceDocument @relation(fields:[documentId], references:[id])
+  payload Json
+  status VerificationStatus @default(NEEDS_REVIEW)
+  issues String[]
+  createdAt DateTime @default(now())
+  reviewedAt DateTime?
+  reviews ReviewRecord[]
+}
+model ReviewRecord {
+  id String @id @default(cuid())
+  candidateId String
+  candidate ExtractionCandidate @relation(fields:[candidateId], references:[id])
+  action String
+  previousValue Json
+  revisedValue Json
+  timestamp DateTime @default(now())
+  administratorIdentity String
+}
+model AdminSession {
+  id String @id
+  administratorIdentity String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+model ModelUsage {
+  id String @id @default(cuid())
+  jobId String
+  job ResearchJob @relation(fields:[jobId], references:[id])
+  model String
+  inputTokens Int
+  outputTokens Int
+  totalTokens Int
+  createdAt DateTime @default(now())
+}
