@@ -9,6 +9,13 @@ import {
   validateEvidence,
 } from "./extraction";
 import { limits } from "../config";
+import { extractRegisteredPrograms } from "./programs";
+import {
+  assessPage,
+  isRegistry,
+  selectWindows,
+  programTitleIssues,
+} from "./relevance";
 export async function runResearch(jobId: string) {
   const job = await db.researchJob.findUniqueOrThrow({
     where: { id: jobId },
@@ -33,9 +40,15 @@ export async function runResearch(jobId: string) {
   await log("Approved research targets: " + job.targets.join(", "));
   const provider = new OpenAIProvider(jobId);
   let candidates = 0;
+  // Universities with registry pages are extracted per registered program after the crawl.
+  const programMode = job.university.sources.some((s) => isRegistry(s.purpose));
   await stage("Crawling");
+  // Registry pages (international admission, fees, program pages) are crawled before generic hubs.
+  const sources = [...job.university.sources].sort(
+    (a, b) => Number(isRegistry(b.purpose)) - Number(isRegistry(a.purpose)),
+  );
   await crawlSources(
-    job.university.sources,
+    sources,
     async (d) => {
       const existing = await db.sourceDocument.findUnique({
         where: {
@@ -97,6 +110,18 @@ export async function runResearch(jobId: string) {
         where: { id: jobId },
         data: { pagesProcessed: { increment: 1 } },
       });
+      if (programMode) return;
+      const assessment = assessPage(d.url, d.text);
+      if (!assessment.worthExtracting) {
+        await db.sourceDocument.update({
+          where: { id: doc.id },
+          data: { extractedAt: new Date() },
+        });
+        await log(
+          "Skipped model extraction (" + assessment.reason + "): " + d.url,
+        );
+        return;
+      }
       const calls = await db.researchJob.findUniqueOrThrow({
         where: { id: jobId },
       });
@@ -109,27 +134,7 @@ export async function runResearch(jobId: string) {
       }
       await stage("Extracting");
       // Bounded relevant windows retain contiguous quotations and do not send whole sites.
-      const lines = d.text.split("\n");
-      const selected = new Set<number>();
-      lines.forEach((line, i) => {
-        if (
-          /admission|require|IELTS|TOEFL|tuition|scholarship|deadline|bachelor|master|computer|engineering|funding/i.test(
-            line,
-          )
-        )
-          for (
-            let j = Math.max(0, i - 1);
-            j <= Math.min(lines.length - 1, i + 2);
-            j++
-          )
-            selected.add(j);
-      });
-      const text = (
-        [...selected]
-          .sort((a, b) => a - b)
-          .map((i) => lines[i])
-          .join("\n") || d.text
-      ).slice(0, 18000);
+      const text = selectWindows(d.text);
       try {
         const payload = await provider.extract({
           url: d.url,
@@ -137,9 +142,27 @@ export async function runResearch(jobId: string) {
           target: job.targets.join(", "),
         });
         await stage("Validating");
+        const hasFacts =
+          payload.requirements.length +
+            payload.intakes.length +
+            payload.costs.length +
+            payload.documents.length +
+            payload.scholarships.length >
+          0;
+        if (!hasFacts) {
+          await db.sourceDocument.update({
+            where: { id: doc.id },
+            data: { extractedAt: new Date() },
+          });
+          await log("No extractable facts; no candidate created: " + d.url);
+          await stage("Crawling");
+          return;
+        }
         const issues = validateEvidence(payload, d.text, (url) =>
           allowedUrl(url, job.university.sources),
         );
+        if (payload.program)
+          issues.push(...programTitleIssues(payload.program.title, d.text));
         const program = payload.program
           ? await db.degreeProgram.findFirst({
               where: {
@@ -269,6 +292,15 @@ export async function runResearch(jobId: string) {
       await log(message, message.startsWith("FAILED") ? "ERROR" : "INFO");
     },
   );
+  if (programMode) {
+    candidates += await extractRegisteredPrograms(
+      jobId,
+      job.universityId,
+      provider,
+      log,
+      stage,
+    );
+  }
   const errors = await db.researchLog.findMany({
     where: { jobId, level: "ERROR" },
   });

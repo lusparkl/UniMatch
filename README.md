@@ -15,7 +15,7 @@ npm run db:generate
 npm run dev
 ```
 
-Open **http://localhost:3000** → **Find my universities**. No OpenAI key, database, Redis, or student account is needed for the student-facing fictional demo. The default `DEMO_MODE=DEMO_FIXTURES` is displayed prominently. Admin features require PostgreSQL and Redis.
+Open **http://localhost:3000** → **Find my universities**. No OpenAI key, database, Redis, or student account is needed for the student-facing fictional demo. The default `DEMO_MODE=DEMO_FIXTURES` is displayed prominently. Admin features, and optional student accounts (saved profile, documents, priorities), require PostgreSQL and Redis.
 
 The profile is stored under `unimatch-profile-v1` in browser local storage. Edit it on **My profile**, or use **Delete my saved profile**. No identity documents are collected.
 
@@ -54,7 +54,7 @@ PostgreSQL and Redis bind to loopback ports **5434** and **6381**, avoiding typi
 7. Approve to publish, or reject. Mark the completeness checkbox only when you actually checked the full mandatory requirement set.
 8. Open **/results** in real mode. Published facts immediately affect deterministic matching.
 
-Set `MAX_CRAWL_PAGES=1` and `MAX_AI_CALLS_PER_JOB=2` for the first experiment. Expand after inspecting results. A program page without admissions information may yield only identity information or no usable facts. Institution-wide scholarship pages may return `program:null`; these may publish scholarship options but cannot create institution-wide admission rules. Institution-wide funding still needs explicit review of scope and restrictions.
+Set `MAX_CRAWL_PAGES=1` and `MAX_AI_CALLS_PER_JOB=2` for the first experiment. Expand after inspecting results. For universities in `prisma/registry.ts` (HKU, HKUST, PolyU) research makes one model call per registered program over its best-matching stored pages; add a degree there with its official page and the institution's international-admission, fee and scholarship pages. Elsewhere pages are gated before any model call: noise URLs and pages without amounts, deadlines, test scores, funding or admission wording are saved but skipped, and an extraction that yields a program with no facts creates no candidate. Candidates whose program title is generic or absent from the source are flagged for review. Institution-wide scholarship pages may return `program:null`; these may publish scholarship options but cannot create institution-wide admission rules. Institution-wide funding still needs explicit review of scope and restrictions.
 
 A missing key disables submission and scheduling. A failed source or model request produces real errors, never substitute facts. Already-extracted unchanged source versions do not cause additional model calls.
 

@@ -6,7 +6,12 @@ import {
   type Requirement,
 } from "../lib/domain";
 import { demoPrograms } from "../lib/demo";
-import { combine, evaluateRule, matchProgram } from "../lib/matching";
+import {
+  combine,
+  evaluateEnglish,
+  evaluateRule,
+  matchProgram,
+} from "../lib/matching";
 const profile: Profile = {
   ...defaultProfile,
   nationality: "Ukraine",
@@ -163,5 +168,73 @@ describe("three-valued matching", () => {
     const p = program();
     p.costs.push({ ...p.costs[0], tuition: 1 });
     expect(match(p).scenarios[0].remaining).toBeNull();
+  });
+});
+
+describe("English tests as alternatives", () => {
+  const test = (type: string, minimum: number): Requirement =>
+    r({
+      type: type as Requirement["type"],
+      label: "English proof (any one accepted test) " + type,
+      minimum,
+      scale: null,
+      allowed: [],
+      mandatory: true,
+      appliesToNationalities: [],
+      appliesToQualifications: [],
+    });
+  const rules = [
+    test("IELTS", 6),
+    test("TOEFL", 80),
+    test("DUOLINGO", 125),
+    test("PTE", 64),
+  ];
+  const none = {
+    ...profile,
+    ielts: null,
+    toefl: null,
+    duolingo: null,
+    pte: null,
+  };
+
+  it("passes when any one accepted test meets its minimum", () => {
+    const check = evaluateEnglish(rules, { ...none, duolingo: 130 })!;
+    expect(check.state).toBe("PASS");
+    expect(check.reason).toContain("130");
+  });
+
+  it("stays unknown while no accepted test result is given", () => {
+    const check = evaluateEnglish(rules, none)!;
+    expect(check.state).toBe("UNKNOWN");
+    expect(check.reason).toContain("IELTS 6");
+    expect(check.reason).toContain("PTE 64");
+  });
+
+  it("does not fail a student whose other tests could still qualify", () => {
+    const check = evaluateEnglish(rules, { ...none, ielts: 5 })!;
+    expect(check.state).toBe("UNKNOWN");
+    expect(check.reason).toContain("another accepted test");
+  });
+
+  it("fails only when every accepted test has a result below its minimum", () => {
+    const check = evaluateEnglish(rules, {
+      ...none,
+      ielts: 5,
+      toefl: 60,
+      duolingo: 100,
+      pte: 50,
+    })!;
+    expect(check.state).toBe("FAIL");
+  });
+
+  it("keeps single-test behaviour and feeds the program match", () => {
+    expect(
+      evaluateEnglish([test("IELTS", 6)], { ...none, ielts: 5 })!.state,
+    ).toBe("FAIL");
+    const p = program();
+    p.requirements = [...rules];
+    const result = matchProgram(p, { ...profile, ielts: null, toefl: 95 }, now);
+    const english = result.academic.find((c) => c.label.startsWith("English"))!;
+    expect(english.state).toBe("PASS");
   });
 });

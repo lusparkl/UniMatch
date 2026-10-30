@@ -81,12 +81,12 @@ export class SafeFetcher {
     private delay = limits().delay,
     private maxBytes = limits().bytes,
   ) {}
-  private async throttle(host: string) {
+  private async throttle(host: string, delay = this.delay) {
     const previous = this.locks.get(host) ?? Promise.resolve();
     const next = previous
       .catch(() => {})
       .then(async () => {
-        const ms = this.delay - (Date.now() - (this.last.get(host) ?? 0));
+        const ms = delay - (Date.now() - (this.last.get(host) ?? 0));
         if (ms > 0) await new Promise((r) => setTimeout(r, ms));
         this.last.set(host, Date.now());
       });
@@ -97,6 +97,7 @@ export class SafeFetcher {
     raw: string,
     checkRobots = true,
     redirects = 0,
+    subresourceDelay?: number,
   ): Promise<Download> {
     if (redirects > 5) throw new Error("Redirect limit exceeded");
     const url = canonicalUrl(raw),
@@ -122,7 +123,13 @@ export class SafeFetcher {
       if (crawlDelay) this.delay = Math.max(this.delay, crawlDelay * 1000);
     }
     await this.acquire();
-    await this.throttle(u.hostname);
+    // A rendered page loads many static files at once; they use a short gap, never the full page delay.
+    await this.throttle(
+      u.hostname,
+      subresourceDelay === undefined
+        ? this.delay
+        : Math.min(this.delay, subresourceDelay),
+    );
     const result = await new Promise<Download & { location?: string }>(
       (resolve, reject) => {
         // Connect to the validated IP directly. Host/SNI remain original. DNS cannot rebind.
@@ -178,6 +185,7 @@ export class SafeFetcher {
         new URL(result.location, url).href,
         checkRobots,
         redirects + 1,
+        subresourceDelay,
       );
     }
     if (result.status !== 200 && !(result.status === 404 && !checkRobots))

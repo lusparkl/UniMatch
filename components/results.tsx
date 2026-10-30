@@ -2,14 +2,14 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  ArrowRight,
   GraduationCap,
   MapPin,
   SlidersHorizontal,
   UserRound,
 } from "lucide-react";
 import { Button } from "./ui/button";
-import { readProfile } from "./profile-wizard";
+import { loadProfile, usePriorities } from "./account-client";
+import { PriorityButton } from "./priority-button";
 import {
   countries,
   defaultProfile,
@@ -44,11 +44,13 @@ export function Results({ programs }: { programs: Program[] }) {
     [funding, setFunding] = useState(""),
     [eligibility, setEligibility] = useState(""),
     [sort, setSort] = useState("fit");
+  const priorities = usePriorities();
   useEffect(() => {
-    const saved = readProfile();
-    setProfile(saved);
-    if (saved) setDegree(saved.degreeLevel);
-    setReady(true);
+    void loadProfile().then((saved) => {
+      setProfile(saved);
+      if (saved) setDegree(saved.degreeLevel);
+      setReady(true);
+    });
   }, []);
   const results = useMemo(
     () =>
@@ -325,18 +327,26 @@ export function Results({ programs }: { programs: Program[] }) {
                       )
                     : "Awaiting research"}
                 </span>
-                <Button asChild variant="ghost" size="sm">
-                  <Link
-                    href={
-                      "/universities/" +
-                      m.program.universityId +
-                      "?program=" +
-                      m.program.id
-                    }
-                  >
-                    View details <ArrowRight size={14} />
-                  </Link>
-                </Button>
+                <div className="actions" style={{ gap: 8 }}>
+                  <PriorityButton
+                    programId={m.program.id}
+                    saved={priorities.ids.includes(m.program.id)}
+                    signedIn={priorities.signedIn}
+                    toggle={priorities.toggle}
+                  />
+                  <Button asChild variant="dark" size="sm">
+                    <Link
+                      href={
+                        "/universities/" +
+                        m.program.universityId +
+                        "?program=" +
+                        m.program.id
+                      }
+                    >
+                      View details
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </article>
           ))}

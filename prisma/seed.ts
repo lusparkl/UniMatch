@@ -1,6 +1,7 @@
 import { seedEvidence } from "./seed-evidence";
 import { db } from "../lib/db";
 import { curated } from "./curated";
+import { seedRegistry } from "./registry";
 try {
   for (const u of curated) {
     await db.university.upsert({
@@ -46,6 +47,7 @@ try {
     }
   }
   await seedEvidence();
+  await seedRegistry();
   console.log(
     "Seeded 10 real institutions and program discovery records. A dated Debrecen source snapshot supplies tuition and two manual-review conditions; other requirements and costs remain unknown. No fictional records were inserted.",
   );

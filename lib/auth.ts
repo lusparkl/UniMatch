@@ -9,7 +9,7 @@ export class HttpError extends Error {
     super(message);
   }
 }
-const hash = (token: string) =>
+export const hashToken = (token: string) =>
   createHash("sha256").update(token).digest("hex");
 export function checkOrigin(request: Request) {
   const expected = new URL(
@@ -22,7 +22,7 @@ export async function adminSession() {
   const token = (await cookies()).get("unimatch-admin")?.value;
   if (!token) return null;
   const session = await db.adminSession.findUnique({
-    where: { id: hash(token) },
+    where: { id: hashToken(token) },
   });
   return session && session.expiresAt > new Date() ? session : null;
 }
@@ -35,7 +35,11 @@ export async function createSession(email: string) {
   const token = randomBytes(32).toString("hex");
   const expires = new Date(Date.now() + 8 * 3600000);
   await db.adminSession.create({
-    data: { id: hash(token), administratorIdentity: email, expiresAt: expires },
+    data: {
+      id: hashToken(token),
+      administratorIdentity: email,
+      expiresAt: expires,
+    },
   });
   (await cookies()).set("unimatch-admin", token, {
     httpOnly: true,
@@ -47,7 +51,8 @@ export async function createSession(email: string) {
 }
 export async function deleteSession() {
   const token = (await cookies()).get("unimatch-admin")?.value;
-  if (token) await db.adminSession.deleteMany({ where: { id: hash(token) } });
+  if (token)
+    await db.adminSession.deleteMany({ where: { id: hashToken(token) } });
   (await cookies()).delete("unimatch-admin");
 }
 export function apiError(error: unknown) {

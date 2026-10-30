@@ -224,11 +224,14 @@ model ExtractionCandidate {
   documentId String
   document SourceDocument @relation(fields:[documentId], references:[id])
   payload Json
+  programId String?
+  bundleHash String?
   status VerificationStatus @default(NEEDS_REVIEW)
   issues String[]
   createdAt DateTime @default(now())
   reviewedAt DateTime?
   reviews ReviewRecord[]
+  @@index([programId, bundleHash])
 }
 model ReviewRecord {
   id String @id @default(cuid())
@@ -239,6 +242,51 @@ model ReviewRecord {
   revisedValue Json
   timestamp DateTime @default(now())
   administratorIdentity String
+}
+enum DocumentStatus {
+  HAVE
+  IN_PROGRESS
+}
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  passwordHash String
+  profile Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions UserSession[]
+  documents UserDocument[]
+  priorities Priority[]
+}
+model UserSession {
+  id String @id
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  @@index([userId])
+}
+model UserDocument {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  kind String
+  status DocumentStatus
+  note String?
+  updatedAt DateTime @updatedAt
+  @@unique([userId, kind])
+}
+model Priority {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id], onDelete:Cascade)
+  // No relation: demo catalog programs are not database rows; orphans are skipped when read.
+  programId String
+  rank Int
+  note String?
+  createdAt DateTime @default(now())
+  @@unique([userId, programId])
+  @@index([userId, rank])
 }
 model AdminSession {
   id String @id

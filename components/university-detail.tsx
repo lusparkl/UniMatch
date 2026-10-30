@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, GraduationCap } from "lucide-react";
 import { Button } from "./ui/button";
-import { readProfile } from "./profile-wizard";
+import { loadProfile, usePriorities } from "./account-client";
+import { PriorityButton } from "./priority-button";
+import { ReadinessPanel } from "./readiness-panel";
 import { money, statusLabel } from "./results";
 import { matchProgram, trusted } from "@/lib/matching";
 import type { Evidence, Program, Profile } from "@/lib/domain";
@@ -29,7 +31,10 @@ export function UniversityDetail({
 }) {
   const [selected, setSelected] = useState(initialId ?? programs[0].id),
     [profile, setProfile] = useState<Profile | null>(null);
-  useEffect(() => setProfile(readProfile()), []);
+  const priorities = usePriorities();
+  useEffect(() => {
+    void loadProfile().then(setProfile);
+  }, []);
   const p = programs.find((p) => p.id === selected) ?? programs[0],
     match = profile ? matchProgram(p, profile) : null;
   return (
@@ -76,6 +81,14 @@ export function UniversityDetail({
               {p.teachingLanguage ?? "Teaching language not verified"} ·{" "}
               {p.degreeLevel === "MASTER" ? "Master’s" : "Bachelor’s"} program
             </p>
+            <div style={{ margin: "10px 0" }}>
+              <PriorityButton
+                programId={p.id}
+                saved={priorities.ids.includes(p.id)}
+                signedIn={priorities.signedIn}
+                toggle={priorities.toggle}
+              />
+            </div>
             {p.officialUrl && (
               <a
                 href={p.officialUrl}
@@ -88,6 +101,11 @@ export function UniversityDetail({
               </a>
             )}
           </section>
+          <ReadinessPanel
+            program={p}
+            profile={profile}
+            signedIn={priorities.signedIn}
+          />
           <section className="panel">
             <h3>Admission & language requirements</h3>
             {!p.requirements.length && (

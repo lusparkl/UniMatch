@@ -7,6 +7,7 @@ import {
   extractionSchema,
   extractionJsonSchema,
   EXTRACTION_INSTRUCTIONS,
+  PROGRAM_INSTRUCTIONS,
   type Extraction,
 } from "../research/extraction";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -115,7 +116,9 @@ export class OpenAIProvider {
                 model,
                 messages,
                 store: false,
-                reasoning_effort: "low",
+                ...(/^(gpt-5|o\d)/.test(model)
+                  ? { reasoning_effort: "low" }
+                  : {}),
                 max_completion_tokens: settings.output,
                 response_format: {
                   type: "json_schema",
@@ -224,6 +227,23 @@ export class OpenAIProvider {
   }): Promise<Extraction> {
     return this.structured(
       EXTRACTION_INSTRUCTIONS,
+      input,
+      extractionJsonSchema,
+      extractionSchema,
+    );
+  }
+  extractProgram(input: {
+    program: {
+      title: string;
+      degreeLevel: string;
+      fieldOfStudy: string;
+      officialUrl: string;
+      university: string;
+    };
+    text: string;
+  }): Promise<Extraction> {
+    return this.structured(
+      PROGRAM_INSTRUCTIONS,
       input,
       extractionJsonSchema,
       extractionSchema,

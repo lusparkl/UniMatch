@@ -4,29 +4,28 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, LockKeyhole, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import {
+  PROFILE_KEY,
+  api,
+  loadProfile,
+  readLocalProfile,
+  saveProfile,
+} from "./account-client";
+import {
   countries,
   defaultProfile,
   profileSchema,
   type Profile,
 } from "@/lib/domain";
-export const PROFILE_KEY = "unimatch-profile-v1";
-export function readProfile(): Profile | null {
-  try {
-    const data = JSON.parse(localStorage.getItem(PROFILE_KEY) ?? "null");
-    const result = profileSchema.safeParse(data);
-    return result.success ? result.data : null;
-  } catch {
-    return null;
-  }
-}
+export { readLocalProfile as readProfile, PROFILE_KEY };
 export function ProfileWizard() {
   const [profile, setProfile] = useState<Profile>(defaultProfile),
     [step, setStep] = useState(0),
     [error, setError] = useState("");
   const router = useRouter();
   useEffect(() => {
-    const saved = readProfile();
-    if (saved) setProfile(saved);
+    void loadProfile().then((saved) => {
+      if (saved) setProfile(saved);
+    });
   }, []);
   const set = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setProfile((p) => ({ ...p, [key]: value }));
@@ -90,14 +89,13 @@ export function ProfileWizard() {
       );
       return;
     }
-    try {
-      localStorage.setItem(PROFILE_KEY, JSON.stringify(result.data));
-      router.push("/results");
-    } catch {
-      setError(
-        "Browser storage is unavailable. Enable local storage to save your profile.",
-      );
-    }
+    void saveProfile(result.data).then(
+      () => router.push("/results"),
+      () =>
+        setError(
+          "Browser storage is unavailable. Enable local storage to save your profile.",
+        ),
+    );
   }
   return (
     <div className="wizard">
@@ -222,6 +220,8 @@ export function ProfileWizard() {
               {number("grade", "Academic grade average", 1000)}
               {number("ielts", "IELTS overall", 9)}
               {number("toefl", "TOEFL iBT", 120)}
+              {number("duolingo", "Duolingo English Test", 160)}
+              {number("pte", "PTE Academic", 90)}
               {number("sat", "SAT", 1600)}
               {number("act", "ACT", 36)}
               {profile.degreeLevel === "MASTER" && (
@@ -307,9 +307,10 @@ export function ProfileWizard() {
         style={{ marginTop: 22 }}
         onClick={() => {
           localStorage.removeItem(PROFILE_KEY);
+          void api("/api/account/profile", "DELETE");
           setProfile(defaultProfile);
           setStep(0);
-          setError("Profile deleted from this device.");
+          setError("Profile deleted from this device and your account.");
         }}
       >
         <Trash2 size={14} /> Delete my saved profile

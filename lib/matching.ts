@@ -1,6 +1,12 @@
 import type { Profile, Program, Requirement, Verification } from "./domain";
 export type Truth = "PASS" | "FAIL" | "UNKNOWN";
-export type Check = { label: string; state: Truth; reason: string };
+export type Check = {
+  label: string;
+  state: Truth;
+  reason: string;
+  // Rule type (or "ENGLISH" for the any-of English group); lets callers split tests from other checks.
+  kind?: string;
+};
 export type Scenario = {
   name: string;
   award: "NONE" | "COMPETITIVE" | "GUARANTEED";
@@ -42,6 +48,7 @@ export function evaluateRule(rule: Requirement, p: Profile): Check | null {
     label: rule.label,
     state,
     reason,
+    kind: rule.type,
   });
   if (
     rule.evidence?.academicYear &&
@@ -56,6 +63,8 @@ export function evaluateRule(rule: Requirement, p: Profile): Check | null {
   const numeric: Record<string, number | null> = {
     IELTS: p.ielts,
     TOEFL: p.toefl,
+    DUOLINGO: p.duolingo,
+    PTE: p.pte,
     SAT: p.sat,
     ACT: p.act,
     GRE: p.gre,
@@ -109,6 +118,60 @@ export function evaluateRule(rule: Requirement, p: Profile): Check | null {
     "This condition requires human review; it cannot be evaluated automatically.",
   );
 }
+const ENGLISH_TESTS = ["IELTS", "TOEFL", "DUOLINGO", "PTE"];
+const TEST_NAMES: Record<string, string> = {
+  IELTS: "IELTS",
+  TOEFL: "TOEFL",
+  DUOLINGO: "Duolingo",
+  PTE: "PTE",
+};
+/**
+ * Accepted English tests are alternatives: one passing result satisfies the requirement.
+ * A confirmed FAIL needs a result below the minimum for every accepted test; otherwise another
+ * test could still qualify, so the answer stays UNKNOWN.
+ */
+export function evaluateEnglish(
+  rules: Requirement[],
+  p: Profile,
+): Check | null {
+  const checks = rules
+    .map((rule) => ({ rule, check: evaluateRule(rule, p) }))
+    .filter((c): c is { rule: Requirement; check: Check } => c.check !== null);
+  if (!checks.length) return null;
+  if (checks.length === 1) return checks[0].check;
+  const label = "English proof (any one accepted test)";
+  const kind = "ENGLISH";
+  const passed = checks.find((c) => c.check.state === "PASS");
+  if (passed)
+    return { label, kind, state: "PASS", reason: passed.check.reason };
+  const wanted = checks
+    .map(
+      ({ rule }) =>
+        (TEST_NAMES[rule.type] ?? rule.type) +
+        (rule.minimum !== null ? " " + rule.minimum : ""),
+    )
+    .join(", ");
+  if (checks.every((c) => c.check.state === "FAIL"))
+    return {
+      label,
+      kind,
+      state: "FAIL",
+      reason:
+        "Every accepted test result is below its minimum (" + wanted + ").",
+    };
+  const below = checks.filter((c) => c.check.state === "FAIL");
+  return {
+    label,
+    kind,
+    state: "UNKNOWN",
+    reason: below.length
+      ? "Your result is below the minimum for some tests, but another accepted test could qualify: " +
+        wanted +
+        "."
+      : "Add one result from: " + wanted + ".",
+  };
+}
+
 export function matchProgram(
   program: Program,
   profile: Profile,
@@ -129,7 +192,13 @@ export function matchProgram(
     },
   ];
   const application: Check[] = [];
-  for (const rule of program.requirements.filter((r) => r.mandatory)) {
+  const mandatory = program.requirements.filter((r) => r.mandatory);
+  const english = evaluateEnglish(
+    mandatory.filter((r) => ENGLISH_TESTS.includes(r.type)),
+    profile,
+  );
+  if (english) academic.push(english);
+  for (const rule of mandatory.filter((r) => !ENGLISH_TESTS.includes(r.type))) {
     const check = evaluateRule(rule, profile);
     if (check)
       (["NATIONALITY", "EDUCATION_COUNTRY"].includes(rule.type)

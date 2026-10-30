@@ -4,16 +4,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 const variants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-emerald-700",
+  "btn inline-flex items-center justify-center gap-2 rounded-[4px] font-semibold whitespace-nowrap transition-colors no-underline hover:no-underline disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-emerald-900 text-white hover:bg-emerald-800",
+        default:
+          "bg-[var(--brand)] text-white hover:bg-[var(--brand-hover)] hover:text-white",
         outline:
-          "border border-slate-200 bg-white hover:bg-slate-50 text-slate-800",
-        ghost: "hover:bg-slate-100 text-slate-600",
+          "border border-[var(--border-strong)] bg-white text-[var(--fg-1)] hover:bg-[var(--neutral-900)] hover:text-white",
+        dark: "bg-[var(--neutral-900)] text-white hover:bg-[var(--neutral-700)] hover:text-white",
+        light: "bg-white text-[var(--brand)] hover:bg-[var(--crimson-50)]",
+        ghost:
+          "bg-transparent text-[var(--brand)] hover:bg-[var(--crimson-50)] hover:text-[var(--brand-hover)]",
       },
-      size: { default: "h-11 px-5", sm: "h-9 px-3" },
+      size: { default: "h-11 px-6 text-[15px]", sm: "h-9 px-4 text-sm" },
     },
     defaultVariants: { variant: "default", size: "default" },
   },

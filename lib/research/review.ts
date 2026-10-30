@@ -3,6 +3,15 @@ import { Prisma } from "@/generated/prisma/client";
 import { extractionSchema, validateEvidence } from "./extraction";
 import { allowedUrl } from "./security";
 import { ruleSchema } from "../domain";
+import { sameProgram } from "./relevance";
+type PageRow = {
+  id: string;
+  url: string;
+  title: string;
+  text: string;
+  retrievedAt: Date;
+  contentHash: string;
+};
 export async function reviewCandidate(
   id: string,
   action: "APPROVE" | "REJECT",
@@ -49,29 +58,60 @@ export async function reviewCandidate(
         }),
       ) as Prisma.InputJsonValue;
       if (action === "APPROVE") {
+        // Program-targeted candidates cite several stored pages; resolve each cited page's latest version.
+        const cited = new Set(
+          [
+            ...(payload.program ? [payload.program] : []),
+            ...payload.requirements,
+            ...payload.intakes,
+            ...payload.costs,
+            ...payload.documents,
+            ...payload.scholarships,
+            ...payload.scholarships.flatMap((s) => s.rules),
+          ].flatMap((c) => (c.sourceUrl ? [c.sourceUrl] : [])),
+        );
+        const pages = new Map<string, PageRow>([
+          [candidate.document.url, candidate.document],
+        ]);
+        for (const url of cited) {
+          if (pages.has(url)) continue;
+          const page = await tx.sourceDocument.findFirst({
+            where: { universityId: candidate.document.universityId, url },
+            orderBy: { retrievedAt: "desc" },
+          });
+          if (page) pages.set(url, page);
+        }
         const issues = validateEvidence(
           payload,
-          candidate.document.text,
+          cited.size
+            ? new Map([...pages].map(([url, page]) => [url, page.text]))
+            : candidate.document.text,
           (url) => allowedUrl(url, candidate.document.university.sources),
         ).filter(
           (i) =>
             i.startsWith("Excerpt") ||
+            i.startsWith("Citation") ||
             i.startsWith("Unapproved") ||
             i.startsWith("Unsupported intake year"),
         );
         if (issues.length) throw new Error(issues.join("; "));
         const doc = candidate.document;
-        async function evidence(excerpt: string) {
+        async function evidence(excerpt: string, sourceUrl?: string | null) {
+          const page: PageRow =
+            (sourceUrl && pages.get(sourceUrl)) || candidate.document;
           return tx.sourceEvidence.create({
             data: {
-              documentId: doc.id,
-              url: doc.url,
-              title: doc.title,
+              documentId: page.id,
+              url: page.url,
+              title: page.title,
               excerpt,
-              startOffset: doc.text.indexOf(excerpt),
-              retrievedAt: doc.retrievedAt,
+              startOffset:
+                page.text.indexOf(excerpt) >= 0
+                  ? page.text.indexOf(excerpt)
+                  : null,
+              retrievedAt: page.retrievedAt,
               verifiedAt: new Date(),
-              contentHash: doc.contentHash,
+              contentHash: page.contentHash,
               relevantAcademicYear: payload.academicYear,
               verificationStatus: "ADMIN_VERIFIED",
             },
@@ -85,6 +125,23 @@ export async function reviewCandidate(
             payload.documents.length)
         )
           throw new Error("Program-specific facts need explicit program scope");
+        if (payload.program && !publishedBefore) {
+          const siblings = await tx.degreeProgram.findMany({
+            where: {
+              universityId: doc.universityId,
+              degreeLevel: payload.program.degreeLevel,
+            },
+          });
+          const duplicate = siblings.find((s) =>
+            sameProgram(s.title, payload.program!.title),
+          );
+          if (duplicate)
+            throw new Error(
+              'Duplicate program: already published as "' +
+                duplicate.title +
+                '". Revise the title to match it before approving.',
+            );
+        }
         const p = payload.program
           ? await tx.degreeProgram.upsert({
               where: {
@@ -120,7 +177,7 @@ export async function reviewCandidate(
               conditions: { path: ["label"], equals: r.label },
             },
           });
-          const e = await evidence(r.excerpt);
+          const e = await evidence(r.excerpt, r.sourceUrl);
           await tx.admissionRequirement.create({
             data: {
               programId: p!.id,
@@ -143,7 +200,7 @@ export async function reviewCandidate(
               applicationRoute: i.route,
             },
           });
-          const e = await evidence(i.excerpt);
+          const e = await evidence(i.excerpt, i.sourceUrl);
           await tx.applicationIntake.create({
             data: {
               programId: p!.id,
@@ -160,7 +217,7 @@ export async function reviewCandidate(
           });
         }
         for (const c of payload.costs) {
-          const e = await evidence(c.excerpt);
+          const e = await evidence(c.excerpt, c.sourceUrl);
           await tx.costEstimate.deleteMany({
             where: { programId: p!.id, currency: c.currency, period: c.period },
           });
@@ -179,7 +236,7 @@ export async function reviewCandidate(
           });
         }
         for (const s of payload.scholarships) {
-          const e = await evidence(s.excerpt);
+          const e = await evidence(s.excerpt, s.sourceUrl);
           const scholarship = await tx.scholarship.create({
             data: {
               name: s.name,
@@ -218,7 +275,7 @@ export async function reviewCandidate(
           });
         }
         for (const d of payload.documents) {
-          const e = await evidence(d.excerpt);
+          const e = await evidence(d.excerpt, d.sourceUrl);
           await tx.requiredDocument.deleteMany({
             where: { programId: p!.id, documentType: d.name },
           });

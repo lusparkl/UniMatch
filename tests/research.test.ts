@@ -135,6 +135,7 @@ describe("source safeguards", () => {
         deadline: "1562-06-15T00:00:00Z",
         timezone: null,
         excerpt,
+        sourceUrl: null,
       },
     ];
     const source =
@@ -175,3 +176,26 @@ export function fixture() {
     ambiguities: [],
   });
 }
+
+describe("CMS templates that wrap content in header/form elements", () => {
+  it("keeps facts inside <main><header> and drops page-level chrome", () => {
+    const filler =
+      "Applicants need IELTS 6.5 overall and a strong mathematics grade. ";
+    const d = extractHtml(
+      `<html><body><header>Site menu Apply Now</header><main><header><h1>BEng in Computer Science</h1><p>${filler.repeat(6)}</p></header></main><footer>Copyright</footer></body></html>`,
+      "https://example.edu/p",
+      [{ hostname: "example.edu", allowSubdomains: false }],
+    );
+    expect(d.text).toContain("IELTS 6.5");
+    expect(d.text).not.toContain("Site menu");
+    expect(d.text).not.toContain("Copyright");
+  });
+  it("falls back to body when <main> holds only a sliver", () => {
+    const d = extractHtml(
+      `<html><body><main>Subscribe</main><div><p>${"Tuition is HK$ 180,000 per year for non-local students. ".repeat(8)}</p></div></body></html>`,
+      "https://example.edu/p",
+      [{ hostname: "example.edu", allowSubdomains: false }],
+    );
+    expect(d.text).toContain("HK$ 180,000");
+  });
+});

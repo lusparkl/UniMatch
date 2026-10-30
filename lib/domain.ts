@@ -34,6 +34,9 @@ export const profileSchema = z.object({
   gradingScale: z.string().max(60),
   ielts: optionalScore(9),
   toefl: optionalScore(120),
+  // Added after launch: profiles saved earlier lack these fields.
+  duolingo: optionalScore(160).default(null),
+  pte: optionalScore(90).default(null),
   sat: optionalScore(1600),
   act: optionalScore(36),
   gre: optionalScore(340),
@@ -47,6 +50,8 @@ export const ruleSchema = z.object({
   type: z.enum([
     "IELTS",
     "TOEFL",
+    "DUOLINGO",
+    "PTE",
     "SAT",
     "ACT",
     "GRE",
@@ -141,6 +146,8 @@ export const defaultProfile: Profile = {
   gradingScale: "",
   ielts: null,
   toefl: null,
+  duolingo: null,
+  pte: null,
   sat: null,
   act: null,
   gre: null,

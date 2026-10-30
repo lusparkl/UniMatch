@@ -70,6 +70,29 @@ describe("OpenAI provider (recorded transport, no external calls)", () => {
       }),
     );
   });
+  it("omits reasoning_effort for models without reasoning support", async () => {
+    vi.stubEnv("OPENAI_MODEL", "gpt-4.1-mini");
+    const transport = vi.fn().mockResolvedValue(
+      Response.json({
+        choices: [
+          {
+            finish_reason: "stop",
+            message: { content: '{"answer":"source-backed"}' },
+          },
+        ],
+        usage: { prompt_tokens: 20, completion_tokens: 5, total_tokens: 25 },
+      }),
+    );
+    await new OpenAIProvider("test", transport).structured(
+      "Stable instructions",
+      { text: "data" },
+      z.toJSONSchema(schema),
+      schema,
+    );
+    const body = JSON.parse(transport.mock.calls[0][1].body);
+    expect(body.model).toBe("gpt-4.1-mini");
+    expect(body).not.toHaveProperty("reasoning_effort");
+  });
   it("adapts nested URL formats without weakening local validation", () => {
     const adapted = openAISchema(extractionJsonSchema);
     expect(JSON.stringify(adapted)).not.toContain('"format":"uri"');
