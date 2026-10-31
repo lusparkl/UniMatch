@@ -35,6 +35,25 @@ export const money = (amount: number | null, currency: string | null) =>
         currency,
         maximumFractionDigits: 0,
       }).format(amount);
+/** Earliest verified deadline for the student's intake (any intake without a profile), formatted for display. */
+export const nextDeadline = (program: Program, profile: Profile | null) => {
+  const intake = program.intakes
+    .filter(
+      (i) =>
+        trusted(i.status) &&
+        i.deadline &&
+        i.timezone &&
+        (!profile || profile.intake === i.academicYear + "-" + i.term),
+    )
+    .sort((a, b) => a.deadline!.localeCompare(b.deadline!))[0];
+  return intake?.deadline
+    ? new Date(intake.deadline).toLocaleDateString("en", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "Not verified";
+};
 export function Results({ programs }: { programs: Program[] }) {
   const [profile, setProfile] = useState<Profile | null>(null),
     [ready, setReady] = useState(false),
@@ -43,7 +62,8 @@ export function Results({ programs }: { programs: Program[] }) {
     [search, setSearch] = useState(""),
     [funding, setFunding] = useState(""),
     [eligibility, setEligibility] = useState(""),
-    [sort, setSort] = useState("fit");
+    [sort, setSort] = useState("fit"),
+    [filtersOpen, setFiltersOpen] = useState(false);
   const priorities = usePriorities();
   useEffect(() => {
     void loadProfile().then((saved) => {
@@ -85,15 +105,45 @@ export function Results({ programs }: { programs: Program[] }) {
         .sort(
           sort === "name"
             ? (a, b) => a.program.university.localeCompare(b.program.university)
-            : sort === "fresh"
+            : sort === "cost"
               ? (a, b) =>
-                  (b.program.lastResearched ?? "").localeCompare(
-                    a.program.lastResearched ?? "",
-                  )
-              : compareMatches,
+                  (a.scenarios[0].remaining ?? Infinity) -
+                  (b.scenarios[0].remaining ?? Infinity)
+              : sort === "fresh"
+                ? (a, b) =>
+                    (b.program.lastResearched ?? "").localeCompare(
+                      a.program.lastResearched ?? "",
+                    )
+                : compareMatches,
         ),
     [programs, profile, country, degree, search, funding, eligibility, sort],
   );
+  const resetFilters = () => {
+    setCountry("");
+    setDegree("");
+    setSearch("");
+    setFunding("");
+    setEligibility("");
+  };
+  const chips = [
+    country && { label: country, clear: () => setCountry("") },
+    degree && {
+      label: degree === "MASTER" ? "Master’s" : "Bachelor’s",
+      clear: () => setDegree(""),
+    },
+    funding && {
+      label:
+        funding === "full"
+          ? "Potential full coverage"
+          : "Scholarship available",
+      clear: () => setFunding(""),
+    },
+    eligibility && {
+      label: statusLabel[eligibility as Truth],
+      clear: () => setEligibility(""),
+    },
+    search && { label: "“" + search + "”", clear: () => setSearch("") },
+  ].filter((c) => typeof c === "object");
   return (
     <>
       <div className="page-head">
@@ -108,26 +158,36 @@ export function Results({ programs }: { programs: Program[] }) {
             Look beyond the name. Find a program that fits your life.
           </p>
         </div>
-        <div className="actions">
-          <Button asChild variant="outline">
+      </div>
+      {ready && (
+        <div className="profile-bar">
+          <span>
+            {profile
+              ? [
+                  profile.degreeLevel === "MASTER" ? "Master’s" : "Bachelor’s",
+                  profile.fieldOfStudy,
+                  profile.intake,
+                  profile.budget > 0
+                    ? money(profile.budget, profile.currency) + " budget"
+                    : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")
+              : "You’re exploring the catalog. Complete a profile for personalised eligibility and funding scenarios."}
+          </span>
+          <Button asChild variant="outline" size="sm">
             <Link href="/profile">
               <UserRound size={16} />
               {profile ? "Edit my profile" : "Create my profile"}
             </Link>
           </Button>
         </div>
-      </div>
-      {ready && !profile && (
-        <div className="notice">
-          You’re exploring the catalog.{" "}
-          <Link href="/profile" style={{ textDecoration: "underline" }}>
-            Complete your profile
-          </Link>{" "}
-          to see personalized eligibility and financial scenarios.
-        </div>
       )}
       <div className="layout">
-        <aside className="panel filters">
+        <aside
+          className={"panel filters" + (filtersOpen ? " open" : "")}
+          aria-label="Filters"
+        >
           <h3>
             <SlidersHorizontal size={16} /> Refine your shortlist
           </h3>
@@ -185,34 +245,52 @@ export function Results({ programs }: { programs: Program[] }) {
               ))}
             </select>
           </label>
-          <button
-            className="tiny muted"
-            style={{ textAlign: "left", marginTop: 20 }}
-            onClick={() => {
-              setCountry("");
-              setDegree("");
-              setSearch("");
-              setFunding("");
-              setEligibility("");
-            }}
-          >
+          <button className="link-btn" onClick={resetFilters}>
             Reset filters
           </button>
         </aside>
         <section>
           <div className="results-bar">
-            <span>
-              <strong>{results.length} programs</strong> to explore
-            </span>
+            <div className="actions">
+              <Button
+                variant="outline"
+                size="sm"
+                className="filter-toggle"
+                aria-expanded={filtersOpen}
+                onClick={() => setFiltersOpen((o) => !o)}
+              >
+                <SlidersHorizontal size={14} />
+                {(filtersOpen ? "Hide filters" : "Filters") +
+                  (chips.length ? " (" + chips.length + ")" : "")}
+              </Button>
+              <span>
+                <strong>{results.length}</strong> programs to explore
+              </span>
+            </div>
             <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
               Sort by
               <select value={sort} onChange={(e) => setSort(e.target.value)}>
                 <option value="fit">Relevant fit</option>
                 <option value="name">University name</option>
+                <option value="cost">Lowest cost</option>
                 <option value="fresh">Recently researched</option>
               </select>
             </label>
           </div>
+          {chips.length > 0 && (
+            <div className="chips">
+              {chips.map((c) => (
+                <button
+                  key={c.label}
+                  className="chip"
+                  aria-label={"Remove filter " + c.label}
+                  onClick={c.clear}
+                >
+                  {c.label} ×
+                </button>
+              ))}
+            </div>
+          )}
           {!results.length && (
             <div className="empty">
               <GraduationCap size={32} style={{ margin: "0 auto 15px" }} />
@@ -221,16 +299,7 @@ export function Results({ programs }: { programs: Program[] }) {
                 Try broader filters. Real records appear after research and
                 administrator review.
               </p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setCountry("");
-                  setDegree("");
-                  setSearch("");
-                  setFunding("");
-                  setEligibility("");
-                }}
-              >
+              <Button variant="outline" onClick={resetFilters}>
                 Clear filters
               </Button>
             </div>
@@ -293,27 +362,7 @@ export function Results({ programs }: { programs: Program[] }) {
                 <div>
                   <div className="metric-label">Application deadline</div>
                   <div className="metric-value">
-                    {(() => {
-                      const intake = m.program.intakes
-                        .filter(
-                          (i) =>
-                            trusted(i.status) &&
-                            i.deadline &&
-                            i.timezone &&
-                            (!profile ||
-                              profile.intake === i.academicYear + "-" + i.term),
-                        )
-                        .sort((a, b) =>
-                          a.deadline!.localeCompare(b.deadline!),
-                        )[0];
-                      return intake?.deadline
-                        ? new Date(intake.deadline).toLocaleDateString("en", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })
-                        : "Not verified";
-                    })()}
+                    {nextDeadline(m.program, profile)}
                   </div>
                 </div>
               </div>

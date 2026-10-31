@@ -99,9 +99,11 @@ test("admin authentication, polling and honest missing-key error", async ({
   await expect(
     page.getByRole("heading", { name: "Good decisions start with good data." }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Universities", exact: true }).click();
   await expect(
-    page.getByText("Approved institutions", { exact: true }),
+    page.getByRole("heading", { name: "Approved institutions" }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Research", exact: true }).click();
   await page
     .getByRole("combobox", { name: "Approved university", exact: true })
     .selectOption("mit");

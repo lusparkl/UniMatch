@@ -51,12 +51,19 @@ async function post(path: string, body: unknown) {
   if (!response.ok) throw new Error(data.error ?? "Request failed");
   return data;
 }
+const adminTabs = [
+  ["overview", "Overview"],
+  ["unis", "Universities"],
+  ["research", "Research"],
+  ["review", "Review"],
+] as const;
 export function Admin({ authenticated }: { authenticated: boolean }) {
   const [signed, setSigned] = useState(authenticated),
     [data, setData] = useState<Dashboard | null>(null),
     [error, setError] = useState(""),
     [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [tab, setTab] = useState<(typeof adminTabs)[number][0]>("overview");
   const [email, setEmail] = useState(""),
     [password, setPassword] = useState(""),
     [selected, setSelected] = useState(""),
@@ -197,335 +204,387 @@ export function Admin({ authenticated }: { authenticated: boolean }) {
         <div className="loading">Loading research workspace…</div>
       ) : (
         <>
-          <div className="notice">
-            {data.liveEnabled
-              ? "OpenAI research is configured. Every extraction awaits review before publication."
-              : "Offline AI mode: OPENAI_API_KEY is absent. Live research is disabled; no simulated jobs are shown."}
-            {data.demo &&
-              " Student pages currently show fictional DEMO_FIXTURES. Switch DEMO_MODE=false to see published PostgreSQL records."}
-          </div>
-          <div className="stats">
-            <div className="panel stat">
-              <strong>{data.universities.length}</strong>
-              <span>Approved universities</span>
-            </div>
-            <div className="panel stat">
-              <strong>{data.candidates.length}</strong>
-              <span>Awaiting review</span>
-            </div>
-            <div className="panel stat">
-              <strong>{data.sourceCount}</strong>
-              <span>Source versions</span>
-            </div>
-            <div className="panel stat">
-              <strong>{data.tokens.toLocaleString()}</strong>
-              <span>
-                Reported tokens today / {data.tokenLimit.toLocaleString()}{" "}
-                budget
-                <br />
-                {data.reservedTokens.toLocaleString()} consumed or reserved
-              </span>
-            </div>
-          </div>
-          <div className="admin-grid">
-            <section className="panel">
-              <h3>University management</h3>
-              <form
-                className="stack"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  void act(async () => {
-                    await post("universities", {
-                      ...(editId ? { id: editId } : {}),
-                      name,
-                      country,
-                      city,
-                      officialWebsite: website,
-                    });
-                    setEditId("");
-                    setName("");
-                    setCity("");
-                    setWebsite("");
-                  }, "University saved. Approve specific research sources below.");
-                }}
-              >
-                <label>
-                  University name
-                  <input
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </label>
-                <div className="form-grid">
-                  <label>
-                    Country
-                    <select
-                      value={country}
-                      onChange={(e) => setCountry(e.target.value)}
+          <div className="admin-shell">
+            <nav className="admin-tabs" aria-label="Admin sections">
+              {adminTabs.map(([key, label]) => (
+                <button
+                  key={key}
+                  aria-current={tab === key ? "page" : undefined}
+                  onClick={() => setTab(key)}
+                >
+                  {label}
+                  {key === "review" && data.candidates.length > 0 && (
+                    <span className="badge">{data.candidates.length}</span>
+                  )}
+                </button>
+              ))}
+            </nav>
+            <div className="admin-body">
+              {tab === "overview" && (
+                <>
+                  <div className="notice">
+                    {data.liveEnabled
+                      ? "OpenAI research is configured. Every extraction awaits review before publication."
+                      : "Offline AI mode: OPENAI_API_KEY is absent. Live research is disabled; no simulated jobs are shown."}
+                    {data.demo &&
+                      " Student pages currently show fictional DEMO_FIXTURES. Switch DEMO_MODE=false to see published PostgreSQL records."}
+                  </div>
+                  <div className="stats">
+                    <div className="panel stat">
+                      <strong>{data.universities.length}</strong>
+                      <span>Approved universities</span>
+                    </div>
+                    <div className="panel stat">
+                      <strong>{data.candidates.length}</strong>
+                      <span>Awaiting review</span>
+                    </div>
+                    <div className="panel stat">
+                      <strong>{data.sourceCount}</strong>
+                      <span>Source versions</span>
+                    </div>
+                    <div className="panel stat">
+                      <strong>{data.tokens.toLocaleString()}</strong>
+                      <span>
+                        Reported tokens today /{" "}
+                        {data.tokenLimit.toLocaleString()} budget
+                        <br />
+                        {data.reservedTokens.toLocaleString()} consumed or
+                        reserved
+                      </span>
+                    </div>
+                  </div>
+                  <section className="panel">
+                    <h3>Needs attention</h3>
+                    <button
+                      className="link-btn"
+                      onClick={() => setTab("review")}
                     >
-                      {countries.map((c) => (
-                        <option key={c}>{c}</option>
-                      ))}
-                    </select>
-                  </label>
-                  <label>
-                    City
-                    <input
-                      required
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                    />
-                  </label>
-                </div>
-                <label>
-                  Official website
-                  <input
-                    type="url"
-                    required
-                    placeholder="https://university.edu"
-                    value={website}
-                    onChange={(e) => setWebsite(e.target.value)}
-                  />
-                </label>
-                <Button disabled={busy}>
-                  {editId ? "Update university" : "Add university"}
-                </Button>
-              </form>
-            </section>
-            <section className="panel">
-              <h3>Launch controlled research</h3>
-              <div className="stack">
-                <label>
-                  Approved university
-                  <select
-                    value={selected}
-                    onChange={(e) => setSelected(e.target.value)}
-                  >
-                    <option value="">Select a university</option>
+                      {data.candidates.length
+                        ? data.candidates.length + " candidates awaiting review"
+                        : "Review queue is clear"}{" "}
+                      →
+                    </button>
+                  </section>
+                </>
+              )}
+              {tab === "unis" && (
+                <div className="admin-grid">
+                  <section className="panel">
+                    <h3>Approved institutions</h3>
                     {data.universities.map((u) => (
-                      <option value={u.id} key={u.id}>
-                        {u.name}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label>
-                  Research target
-                  <input
-                    value={target}
-                    onChange={(e) => setTarget(e.target.value)}
-                  />
-                </label>
-                <Button
-                  disabled={busy || !selected || !data.liveEnabled}
-                  onClick={() =>
-                    void act(
-                      () =>
-                        post("research", {
-                          universityId: selected,
-                          targets: [target],
-                        }),
-                      "Research queued. Start the worker to process it.",
-                    )
-                  }
-                >
-                  <RefreshCw size={15} /> Research / refresh
-                </Button>
-                <details>
-                  <summary className="tiny">
-                    Approve an official research source
-                  </summary>
-                  <div className="stack" style={{ marginTop: 15 }}>
-                    <label>
-                      Official page or scholarship provider URL
-                      <input
-                        type="url"
-                        value={source}
-                        onChange={(e) => setSource(e.target.value)}
-                      />
-                    </label>
-                    <label>
-                      Source purpose
-                      <select
-                        value={purpose}
-                        onChange={(e) => setPurpose(e.target.value)}
-                      >
-                        {[
-                          "admissions",
-                          "scholarship",
-                          "deadline",
-                          "metadata",
-                        ].map((p) => (
-                          <option key={p}>{p}</option>
-                        ))}
-                      </select>
-                    </label>
-                    <label className="checkbox-chip">
-                      <input
-                        type="checkbox"
-                        checked={subdomains}
-                        onChange={(e) => setSubdomains(e.target.checked)}
-                      />
-                      Approve official subdomains
-                    </label>
-                    <label className="checkbox-chip">
-                      <input
-                        type="checkbox"
-                        checked={browser}
-                        onChange={(e) => setBrowser(e.target.checked)}
-                      />
-                      Allow browser fallback for sparse HTML
-                    </label>
-                    <p className="tiny muted">
-                      Approve only publicly accessible official sources whose
-                      terms permit research.
-                    </p>
-                    <Button
-                      variant="outline"
-                      disabled={busy || !selected || !source}
-                      onClick={() =>
-                        void act(
-                          () =>
-                            post("sources", {
-                              universityId: selected,
-                              startUrl: source,
-                              purpose,
-                              allowSubdomains: subdomains,
-                              browserRendering: browser,
-                            }),
-                          "Source approved",
-                        )
-                      }
-                    >
-                      Approve source
-                    </Button>
-                  </div>
-                </details>
-              </div>
-            </section>
-          </div>
-          <section className="panel" style={{ marginTop: 24 }}>
-            <h3>Approved institutions</h3>
-            {data.universities.map((u) => (
-              <div className="check" key={u.id}>
-                <div>
-                  <strong>{u.name}</strong>
-                  <p>
-                    {u.country} · {u.researchStatus} · {u.sources.length}{" "}
-                    approved sources
-                  </p>
-                  <details>
-                    <summary className="tiny muted">Source list</summary>
-                    {u.sources.map((s) => (
-                      <p className="source" key={s.id}>
-                        {s.purpose}:{" "}
-                        <a
-                          href={s.startUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                      <div className="check" key={u.id}>
+                        <div>
+                          <strong>{u.name}</strong>
+                          <p>
+                            {u.country} · {u.researchStatus} ·{" "}
+                            {u.sources.length} approved sources
+                          </p>
+                          <details>
+                            <summary className="tiny muted">
+                              Source list
+                            </summary>
+                            {u.sources.map((s) => (
+                              <p className="source" key={s.id}>
+                                {s.purpose}:{" "}
+                                <a
+                                  href={s.startUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {s.startUrl}
+                                </a>
+                              </p>
+                            ))}
+                          </details>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setEditId(u.id);
+                            setName(u.name);
+                            setCountry(u.country);
+                            setCity(u.city);
+                            setWebsite(u.officialWebsite);
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
                         >
-                          {s.startUrl}
-                        </a>
-                      </p>
+                          Edit
+                        </Button>
+                      </div>
                     ))}
-                  </details>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setEditId(u.id);
-                    setName(u.name);
-                    setCountry(u.country);
-                    setCity(u.city);
-                    setWebsite(u.officialWebsite);
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
-                >
-                  Edit
-                </Button>
-              </div>
-            ))}
-          </section>
-          <section className="panel" style={{ marginTop: 24 }}>
-            <h3>Research activity</h3>
-            {!data.jobs.length && (
-              <p className="muted">
-                No jobs yet. Research progresses only when the worker performs
-                real work.
-              </p>
-            )}
-            {data.jobs.map((j) => (
-              <div key={j.id} className="check">
-                <div style={{ width: "100%" }}>
-                  <div className="actions">
-                    <strong>{j.university.name}</strong>
-                    <span
-                      className={
-                        "tag " + (j.status === "FAILED" ? "FAIL" : "UNKNOWN")
-                      }
+                  </section>
+                  <section className="panel">
+                    <h3>University management</h3>
+                    <form
+                      className="stack"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void act(async () => {
+                          await post("universities", {
+                            ...(editId ? { id: editId } : {}),
+                            name,
+                            country,
+                            city,
+                            officialWebsite: website,
+                          });
+                          setEditId("");
+                          setName("");
+                          setCity("");
+                          setWebsite("");
+                        }, "University saved. Approve specific research sources below.");
+                      }}
                     >
-                      {j.stage} · {j.status}
-                    </span>
-                  </div>
-                  <p>
-                    {j.pagesProcessed} pages processed · {j.modelCalls} model
-                    attempts · {j.tokenUsage} tokens
-                  </p>
-                  <details>
-                    <summary className="tiny">
-                      View progress log & errors
-                    </summary>
-                    <pre>
-                      {j.logs
-                        .map(
-                          (l) =>
-                            new Date(l.createdAt).toLocaleTimeString() +
-                            " [" +
-                            l.level +
-                            "] " +
-                            l.message,
-                        )
-                        .join("\n") || "Queued; waiting for the worker."}
-                    </pre>
-                    {j.errors.length > 0 && <pre>{j.errors.join("\n")}</pre>}
-                  </details>
+                      <label>
+                        University name
+                        <input
+                          required
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
+                      </label>
+                      <div className="form-grid">
+                        <label>
+                          Country
+                          <select
+                            value={country}
+                            onChange={(e) => setCountry(e.target.value)}
+                          >
+                            {countries.map((c) => (
+                              <option key={c}>{c}</option>
+                            ))}
+                          </select>
+                        </label>
+                        <label>
+                          City
+                          <input
+                            required
+                            value={city}
+                            onChange={(e) => setCity(e.target.value)}
+                          />
+                        </label>
+                      </div>
+                      <label>
+                        Official website
+                        <input
+                          type="url"
+                          required
+                          placeholder="https://university.edu"
+                          value={website}
+                          onChange={(e) => setWebsite(e.target.value)}
+                        />
+                      </label>
+                      <Button disabled={busy}>
+                        {editId ? "Update university" : "Add university"}
+                      </Button>
+                    </form>
+                  </section>
                 </div>
-              </div>
-            ))}
-          </section>
-          <section style={{ marginTop: 28 }}>
-            <h2>Evidence awaiting review</h2>
-            <p className="muted">
-              Read the source, correct the JSON if needed, then approve or
-              reject. Approval is the only path to administrator-verified data.
-            </p>
-            {!data.candidates.length && (
-              <div className="panel muted">The review queue is clear.</div>
-            )}
-            {data.candidates.map((c) => (
-              <Review
-                key={c.id}
-                candidate={c}
-                busy={busy}
-                onReview={(action, payload, complete) =>
-                  act(
-                    () =>
-                      post("review", {
-                        id: c.id,
-                        action,
-                        payload,
-                        requirementsComplete: complete,
-                      }),
-                    action === "APPROVE"
-                      ? "Reviewed facts published to the real catalog."
-                      : "Candidate rejected.",
-                  )
-                }
-              />
-            ))}
-          </section>
+              )}
+              {tab === "research" && (
+                <div className="admin-grid">
+                  <section className="panel">
+                    <h3>Launch controlled research</h3>
+                    <div className="stack">
+                      <label>
+                        Approved university
+                        <select
+                          value={selected}
+                          onChange={(e) => setSelected(e.target.value)}
+                        >
+                          <option value="">Select a university</option>
+                          {data.universities.map((u) => (
+                            <option value={u.id} key={u.id}>
+                              {u.name}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label>
+                        Research target
+                        <input
+                          value={target}
+                          onChange={(e) => setTarget(e.target.value)}
+                        />
+                      </label>
+                      <Button
+                        disabled={busy || !selected || !data.liveEnabled}
+                        onClick={() =>
+                          void act(
+                            () =>
+                              post("research", {
+                                universityId: selected,
+                                targets: [target],
+                              }),
+                            "Research queued. Start the worker to process it.",
+                          )
+                        }
+                      >
+                        <RefreshCw size={15} /> Research / refresh
+                      </Button>
+                      <details>
+                        <summary className="tiny">
+                          Approve an official research source
+                        </summary>
+                        <div className="stack" style={{ marginTop: 15 }}>
+                          <label>
+                            Official page or scholarship provider URL
+                            <input
+                              type="url"
+                              value={source}
+                              onChange={(e) => setSource(e.target.value)}
+                            />
+                          </label>
+                          <label>
+                            Source purpose
+                            <select
+                              value={purpose}
+                              onChange={(e) => setPurpose(e.target.value)}
+                            >
+                              {[
+                                "admissions",
+                                "scholarship",
+                                "deadline",
+                                "metadata",
+                              ].map((p) => (
+                                <option key={p}>{p}</option>
+                              ))}
+                            </select>
+                          </label>
+                          <label className="checkbox-chip">
+                            <input
+                              type="checkbox"
+                              checked={subdomains}
+                              onChange={(e) => setSubdomains(e.target.checked)}
+                            />
+                            Approve official subdomains
+                          </label>
+                          <label className="checkbox-chip">
+                            <input
+                              type="checkbox"
+                              checked={browser}
+                              onChange={(e) => setBrowser(e.target.checked)}
+                            />
+                            Allow browser fallback for sparse HTML
+                          </label>
+                          <p className="tiny muted">
+                            Approve only publicly accessible official sources
+                            whose terms permit research.
+                          </p>
+                          <Button
+                            variant="outline"
+                            disabled={busy || !selected || !source}
+                            onClick={() =>
+                              void act(
+                                () =>
+                                  post("sources", {
+                                    universityId: selected,
+                                    startUrl: source,
+                                    purpose,
+                                    allowSubdomains: subdomains,
+                                    browserRendering: browser,
+                                  }),
+                                "Source approved",
+                              )
+                            }
+                          >
+                            Approve source
+                          </Button>
+                        </div>
+                      </details>
+                    </div>
+                  </section>
+                  <section className="panel">
+                    <h3>Research activity</h3>
+                    {!data.jobs.length && (
+                      <p className="muted">
+                        No jobs yet. Research progresses only when the worker
+                        performs real work.
+                      </p>
+                    )}
+                    {data.jobs.map((j) => (
+                      <div key={j.id} className="check">
+                        <div style={{ width: "100%" }}>
+                          <div className="actions">
+                            <strong>{j.university.name}</strong>
+                            <span
+                              className={
+                                "tag " +
+                                (j.status === "FAILED" ? "FAIL" : "UNKNOWN")
+                              }
+                            >
+                              {j.stage} · {j.status}
+                            </span>
+                          </div>
+                          <p>
+                            {j.pagesProcessed} pages processed · {j.modelCalls}{" "}
+                            model attempts · {j.tokenUsage} tokens
+                          </p>
+                          <details>
+                            <summary className="tiny">
+                              View progress log & errors
+                            </summary>
+                            <pre>
+                              {j.logs
+                                .map(
+                                  (l) =>
+                                    new Date(l.createdAt).toLocaleTimeString() +
+                                    " [" +
+                                    l.level +
+                                    "] " +
+                                    l.message,
+                                )
+                                .join("\n") ||
+                                "Queued; waiting for the worker."}
+                            </pre>
+                            {j.errors.length > 0 && (
+                              <pre>{j.errors.join("\n")}</pre>
+                            )}
+                          </details>
+                        </div>
+                      </div>
+                    ))}
+                  </section>
+                </div>
+              )}
+              {tab === "review" && (
+                <section>
+                  <h2>Evidence awaiting review</h2>
+                  <p className="muted">
+                    Read the source, correct the JSON if needed, then approve or
+                    reject. Approval is the only path to administrator-verified
+                    data.
+                  </p>
+                  {!data.candidates.length && (
+                    <div className="panel muted">
+                      The review queue is clear.
+                    </div>
+                  )}
+                  {data.candidates.map((c) => (
+                    <Review
+                      key={c.id}
+                      candidate={c}
+                      busy={busy}
+                      onReview={(action, payload, complete) =>
+                        act(
+                          () =>
+                            post("review", {
+                              id: c.id,
+                              action,
+                              payload,
+                              requirementsComplete: complete,
+                            }),
+                          action === "APPROVE"
+                            ? "Reviewed facts published to the real catalog."
+                            : "Candidate rejected.",
+                        )
+                      }
+                    />
+                  ))}
+                </section>
+              )}
+            </div>
+          </div>
         </>
       )}
     </>
