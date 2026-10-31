@@ -692,13 +692,16 @@ export function assembleBundle<P extends Page>(
 
 const LANGUAGE_STATEMENT =
   /[^.\n]*\b(?:English (?:is|as) the medium of instruction|medium of instruction[^.\n]{0,80}?\b(?:is|will be) English)\b[^.\n]*\.?/i;
+const BILINGUAL_STATEMENT =
+  /[^.\n]*\badopted bilingualism and biculturalism as the basis of teaching\b[^.\n]*\.?/i;
 /**
  * Teaching language is rarely printed on a program page. When an official page states it for the whole
  * institution ("English is the medium of instruction ..."), return that sentence so a reviewer can see it.
  */
 export function institutionTeachingLanguage(sources: Map<string, string>) {
   for (const [url, text] of sources) {
-    const hit = squashSpace(text).match(LANGUAGE_STATEMENT);
+    const squashed = squashSpace(text);
+    const hit = squashed.match(LANGUAGE_STATEMENT);
     if (hit)
       return {
         url,
@@ -706,6 +709,13 @@ export function institutionTeachingLanguage(sources: Map<string, string>) {
         language: /\b(except|unless)\b/i.test(hit[0])
           ? "English (with exceptions)"
           : "English",
+      };
+    const bilingual = squashed.match(BILINGUAL_STATEMENT);
+    if (bilingual)
+      return {
+        url,
+        sentence: bilingual[0].trim(),
+        language: "English and Chinese (bilingual teaching)",
       };
   }
   return null;

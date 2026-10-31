@@ -144,12 +144,14 @@ export const pages: { universityId: string; url: string; program?: string }[] =
       "https://www.admissions.hku.hk/apply/international-qualifications",
       "https://www.admissions.hku.hk/fees-and-scholarships/fees",
       "https://www.admissions.hku.hk/fees-and-scholarships/scholarships",
+      "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
     ].map((url) => ({ universityId: "hku", url })),
     ...[
       "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/requirements/",
       "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/important-dates/",
       "https://admission.cuhk.edu.hk/fees-financing-your-studies/fees/",
       "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/",
+      "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/faq/",
     ].map((url) => ({ universityId: "cuhk", url })),
     ...[
       "https://admissions.hkbu.edu.hk/admissions/international-qualifications.html",
@@ -160,6 +162,13 @@ export const pages: { universityId: string; url: string; program?: string }[] =
       "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/fees",
       "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/scholarships",
       "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-frequently",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-general",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-english",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-preferred",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-key-dates",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-additional",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-tuition-fees",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-other-fees-and",
     ].map((url) => ({ universityId: "polyu", url })),
   ];
 // Stand-ins that duplicate a registered degree.

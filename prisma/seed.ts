@@ -49,7 +49,7 @@ try {
   await seedEvidence();
   await seedRegistry();
   console.log(
-    "Seeded 10 real institutions and program discovery records. A dated Debrecen source snapshot supplies tuition and two manual-review conditions; other requirements and costs remain unknown. No fictional records were inserted.",
+    "Seeded the real institutions and program discovery records. A dated Debrecen source snapshot supplies tuition and two manual-review conditions; other requirements and costs remain unknown. No fictional records were inserted.",
   );
 } finally {
   await db.$disconnect();

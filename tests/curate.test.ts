@@ -48,6 +48,14 @@ describe("curate", () => {
     expect(result.payload.program?.duration).toBeNull();
     expect(result.dropped.join()).toContain("not printed");
   });
+  it("turns the words null and N/A into missing values", () => {
+    const input = base();
+    input.program!.teachingLanguage = "null";
+    input.program!.duration = "N/A";
+    const { payload } = curate(input, pages);
+    expect(payload.program?.teachingLanguage).toBeNull();
+    expect(payload.program?.duration).toBeNull();
+  });
   it("drops typed rules whose number is missing from the quote", () => {
     const result = curate(
       base({
@@ -132,12 +140,35 @@ describe("curate", () => {
     );
     expect(result.payload.requirements).toHaveLength(0);
   });
-  it("leaves scholarships for manual review", () => {
+  it("keeps a quoted scholarship and clears claims its quote does not state", () => {
+    const quote =
+      "The Entrance Scholarship is awarded to selected students admitted to the School each year";
+    const scholarship = {
+      name: "Entrance Scholarship",
+      provider: "U",
+      officialUrl: "https://u.example/s",
+      degreeLevels: ["BACHELOR"],
+      nationalities: [],
+      rules: [],
+      tuitionCoverage: 1,
+      stipendAmount: null,
+      currency: null,
+      accommodation: null,
+      travel: null,
+      insurance: null,
+      deadline: null,
+      renewalConditions: null,
+      fundingCategory: "GUARANTEED",
+      excerpt: quote,
+      sourceUrl: null,
+    };
     const result = curate(
-      base({ scholarships: [{ name: "X" } as never] }),
+      base({ scholarships: [scholarship, { ...scholarship }] as never }),
       pages,
     );
-    expect(result.payload.scholarships).toHaveLength(0);
+    expect(result.payload.scholarships).toHaveLength(1);
+    expect(result.payload.scholarships[0].tuitionCoverage).toBeNull();
+    expect(result.payload.scholarships[0].fundingCategory).toBe("UNKNOWN");
   });
 });
 

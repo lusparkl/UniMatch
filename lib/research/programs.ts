@@ -19,7 +19,7 @@ import {
   salvageExcerpt,
 } from "./relevance";
 
-const PROMPT_VERSION = "program-v18";
+const PROMPT_VERSION = "program-v19";
 
 type Log = (message: string, level?: string) => Promise<void>;
 
@@ -53,6 +53,9 @@ export async function extractRegisteredPrograms(
     university.sources
       .filter((s) => isRegistry(s.purpose) && registryScope(s.purpose))
       .map((s) => [s.startUrl, registryScope(s.purpose)!]),
+  );
+  const purposeOf = new Map(
+    university.sources.map((s) => [s.startUrl, s.purpose]),
   );
   let candidates = 0;
   for (const program of university.programs) {
@@ -104,6 +107,14 @@ export async function extractRegisteredPrograms(
         text,
       });
       if (payload.program) {
+        // A model sometimes writes the word "null" instead of leaving a field empty.
+        for (const key of ["teachingLanguage", "duration"] as const)
+          if (
+            /^\s*(null|none|n\/a|unknown)?\s*$/i.test(
+              payload.program[key] ?? "x",
+            )
+          )
+            payload.program[key] = null;
         payload.program.title = program.title;
         payload.program.degreeLevel = program.degreeLevel;
         payload.program.officialUrl = program.officialUrl;
@@ -179,7 +190,14 @@ export async function extractRegisteredPrograms(
       payload.intakes = once(payload.intakes);
       const language =
         payload.program && !payload.program.teachingLanguage
-          ? institutionTeachingLanguage(sources)
+          ? institutionTeachingLanguage(
+              // Any registered page may carry the statement, including pages left out of the model input.
+              new Map(
+                documents
+                  .filter((d) => isRegistry(purposeOf.get(d.url) ?? ""))
+                  .map((d) => [d.url, d.text]),
+              ),
+            )
           : null;
       if (payload.program && language)
         payload.program.teachingLanguage = language.language;

@@ -67,13 +67,27 @@ export function curate(
   const drop = (kind: string, why: string) =>
     dropped.push(`${kind} left out: ${why}`);
 
+  // A model sometimes writes the word "null" (or "N/A") instead of leaving a field empty.
+  const placeholder =
+    /^\s*(null|none|n\/a|na|unknown|not (stated|specified|available)|-+)?\s*$/i;
+  if (payload.program) {
+    if (
+      payload.program.teachingLanguage &&
+      placeholder.test(payload.program.teachingLanguage)
+    )
+      payload.program.teachingLanguage = null;
+    if (payload.program.duration && placeholder.test(payload.program.duration))
+      payload.program.duration = null;
+  }
   // Program: a duration is kept only if the cited page prints it.
   if (payload.program?.duration) {
-    const page = squash(
-      pageTexts.get(payload.program.sourceUrl ?? "") ??
-        [...pageTexts.values()].join(" "),
+    const wanted = squash(payload.program.duration).toLowerCase();
+    // The cited page first, then any other registered official page of the same university.
+    const cited = squash(
+      pageTexts.get(payload.program.sourceUrl ?? "") ?? "",
     ).toLowerCase();
-    if (!page.includes(squash(payload.program.duration).toLowerCase())) {
+    const anywhere = squash([...pageTexts.values()].join(" ")).toLowerCase();
+    if (!cited.includes(wanted) && !anywhere.includes(wanted)) {
       drop("duration", `"${payload.program.duration}" not printed on the page`);
       payload.program.duration = null;
     }
@@ -217,13 +231,58 @@ export function curate(
   payload.documents = unique(payload.documents, (d) =>
     squash(d.name).toLowerCase(),
   );
-  // Scholarship terms in these pages are vague and competitive; they stay "not verified" rather than half-described.
-  if (payload.scholarships.length) {
-    drop(
-      "scholarships",
-      `${payload.scholarships.length} left for manual review`,
-    );
-    payload.scholarships = [];
-  }
+  // Scholarships: kept only with a substantive quote, a name the quote contains, and terms the quote states.
+  const seenNames = new Set<string>();
+  payload.scholarships = payload.scholarships.flatMap((sch) => {
+    const quote = squash(sch.excerpt);
+    const key = squash(sch.name).toLowerCase();
+    if (quote.length < 60 || key.length < 4 || seenNames.has(key)) {
+      drop(`scholarship ${sch.name}`, "thin quote or duplicate");
+      return [];
+    }
+    seenNames.add(key);
+    const scholarship = { ...sch };
+    if (
+      scholarship.tuitionCoverage !== null &&
+      !/\b\d{1,3}\s*%|\b(full|half|entire|whole)\b/i.test(quote)
+    ) {
+      drop(`scholarship ${sch.name} coverage`, "quote states no coverage");
+      scholarship.tuitionCoverage = null;
+    }
+    if (
+      scholarship.fundingCategory === "GUARANTEED" &&
+      !/\b(automatic\w*|guarantee\w*|all (admitted|eligible|successful))\b/i.test(
+        quote,
+      )
+    ) {
+      drop(
+        `scholarship ${sch.name} category`,
+        "quote does not guarantee the award",
+      );
+      scholarship.fundingCategory = "UNKNOWN";
+    }
+    if (
+      scholarship.deadline &&
+      !DEADLINE_WORDS.test(labelWindow(quote, scholarship.deadline) ?? "")
+    ) {
+      drop(
+        `scholarship ${sch.name} deadline`,
+        "quote does not label the date as a deadline",
+      );
+      scholarship.deadline = null;
+    }
+    scholarship.rules = scholarship.rules.filter((r) => {
+      const ok =
+        squash(r.excerpt).length >= 40 &&
+        (r.minimum === null ||
+          new RegExp(`(^|[^\\d.])${r.minimum}([^\\d]|$)`).test(
+            squash(r.excerpt),
+          ));
+      if (!ok)
+        drop(`scholarship ${sch.name} rule`, "thin quote or number missing");
+      return ok;
+    });
+    return [scholarship];
+  });
   return { payload, dropped };
 }

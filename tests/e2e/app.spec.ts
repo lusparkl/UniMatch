@@ -68,7 +68,7 @@ test("admin routes reject anonymous callers and cross-origin writes", async ({
     (
       await request.post("/api/admin/research", {
         headers: { Origin: "http://localhost:3001" },
-        data: { universityId: "mit", targets: ["admissions"] },
+        data: { universityId: "hkust", targets: ["admissions"] },
       })
     ).status(),
   ).toBe(401);
@@ -106,13 +106,13 @@ test("admin authentication, polling and honest missing-key error", async ({
   await page.getByRole("button", { name: "Research", exact: true }).click();
   await page
     .getByRole("combobox", { name: "Approved university", exact: true })
-    .selectOption("mit");
+    .selectOption("hkust");
   await expect(
     page.getByRole("button", { name: "Research / refresh" }),
   ).toBeDisabled();
   const response = await page.request.post("/api/admin/research", {
     headers: { Origin: "http://localhost:3001" },
-    data: { universityId: "mit", targets: ["admissions"] },
+    data: { universityId: "hkust", targets: ["admissions"] },
   });
   expect(response.status()).toBe(503);
   expect(await response.json()).toMatchObject({
