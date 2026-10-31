@@ -15,9 +15,11 @@ import {
   pruneClaims,
   widenExcerpt,
   snapExcerpt,
+  institutionTeachingLanguage,
+  salvageExcerpt,
 } from "./relevance";
 
-const PROMPT_VERSION = "program-v12";
+const PROMPT_VERSION = "program-v18";
 
 type Log = (message: string, level?: string) => Promise<void>;
 
@@ -118,10 +120,10 @@ export async function extractRegisteredPrograms(
       ];
       for (const claim of claims) {
         const own = claim.sourceUrl ? sources.get(claim.sourceUrl) : undefined;
-        const snapped = snapExcerpt(
-          claim.excerpt,
-          own ?? [...sources.values()].join("\n"),
-        );
+        const haystack = own ?? [...sources.values()].join("\n");
+        const snapped =
+          snapExcerpt(claim.excerpt, haystack) ??
+          salvageExcerpt(claim.excerpt, haystack);
         if (snapped && snapped.length >= 12) claim.excerpt = snapped;
       }
       // Fold in claims from recent runs that this run missed; they must still be quoted on the current pages.
@@ -162,10 +164,33 @@ export async function extractRegisteredPrograms(
         ...dropUnquoted(payload, sources),
         ...pruneClaims(payload),
       ];
+      // Dedupe identical cost and intake entries (merged runs repeat them).
+      const once = <T>(list: T[]) => [
+        ...new Map(
+          list.map((v) => [
+            JSON.stringify(v, (k, x) =>
+              k === "excerpt" || k === "sourceUrl" ? undefined : x,
+            ),
+            v,
+          ]),
+        ).values(),
+      ];
+      payload.costs = once(payload.costs);
+      payload.intakes = once(payload.intakes);
+      const language =
+        payload.program && !payload.program.teachingLanguage
+          ? institutionTeachingLanguage(sources)
+          : null;
+      if (payload.program && language)
+        payload.program.teachingLanguage = language.language;
       const issues = validateEvidence(payload, sources, (url) =>
         allowedUrl(url, university.sources),
       );
       issues.push(...pruned.map((p) => "Pruned: " + p));
+      if (language)
+        issues.push(
+          `Teaching language "${language.language}" comes from an institution-wide statement, not a program page: "${language.sentence}" (${language.url})`,
+        );
       if (payload.program)
         issues.push(
           ...programTitleIssues(

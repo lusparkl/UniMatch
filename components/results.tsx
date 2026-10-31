@@ -35,24 +35,65 @@ export const money = (amount: number | null, currency: string | null) =>
         currency,
         maximumFractionDigits: 0,
       }).format(amount);
-/** Earliest verified deadline for the student's intake (any intake without a profile), formatted for display. */
+/** Annual cost headline: the full total when known, otherwise only the verified parts, never a guess. */
+export const costHeadline = (
+  program: Program,
+  remaining: number | null,
+  currency: string | null,
+) => {
+  if (remaining !== null) return money(remaining, currency);
+  const annual = program.costs.filter(
+    (c) => trusted(c.status) && c.period === "ANNUAL",
+  );
+  // Separate quotes for tuition, living and fees are never added up; only a single tuition figure is surfaced.
+  const tuitions = [
+    ...new Set(annual.flatMap((c) => (c.tuition === null ? [] : [c.tuition]))),
+  ];
+  const tuitionCurrency =
+    annual.find((c) => c.tuition !== null)?.currency ?? null;
+  return tuitions.length === 1
+    ? "Partial · tuition " +
+        money(tuitions[0], tuitionCurrency) +
+        " only; total not verified"
+    : "Information unavailable";
+};
+const sameTerm = (a: string, b: string) => {
+  const norm = (t: string) => {
+    const v = t.trim().toLowerCase();
+    return v === "autumn" ? "fall" : v;
+  };
+  return norm(a) === norm(b);
+};
+/**
+ * Next verified application deadline for the student's intake (any intake without a profile). A date the
+ * source gives without a time zone is still shown, marked as such; the matching engine keeps requiring one.
+ */
 export const nextDeadline = (program: Program, profile: Profile | null) => {
-  const intake = program.intakes
+  const [year, term] = profile ? profile.intake.split("-") : [];
+  const dated = program.intakes
     .filter(
       (i) =>
         trusted(i.status) &&
         i.deadline &&
-        i.timezone &&
-        (!profile || profile.intake === i.academicYear + "-" + i.term),
+        (!profile ||
+          (i.academicYear === year &&
+            (i.term.toUpperCase() === "UNKNOWN" || sameTerm(i.term, term)))),
     )
-    .sort((a, b) => a.deadline!.localeCompare(b.deadline!))[0];
-  return intake?.deadline
-    ? new Date(intake.deadline).toLocaleDateString("en", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    : "Not verified";
+    .sort((a, b) => a.deadline!.localeCompare(b.deadline!));
+  const now = new Date().toISOString();
+  const intake = dated.find((i) => i.deadline! >= now) ?? dated.at(-1);
+  if (!intake?.deadline) return "Not verified";
+  const label = new Date(intake.deadline).toLocaleDateString("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+  return (
+    label +
+    (intake.deadline < now ? " (passed)" : "") +
+    (intake.timezone ? "" : " · time zone not stated")
+  );
 };
 export function Results({ programs }: { programs: Program[] }) {
   const [profile, setProfile] = useState<Profile | null>(null),
@@ -331,6 +372,9 @@ export function Results({ programs }: { programs: Program[] }) {
                 <span className="tag">
                   {m.program.teachingLanguage ?? "Language not verified"}
                 </span>
+                <span className="tag">
+                  {m.program.duration ?? "Duration not verified"}
+                </span>
                 {m.program.demo && (
                   <span className="tag UNKNOWN">Fictional demo</span>
                 )}
@@ -347,7 +391,11 @@ export function Results({ programs }: { programs: Program[] }) {
                 <div>
                   <div className="metric-label">Annual cost · before aid</div>
                   <div className="metric-value">
-                    {money(m.scenarios[0].remaining, m.scenarios[0].currency)}
+                    {costHeadline(
+                      m.program,
+                      m.scenarios[0].remaining,
+                      m.scenarios[0].currency,
+                    )}
                   </div>
                 </div>
                 <div>

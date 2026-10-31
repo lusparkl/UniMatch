@@ -86,8 +86,12 @@ export async function crawlSources(
   sources: (SourcePolicy & { startUrl: string; browserRendering: boolean })[],
   onDocument: (doc: CrawledDocument) => Promise<void>,
   log: (message: string) => Promise<void>,
+  maxDepth?: number,
 ) {
-  const config = limits();
+  const config = {
+    ...limits(),
+    ...(maxDepth === undefined ? {} : { depth: maxDepth }),
+  };
   const fetcher = new SafeFetcher(sources);
   let processed = 0;
   const seenHashes = new Set<string>(),

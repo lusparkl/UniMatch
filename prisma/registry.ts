@@ -50,12 +50,57 @@ export const programs: Entry[] = [
       "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/",
   },
   {
+    universityId: "hku",
+    title:
+      "Bachelor of Engineering in Artificial Intelligence and Data Science",
+    degreeLevel: "BACHELOR",
+    fieldOfStudy: "Artificial Intelligence and Data Science",
+    officialUrl:
+      "https://www.cds.hku.hk/prospective-students/undergraduate-old-2026/6999-computing-and-data-science/",
+  },
+  {
     universityId: "polyu",
     title:
       "Computing and AI (Computer Science / Enterprise Information Systems) - BSc (Hons) Scheme",
     degreeLevel: "BACHELOR",
     fieldOfStudy: "Computer Science",
     officialUrl: "https://www.polyu.edu.hk/study/ug/jupas/2027/js3868",
+  },
+  {
+    universityId: "cuhk",
+    title: "Computer Science and Engineering",
+    degreeLevel: "BACHELOR",
+    fieldOfStudy: "Computer Science and Engineering",
+    officialUrl: "https://admission.cuhk.edu.hk/programme/bcsen/",
+  },
+  {
+    universityId: "cuhk",
+    title: "Artificial Intelligence: Systems and Technologies",
+    degreeLevel: "BACHELOR",
+    fieldOfStudy: "Artificial Intelligence",
+    officialUrl: "https://admission.cuhk.edu.hk/programme/aistn/",
+  },
+  {
+    universityId: "cuhk",
+    title: "Computational Data Science",
+    degreeLevel: "BACHELOR",
+    fieldOfStudy: "Data Science",
+    officialUrl: "https://admission.cuhk.edu.hk/programme/cdasn/",
+  },
+  {
+    universityId: "cuhk",
+    title: "Information Engineering",
+    degreeLevel: "BACHELOR",
+    fieldOfStudy: "Information Engineering",
+    officialUrl: "https://admission.cuhk.edu.hk/programme/iergn/",
+  },
+  {
+    universityId: "hkbu",
+    title: "Bachelor of Science (Hons)",
+    degreeLevel: "BACHELOR",
+    fieldOfStudy: "Computer Science (one of the science majors)",
+    officialUrl:
+      "https://admissions.hkbu.edu.hk/programmes/faculty-of-science/bachelor-of-science-hons-year1.html",
   },
 ];
 // Institution-level pages for non-local applicants: international qualifications, fees, scholarships.
@@ -70,6 +115,7 @@ export const pages: { universityId: string; url: string; program?: string }[] =
       "https://join.hkust.edu.hk/admissions/international-qualifications",
       "https://join.hkust.edu.hk/fees-and-scholarships",
       "https://seng.hkust.edu.hk/academics/undergraduate/faq-info-for-non-jupas-and-non-local-students",
+      "https://join.hkust.edu.hk/admissions",
     ].map((url) => ({ universityId: "hkust", url })),
     // One curriculum plus one English test per page: IB/IELTS, A-level/TOEFL, SAT-AP/Duolingo, Canada/PTE, Australia, India.
     ...[
@@ -100,9 +146,20 @@ export const pages: { universityId: string; url: string; program?: string }[] =
       "https://www.admissions.hku.hk/fees-and-scholarships/scholarships",
     ].map((url) => ({ universityId: "hku", url })),
     ...[
+      "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/requirements/",
+      "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/important-dates/",
+      "https://admission.cuhk.edu.hk/fees-financing-your-studies/fees/",
+      "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/",
+    ].map((url) => ({ universityId: "cuhk", url })),
+    ...[
+      "https://admissions.hkbu.edu.hk/admissions/international-qualifications.html",
+      "https://admissions.hkbu.edu.hk/fees-and-scholarships.html",
+    ].map((url) => ({ universityId: "hkbu", url })),
+    ...[
       "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications",
       "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/fees",
       "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/scholarships",
+      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-frequently",
     ].map((url) => ({ universityId: "polyu", url })),
   ];
 // Stand-ins that duplicate a registered degree.
@@ -174,6 +231,13 @@ export async function seedRegistry() {
         },
       },
     });
+  // www.cuhk.edu.hk/english/admissions/* serves unrelated search-spam pages; the real site is admission.cuhk.edu.hk.
+  await db.approvedSource.deleteMany({
+    where: {
+      universityId: "cuhk",
+      startUrl: { startsWith: "https://www.cuhk.edu.hk/english/admissions/" },
+    },
+  });
   for (const r of retired)
     await db.degreeProgram.updateMany({
       where: r,

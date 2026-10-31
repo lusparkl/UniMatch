@@ -151,6 +151,63 @@ describe("excerpt snapping", () => {
   });
 });
 
+describe("excerpt salvage", () => {
+  const page =
+    "2027-2028 annual tuition fees for non-local students\n HK$230,000 per annum\n Accommodation is optional and costs extra";
+  it("keeps the verbatim run of a quotation joined with an ellipsis", async () => {
+    const { salvageExcerpt } = await import("../lib/research/relevance");
+    expect(
+      salvageExcerpt(
+        "2027-2028 annual tuition fees for non-local students HK$230,000 per annum ... CUHK has eight faculties",
+        page,
+      ),
+    ).toBe(
+      "2027-2028 annual tuition fees for non-local students HK$230,000 per annum",
+    );
+  });
+  it("refuses to shorten when the cut text held a hedge", async () => {
+    const { salvageExcerpt } = await import("../lib/research/relevance");
+    expect(
+      salvageExcerpt(
+        "2027-2028 annual tuition fees for non-local students HK$230,000 per annum, but only for some applicants",
+        page,
+      ),
+    ).toBeNull();
+  });
+  it("returns null when nothing is verbatim", async () => {
+    const { salvageExcerpt } = await import("../lib/research/relevance");
+    expect(
+      salvageExcerpt("Tuition for everybody is HK$1 per year in total", page),
+    ).toBeNull();
+  });
+});
+
+describe("institution teaching language", () => {
+  it("returns the sentence and flags exceptions", async () => {
+    const { institutionTeachingLanguage } =
+      await import("../lib/research/relevance");
+    const hit = institutionTeachingLanguage(
+      new Map([
+        ["https://a.example/x", "Fees apply."],
+        [
+          "https://a.example/faq",
+          "Are all courses taught in English?\n English is the medium of instruction for classes, except for Chinese-related subjects. More text.",
+        ],
+      ]),
+    );
+    expect(hit?.language).toBe("English (with exceptions)");
+    expect(hit?.url).toBe("https://a.example/faq");
+    expect(hit?.sentence).toContain("medium of instruction");
+  });
+  it("returns null without a statement", async () => {
+    const { institutionTeachingLanguage } =
+      await import("../lib/research/relevance");
+    expect(
+      institutionTeachingLanguage(new Map([["u", "Nothing relevant."]])),
+    ).toBeNull();
+  });
+});
+
 type Req = {
   type: string;
   allowed: string[];

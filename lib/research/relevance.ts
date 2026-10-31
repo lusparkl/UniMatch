@@ -256,6 +256,41 @@ export function snapExcerpt(excerpt: string, sourceText: string) {
   return null;
 }
 
+const QUALIFIER =
+  /\b(up to|maximum|may|might|not|except|unless|excluding|only|competitive)\b/i;
+/**
+ * Last resort for a quote that is not verbatim (an ellipsis, an added or reworded phrase): the longest run of
+ * consecutive words that does occur in the source. Refused when the discarded words held a hedge or negation,
+ * so shortening never turns a conditional claim into a firm one. Later checks still verify every value against
+ * the returned passage.
+ */
+export function salvageExcerpt(excerpt: string, sourceText: string) {
+  const source = squashSpace(sourceText);
+  const words = squashSpace(excerpt.replace(/\.{3}|…/g, " ")).split(" ");
+  if (words.length < 5) return null;
+  let best: { start: number; end: number } | null = null;
+  for (let i = 0; i < words.length - 4; i++) {
+    if (best && words.length - i <= best.end - best.start) break;
+    if (!source.includes(words.slice(i, i + 5).join(" "))) continue;
+    let lo = i + 5,
+      hi = words.length;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (source.includes(words.slice(i, mid).join(" "))) lo = mid;
+      else hi = mid - 1;
+    }
+    if (!best || lo - i > best.end - best.start) best = { start: i, end: lo };
+  }
+  if (!best) return null;
+  const kept = words.slice(best.start, best.end).join(" ");
+  const dropped = [
+    ...words.slice(0, best.start),
+    ...words.slice(best.end),
+  ].join(" ");
+  if (kept.length < 30 || QUALIFIER.test(dropped)) return null;
+  return kept;
+}
+
 const digits = (value: string) => value.replace(/[,\s ]/g, "");
 /** True when the amount's digits appear in the excerpt (thousands separators ignored). */
 const amountIn = (amount: number, excerpt: string) =>
@@ -461,7 +496,8 @@ export function widenExcerpt(
   let start = at;
   let end = at + wanted.length;
   for (const needle of needles) {
-    if (wanted.includes(needle)) continue;
+    // Same word-boundary test as the evidence check: "2027" inside "20270630" does not count.
+    if (new RegExp(`\\b${needle}\\b`).test(wanted)) continue;
     // Nearest occurrence to the excerpt, before or after.
     const before = source.lastIndexOf(needle, at);
     const after = source.indexOf(needle, end - needle.length);
@@ -494,7 +530,9 @@ export function dropUnquoted(
     const page = c.sourceUrl ? squashed.get(c.sourceUrl) : undefined;
     const good = page !== undefined && page.includes(squashSpace(c.excerpt));
     if (!good)
-      dropped.push(`${kind} dropped: excerpt not verbatim in its cited page`);
+      dropped.push(
+        `${kind} dropped: excerpt not verbatim in its cited page: ${c.excerpt.slice(0, 300)}`,
+      );
     return good;
   };
   payload.requirements = payload.requirements.filter((c) =>
@@ -650,4 +688,25 @@ export function assembleBundle<P extends Page>(
     shed,
     sizes: parts.map((p) => [p.doc.url, p.part.length] as const),
   };
+}
+
+const LANGUAGE_STATEMENT =
+  /[^.\n]*\b(?:English (?:is|as) the medium of instruction|medium of instruction[^.\n]{0,80}?\b(?:is|will be) English)\b[^.\n]*\.?/i;
+/**
+ * Teaching language is rarely printed on a program page. When an official page states it for the whole
+ * institution ("English is the medium of instruction ..."), return that sentence so a reviewer can see it.
+ */
+export function institutionTeachingLanguage(sources: Map<string, string>) {
+  for (const [url, text] of sources) {
+    const hit = squashSpace(text).match(LANGUAGE_STATEMENT);
+    if (hit)
+      return {
+        url,
+        sentence: hit[0].trim(),
+        language: /\b(except|unless)\b/i.test(hit[0])
+          ? "English (with exceptions)"
+          : "English",
+      };
+  }
+  return null;
 }

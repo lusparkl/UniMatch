@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { loadProfile, usePriorities } from "./account-client";
 import { PriorityButton } from "./priority-button";
 import { ReadinessPanel } from "./readiness-panel";
-import { money, nextDeadline, statusLabel } from "./results";
+import { costHeadline, money, nextDeadline, statusLabel } from "./results";
 import {
   defaultProfile,
   type Evidence,
@@ -94,7 +94,7 @@ export function UniversityDetail({
       <h1>{p.university}</h1>
       <p className="muted">
         {p.title} · {p.teachingLanguage ?? "Teaching language not verified"} ·{" "}
-        {degree} program
+        {p.duration ?? "Duration not verified"} · {degree} program
       </p>
       {p.demo && (
         <div className="notice">
@@ -141,7 +141,11 @@ export function UniversityDetail({
           <div>
             <div className="metric-label">Annual cost · before aid</div>
             <div className="metric-value">
-              {money(base.scenarios[0].remaining, base.scenarios[0].currency)}
+              {costHeadline(
+                p,
+                base.scenarios[0].remaining,
+                base.scenarios[0].currency,
+              )}
             </div>
           </div>
           <div>
@@ -255,7 +259,10 @@ export function UniversityDetail({
                 >
                   <p>
                     {trusted(i.status) && i.deadline
-                      ? new Date(i.deadline).toLocaleString() +
+                      ? new Date(i.deadline).toLocaleDateString("en", {
+                          dateStyle: "long",
+                          timeZone: "UTC",
+                        }) +
                         " · " +
                         (i.timezone ?? "Timezone not verified")
                       : "Deadline not verified"}

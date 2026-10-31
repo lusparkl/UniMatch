@@ -18,7 +18,14 @@ export async function reviewCandidate(
   administrator: string,
   revised?: unknown,
   requirementsComplete = false,
+  options: {
+    /** Verification written to the published rows; defaults to a human administrator's ADMIN_VERIFIED. */
+    status?: "ADMIN_VERIFIED" | "SOURCE_BACKED";
+    /** Drop the program's earlier facts first, so a fresh extraction supersedes stale rows. */
+    replace?: boolean;
+  } = {},
 ) {
+  const status = options.status ?? "ADMIN_VERIFIED";
   return db.$transaction(
     async (tx) => {
       const candidate = await tx.extractionCandidate.findUniqueOrThrow({
@@ -110,10 +117,10 @@ export async function reviewCandidate(
                   ? page.text.indexOf(excerpt)
                   : null,
               retrievedAt: page.retrievedAt,
-              verifiedAt: new Date(),
+              verifiedAt: status === "ADMIN_VERIFIED" ? new Date() : null,
               contentHash: page.contentHash,
               relevantAcademicYear: payload.academicYear,
-              verificationStatus: "ADMIN_VERIFIED",
+              verificationStatus: status,
             },
           });
         }
@@ -164,10 +171,29 @@ export async function reviewCandidate(
               },
               update: {
                 published: true,
+                officialUrl: payload.program.officialUrl,
+                // Newly extracted values fill gaps; a missing value never erases a stored one.
+                ...(payload.program.teachingLanguage
+                  ? { teachingLanguage: payload.program.teachingLanguage }
+                  : {}),
+                ...(payload.program.duration
+                  ? { duration: payload.program.duration }
+                  : {}),
                 ...(requirementsComplete ? { requirementsComplete: true } : {}),
               },
             })
           : null;
+        if (options.replace && p) {
+          await tx.admissionRequirement.deleteMany({
+            where: { programId: p.id },
+          });
+          await tx.applicationIntake.deleteMany({ where: { programId: p.id } });
+          await tx.costEstimate.deleteMany({ where: { programId: p.id } });
+          await tx.requiredDocument.deleteMany({ where: { programId: p.id } });
+          await tx.scholarshipEligibility.deleteMany({
+            where: { programId: p.id },
+          });
+        }
         for (const r of payload.requirements) {
           // Explicit approval replaces matching condition labels only, retaining audit payloads and source versions.
           await tx.admissionRequirement.deleteMany({
@@ -186,7 +212,7 @@ export async function reviewCandidate(
               thresholds: { minimum: r.minimum, scale: r.scale },
               applicableNationalities: r.appliesToNationalities,
               applicableQualifications: r.appliesToQualifications,
-              verificationStatus: "ADMIN_VERIFIED",
+              verificationStatus: status,
               sourceEvidenceId: e.id,
             },
           });
@@ -196,8 +222,11 @@ export async function reviewCandidate(
             where: {
               programId: p!.id,
               academicYear: i.academicYear,
-              intakeTerm: i.term,
-              applicationRoute: i.route,
+              // The same entry year and deadline is one fact, whatever the page calls the term or route.
+              OR: [
+                { intakeTerm: i.term, applicationRoute: i.route },
+                ...(i.deadline ? [{ deadline: new Date(i.deadline) }] : []),
+              ],
             },
           });
           const e = await evidence(i.excerpt, i.sourceUrl);
@@ -210,7 +239,7 @@ export async function reviewCandidate(
               openDate: i.openDate,
               deadline: i.deadline,
               deadlineTimezone: i.timezone,
-              verificationStatus: "ADMIN_VERIFIED",
+              verificationStatus: status,
               status: "PUBLISHED",
               sourceEvidenceId: e.id,
             },
@@ -230,7 +259,7 @@ export async function reviewCandidate(
               additionalCosts: c.other,
               currency: c.currency,
               period: c.period,
-              verificationStatus: "ADMIN_VERIFIED",
+              verificationStatus: status,
               sourceEvidenceId: e.id,
             },
           });
@@ -254,7 +283,7 @@ export async function reviewCandidate(
               applicationDeadline: s.deadline,
               renewalConditions: s.renewalConditions,
               fundingCategory: s.fundingCategory,
-              verificationStatus: "ADMIN_VERIFIED",
+              verificationStatus: status,
               sourceEvidenceId: e.id,
             },
           });
@@ -357,7 +386,7 @@ export async function reviewCandidate(
         where: { id },
         data: {
           payload,
-          status: action === "APPROVE" ? "ADMIN_VERIFIED" : "UNKNOWN",
+          status: action === "APPROVE" ? status : "UNKNOWN",
           reviewedAt: new Date(),
         },
       });

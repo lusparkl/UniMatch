@@ -103,6 +103,7 @@ export type Program = {
   degreeLevel: "BACHELOR" | "MASTER";
   fieldOfStudy: string;
   teachingLanguage: string | null;
+  duration?: string | null;
   officialUrl: string;
   demo: boolean;
   requirementsComplete: boolean;

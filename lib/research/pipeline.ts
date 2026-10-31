@@ -44,9 +44,12 @@ export async function runResearch(jobId: string) {
   const programMode = job.university.sources.some((s) => isRegistry(s.purpose));
   await stage("Crawling");
   // Registry pages (international admission, fees, program pages) are crawled before generic hubs.
-  const sources = [...job.university.sources].sort(
-    (a, b) => Number(isRegistry(b.purpose)) - Number(isRegistry(a.purpose)),
-  );
+  // Program mode extracts only from the curated registry pages, so it fetches exactly those (no link following).
+  const sources = [...job.university.sources]
+    .filter((s) => !programMode || isRegistry(s.purpose))
+    .sort(
+      (a, b) => Number(isRegistry(b.purpose)) - Number(isRegistry(a.purpose)),
+    );
   await crawlSources(
     sources,
     async (d) => {
@@ -291,6 +294,7 @@ export async function runResearch(jobId: string) {
     async (message) => {
       await log(message, message.startsWith("FAILED") ? "ERROR" : "INFO");
     },
+    programMode ? 0 : undefined,
   );
   if (programMode) {
     candidates += await extractRegisteredPrograms(

@@ -59,6 +59,7 @@ export async function getPrograms(forceReal = false): Promise<Program[]> {
     degreeLevel: p.degreeLevel,
     fieldOfStudy: p.fieldOfStudy,
     teachingLanguage: p.teachingLanguage,
+    duration: p.duration,
     officialUrl: p.officialUrl,
     demo: false,
     requirementsComplete: p.requirementsComplete,

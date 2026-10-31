@@ -1,9 +1,11 @@
 import { lookup } from "node:dns/promises";
 import { request as httpRequest } from "node:http";
 import { request as httpsRequest } from "node:https";
+import { rootCertificates } from "node:tls";
 import ipaddr from "ipaddr.js";
 import robotsParser from "robots-parser";
 import { limits } from "../config";
+import { INTERMEDIATE_CERTIFICATES } from "./intermediate-ca";
 export type SourcePolicy = { hostname: string; allowSubdomains: boolean };
 export const USER_AGENT = "UniMatchResearch/0.1";
 export function canonicalUrl(raw: string) {
@@ -141,6 +143,7 @@ export class SafeFetcher {
             path: u.pathname + u.search,
             method: "GET",
             servername: u.hostname,
+            ca: [...rootCertificates, ...INTERMEDIATE_CERTIFICATES],
             headers: {
               Host: u.host,
               "User-Agent": USER_AGENT,
@@ -151,16 +154,31 @@ export class SafeFetcher {
             timeout: 20000,
           },
           (response) => {
+            const declared = Number(response.headers["content-length"]);
+            if (declared > this.maxBytes) {
+              reject(new Error("Content size limit exceeded"));
+              response.destroy();
+              request.destroy();
+              return;
+            }
             const chunks: Buffer[] = [];
             let size = 0;
             response.on("data", (chunk: Buffer) => {
               size += chunk.length;
               if (size > this.maxBytes) {
+                // Rejecting first matters: destroying a response that has already started never fires "error".
+                reject(new Error("Content size limit exceeded"));
                 response.destroy();
-                request.destroy(new Error("Content size limit exceeded"));
+                request.destroy();
               } else chunks.push(chunk);
             });
             response.on("error", reject);
+            response.on("close", () => {
+              if (!response.complete)
+                reject(
+                  new Error("Connection closed before the response ended"),
+                );
+            });
             response.on("end", () =>
               resolve({
                 url,
@@ -172,9 +190,12 @@ export class SafeFetcher {
             );
           },
         );
-        request.on("timeout", () =>
-          request.destroy(new Error("Source request timed out")),
-        );
+        request.on("timeout", () => {
+          // After the response has started, destroy(err) emits nothing on the request, so reject explicitly.
+          const error = new Error("Source request timed out");
+          reject(error);
+          request.destroy(error);
+        });
         request.on("error", reject);
         request.end();
       },
