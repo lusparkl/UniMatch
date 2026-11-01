@@ -11,6 +11,23 @@ const universities = (
 ).split(",");
 // OWNER_APPROVED=1 records the project owner's explicit approval and publishes as ADMIN_VERIFIED.
 const ownerApproved = process.env.OWNER_APPROVED === "1";
+// Reviewer decisions the automatic checks cannot make: claims left out of named programs, with the reason.
+const exclusions: {
+  universityId: string;
+  title: string;
+  drop: (payload: ReturnType<typeof curate>["payload"]) => void;
+  reason: string;
+}[] = [
+  {
+    universityId: "hku",
+    title: "Bachelor of Education and Bachelor of Science",
+    drop: (p) => {
+      p.costs = p.costs.filter((c) => c.tuition === null);
+    },
+    reason:
+      "tuition left out: the fee page prices STEM and non-STEM faculties differently and does not say which applies to this Education/Science double degree",
+  },
+];
 const reviewer = ownerApproved
   ? "project owner (explicit approval of the delegated review, 2026-10-31)"
   : "claude-code (delegated by project owner; automated evidence checks)";
@@ -51,6 +68,14 @@ try {
         continue;
       }
       const { payload, dropped } = curate(parsed.data, pages);
+      for (const e of exclusions)
+        if (
+          e.universityId === universityId &&
+          e.title === payload.program?.title
+        ) {
+          e.drop(payload);
+          dropped.push(e.reason);
+        }
       if (payload.program && !payload.program.teachingLanguage) {
         const language = institutionTeachingLanguage(pages);
         if (language) {

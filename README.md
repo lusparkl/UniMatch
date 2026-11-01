@@ -54,7 +54,7 @@ PostgreSQL and Redis bind to loopback ports **5434** and **6381**, avoiding typi
 7. Approve to publish, or reject. Mark the completeness checkbox only when you actually checked the full mandatory requirement set.
 8. Open **/results** in real mode. Published facts immediately affect deterministic matching.
 
-Set `MAX_CRAWL_PAGES=1` and `MAX_AI_CALLS_PER_JOB=2` for the first experiment. Expand after inspecting results. For universities in `prisma/registry.ts` (HKU, HKUST, PolyU) research makes one model call per registered program over its best-matching stored pages; add a degree there with its official page and the institution's international-admission, fee and scholarship pages. Elsewhere pages are gated before any model call: noise URLs and pages without amounts, deadlines, test scores, funding or admission wording are saved but skipped, and an extraction that yields a program with no facts creates no candidate. Candidates whose program title is generic or absent from the source are flagged for review. Institution-wide scholarship pages may return `program:null`; these may publish scholarship options but cannot create institution-wide admission rules. Institution-wide funding still needs explicit review of scope and restrictions.
+Set `MAX_CRAWL_PAGES=1` and `MAX_AI_CALLS_PER_JOB=2` for the first experiment. Expand after inspecting results. For universities in `prisma/registry.ts` (HKU, HKUST, CUHK, PolyU, HKBU; programs listed in `prisma/registry-programs.json`) research reads the institution's international-admission, fee and scholarship pages once per university, then makes one model call per registered program over that program's own pages and merges the shared facts into its candidate. A fee page whose tuition differs by program is registered with `fees: "per-program"` and read by every program call instead. When only the institution facts change, candidates are rebuilt without new model calls. Add a degree there with its official page. Elsewhere pages are gated before any model call: noise URLs and pages without amounts, deadlines, test scores, funding or admission wording are saved but skipped, and an extraction that yields a program with no facts creates no candidate. Candidates whose program title is generic or absent from the source are flagged for review. Institution-wide scholarship pages may return `program:null`; these may publish scholarship options but cannot create institution-wide admission rules. Institution-wide funding still needs explicit review of scope and restrictions.
 
 A missing key disables submission and scheduling. A failed source or model request produces real errors, never substitute facts. Already-extracted unchanged source versions do not cause additional model calls.
 
@@ -92,10 +92,10 @@ See [.env.example](.env.example) for all defaults.
 | `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`      | Environment-configured administrator                            |
 | `NEXT_PUBLIC_APP_URL`                     | Expected browser origin, default localhost:3000                 |
 | `DEMO_MODE`                               | `DEMO_FIXTURES` or `false`                                      |
-| `MAX_CRAWL_PAGES`, `MAX_CRAWL_DEPTH`      | 12 pages, depth 3 by default                                    |
+| `MAX_CRAWL_PAGES`, `MAX_CRAWL_DEPTH`      | 12 pages (max 500), depth 3 by default                          |
 | `MAX_CONCURRENT_CRAWLS`, `CRAWL_DELAY_MS` | 2 requests, minimum 2-second domain delay                       |
 | `MAX_CONTENT_BYTES`                       | Download cap, default 2 MB per resource                         |
-| `MAX_AI_CALLS_PER_JOB`                    | 6 attempts per job, including retries                           |
+| `MAX_AI_CALLS_PER_JOB`                    | 6 attempts per job (max 500), including retries                 |
 | `MAX_AI_CONCURRENCY`                      | 1 concurrent provider call by default                           |
 | `MAX_AI_OUTPUT_TOKENS`, `AI_TIMEOUT_MS`   | Output and request bounds                                       |
 | `DAILY_AI_TOKEN_LIMIT`                    | UTC daily token budget, default 100,000                         |

@@ -1,0 +1,1859 @@
+[
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts in Architectural Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Architectural Studies",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-architectural-studies"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science in Surveying",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Surveying",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science-surveying"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts in Landscape Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Landscape Studies",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-landscape-studies"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts in Urban Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Urban Studies",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-urban-studies"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Arts",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts Elite Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Arts Elite Programme",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-elite-programme"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science and Bachelor of Laws",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Science and Laws",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science-and-bachelor-of-laws"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Finance in Asset Management and Private Banking",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Asset Management and Private Banking",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-finance-asset-management-and-private-banking"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science in Quantitative Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Quantitative Finance",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science-quantitative-finance"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Business Administration in International Business and Global Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "International Business and Global Management",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-business-administration-international-business-and"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Science",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering in Biomedical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical Engineering",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-biomedical-engineering"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Global Leadership, Innovation and Society (Self-financed Programme)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Leadership, Innovation and Society (Self-financed Programme)",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-global-leadership-innovation-and-society-self"
+  },
+  {
+    "universityId": "hku",
+    "title": "Global Engineering and Business Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Engineering and Business Programme",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/global-engineering-and-business-programme"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Biomedical Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical Sciences",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-biomedical-sciences"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering in Computer Engineering / Electrical Engineering / Electronic Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Engineering / Electrical Engineering / Electronic Engineering",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-computer-engineering-electrical"
+  },
+  {
+    "universityId": "hku",
+    "title": "Computing and Data Science (Delta+)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computing and Data Science (Delta+)",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science-delta"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Bachelor of Education in Language Education - English",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Language Education - English",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-bachelor-of-education-language-education"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Bachelor of Laws",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Arts and Laws",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-bachelor-of-laws"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Bachelor of Education in Language Education - Chinese",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Language Education - Chinese",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-bachelor-of-education-language-education-0"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Education in Early Childhood Education and Special Education",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Early Childhood Education and Special Education",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-education-early-childhood-education-and-special"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Dental Surgery",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Dental Surgery",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-dental-surgery"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Education and Bachelor of Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Education and Science",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-education-and-bachelor-of-science"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science in Speech-Language Pathology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Speech-Language Pathology",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science-speech-language-pathology"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Sciences in Applied Artificial Intelligence",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Applied Artificial Intelligence",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-sciences-applied-artificial-intelligence"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Sciences in Design+",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Design+",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-sciences-design"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Sciences in Financial Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Financial Technology",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-sciences-financial-technology"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Sciences in Global Health and Development",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Health and Development",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-sciences-global-health-and-development"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts in Global Creative Industries",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Creative Industries",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-global-creative-industries"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts in Humanities and Digital Technologies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Humanities and Digital Technologies",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-humanities-and-digital-technologies"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Arts and Bachelor of Engineering in Artificial Intelligence and Data Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Artificial Intelligence and Data Science",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-arts-and-bachelor-of-engineering-artificial"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering Elite Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Engineering Elite Programme",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-elite-programme"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering in Data and Systems Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Data and Systems Engineering",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-data-and-systems-engineering"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering in Mechanical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mechanical Engineering",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-mechanical-engineering"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering in Civil Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Civil Engineering",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-civil-engineering"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering and Master of Science in Engineering in Artificial Intelligence in Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Engineering in Artificial Intelligence in Engineering",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-and-master-of-science-engineering"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Engineering in Robotics Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Robotics Engineering",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-engineering-robotics-engineering"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Laws",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Laws",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-laws"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Nursing Advanced Leadership Track",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Nursing Advanced Leadership Track",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-nursing-advanced-leadership-track"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Medicine and Bachelor of Surgery",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Medicine and Surgery",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-medicine-and-bachelor-of-surgery"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Medicine and Bachelor of Surgery (Distinguished MedScholar)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Medicine and Surgery (Distinguished MedScholar)",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-medicine-and-bachelor-of-surgery-distinguished"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Nursing",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Nursing",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-nursing"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Chinese Medicine",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chinese Medicine",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-chinese-medicine"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Pharmacy",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Pharmacy",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-pharmacy"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science in Innovation and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Innovation and Technology",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science-innovation-and-technology"
+  },
+  {
+    "universityId": "hku",
+    "title": "Science Master Class",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Science Master Class",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/science-master-class"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Psychology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Psychology",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-psychology"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Social Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Social Sciences",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-social-sciences"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science in Actuarial Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Actuarial Science",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science-actuarial-science"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Social Work",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Social Work",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-social-work"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Business Administration",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-business-administration"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Economics/ Bachelor of Economics and Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Economics/ Economics and Finance",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-economics-bachelor-of-economics-and-finance"
+  },
+  {
+    "universityId": "hku",
+    "title": "Statistical Decision Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Statistical Decision Sciences",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/statistical-decision-sciences"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Business Administration in Accounting and Finance / Bachelor of Business Administration in Accounting Data Analytics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Accounting and Finance / Bachelor of Business Administration in Accounting Data Analytics",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-business-administration-accounting-and-finance"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Business Administration (Business Analytics)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration (Business Analytics)",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-business-administration-business-analytics"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Business Administration (Law) and Bachelor of Laws",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration (Law) and Laws",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-business-administration-law-and-bachelor-of-laws"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Social Sciences (Government and Laws) and Bachelor of Laws",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Social Sciences (Government and Laws) and Laws",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-social-sciences-government-and-laws-and-bachelor-of"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Journalism, Media and Artificial Intelligence",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Journalism, Media and Artificial Intelligence",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-journalism-media-and-artificial-intelligence"
+  },
+  {
+    "universityId": "hku",
+    "title": "Bachelor of Science in Marketing Analytics and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Marketing Analytics and Technology",
+    "officialUrl": "https://www.admissions.hku.hk/programmes/undergraduate-programmes/bachelor-of-science-marketing-analytics-and-technology"
+  },
+  {
+    "universityId": "hkust",
+    "title": "Science (Group A) with Extended Major in Artificial Intelligence",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Science (Group A) with Extended Major in Artificial Intelligence",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/science-group-a-with-an-extended-major-in-artificial-intelligence",
+    "requirementFilter": "46624"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Biomedical and Health Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical and Health Sciences",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/biomedical-and-health-sciences",
+    "requirementFilter": "46769"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Biochemistry and Cell Biology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biochemistry and Cell Biology",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/biochemistry-and-cell-biology",
+    "requirementFilter": "46293"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Biotechnology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biotechnology",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/biotechnology",
+    "requirementFilter": "46295"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Chemistry",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chemistry",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/chemistry",
+    "requirementFilter": "46296"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Data Analytics and Artificial Intelligence in Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Data Analytics and Artificial Intelligence in Science",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/data-analytics-and-artificial-intelligence-in-science",
+    "requirementFilter": "46608"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Mathematics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mathematics",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/mathematics",
+    "requirementFilter": "46266"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Ocean Science and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Ocean Science and Technology",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/ocean-science-and-technology",
+    "requirementFilter": "46298"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Physics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Physics",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-science/physics",
+    "requirementFilter": "46292"
+  },
+  {
+    "universityId": "hkust",
+    "title": "Engineering with Extended Major in Artificial Intelligence",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Engineering with Extended Major in Artificial Intelligence",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/engineering-with-an-extended-major-in-artificial-intelligence",
+    "requirementFilter": "46625"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Bioengineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Bioengineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/bioengineering",
+    "requirementFilter": "46302"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Chemical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chemical Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/chemical-engineering",
+    "requirementFilter": "46303"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Energy and Environmental Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Energy and Environmental Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/energy-and-environmental-engineering",
+    "requirementFilter": "46304"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Civil Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Civil Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/civil-engineering",
+    "requirementFilter": "46305"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Civil and Environmental Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Civil and Environmental Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/civil-and-environmental-engineering",
+    "requirementFilter": "46306"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Artificial Intelligence",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Artificial Intelligence",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/artificial-intelligence",
+    "requirementFilter": "46313"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng / BSc in Computer Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Science",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/computer-science",
+    "requirementFilter": "46308"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Electronic Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Electronic Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/electronic-engineering",
+    "requirementFilter": "46310"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Microelectronics and Integrated Circuits",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Microelectronics and Integrated Circuits",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/microelectronics-and-integrated-circuits",
+    "requirementFilter": "46775"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Decision Analytics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Decision Analytics",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/decision-analytics",
+    "requirementFilter": "46309"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Industrial Engineering and Engineering Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Industrial Engineering and Engineering Management",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/industrial-engineering-and-engineering-management",
+    "requirementFilter": "46311"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Aerospace Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Aerospace Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/aerospace-engineering",
+    "requirementFilter": "46301"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Mechanical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mechanical Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/mechanical-engineering",
+    "requirementFilter": "46312"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng in Computer Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Engineering",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-engineering/computer-engineering",
+    "requirementFilter": "46307"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Economics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Economics",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/economics",
+    "requirementFilter": "46317"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Finance",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/finance",
+    "requirementFilter": "46325"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Global Business",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Business",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/global-business",
+    "requirementFilter": "46318"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Information Systems",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Information Systems",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/information-systems",
+    "requirementFilter": "46319"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Management",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/management",
+    "requirementFilter": "46320"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Marketing",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Marketing",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/marketing",
+    "requirementFilter": "46321"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Operations Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Operations Management",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/operations-management",
+    "requirementFilter": "46322"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BBA in Professional Accounting",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Professional Accounting",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/professional-accounting",
+    "requirementFilter": "46323"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Economics and Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Economics and Finance",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/economics-and-finance",
+    "requirementFilter": "46324"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Quantitative Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Quantitative Finance",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-business-and-management/quantitative-finance",
+    "requirementFilter": "46776"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Global China Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global China Studies",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-humanities-and-social-science/global-china-studies",
+    "requirementFilter": "46328"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Quantitative Social Analysis",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Quantitative Social Analysis",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/school-of-humanities-and-social-science/quantitative-social-analysis",
+    "requirementFilter": "46329"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BEng/BSc & BBA in Dual Degree Program in Technology and Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Technology and Management",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/academy-of-interdisciplinary-studies/dual-degree-program-in-technology-and-management",
+    "requirementFilter": "46331"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Environmental Management and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Environmental Management and Technology",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/academy-of-interdisciplinary-studies/environmental-management-and-technology",
+    "requirementFilter": "46332"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Innovation, Design and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Innovation, Design and Technology",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/academy-of-interdisciplinary-studies/innovation-design-and-technology",
+    "requirementFilter": "46314"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Biotechnology and Business",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biotechnology and Business",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/joint-school-program/biotechnology-and-business",
+    "requirementFilter": "46335"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Mathematics and Economics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mathematics and Economics",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/joint-school-program/mathematics-and-economics",
+    "requirementFilter": "46337"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Risk Management and Business Intelligence",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Risk Management and Business Intelligence",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/joint-school-program/risk-management-and-business-intelligence",
+    "requirementFilter": "46338"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Sustainable and Green Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Sustainable and Green Finance",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/joint-school-program/sustainable-and-green-finance",
+    "requirementFilter": "46646"
+  },
+  {
+    "universityId": "hkust",
+    "title": "BSc in Data Science and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Data Science and Technology",
+    "officialUrl": "https://join.hkust.edu.hk/our-programs/joint-school-program/data-science-and-technology",
+    "requirementFilter": "46336"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Anthropology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Anthropology",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/anthn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Bimodal Bilingual Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Bimodal Bilingual Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bmbln/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "China Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "China Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/chesc/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "China Studies & International Organizations and Global Governance Double Major Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "China Studies & International Organizations and Global Governance Double Major Programme",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/chescig/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Chinese Language and Literature",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chinese Language and Literature",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/chlln/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "English",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "English",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/engen/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Fine Arts",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Fine Arts",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/faasn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "History",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "History",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/histn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Japanese Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Japanese Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/jaspn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Linguistics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Linguistics",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/lingn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Music",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Music",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/muscn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Philosophy",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Philosophy",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/philn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Public History",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Public History",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/histn-puh/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Public Humanities",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Public Humanities",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/puhsn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Religious Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Religious Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/relsn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Theology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Theology",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/theon/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Translation",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Translation",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/trann/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "BBA(IBBA)-JD Double Degree Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "BBA(IBBA)-JD Double Degree Programme",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bajdn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Biotechnology, Entrepreneurship and Healthcare Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biotechnology, Entrepreneurship and Healthcare Management",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/behmn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Global Business Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Business Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/ibbac-gbs/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Global Economics and Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Economics and Finance",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/glefn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Hospitality and Real Estate",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Hospitality and Real Estate",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/htmgb/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Insurance, Financial and Actuarial Analysis",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Insurance, Financial and Actuarial Analysis",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/ifaab/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Integrated Bachelor of Business Administration Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Integrated Business Administration Programme",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/ibbac/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Interdisciplinary Data Analytics & X Double Major Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Interdisciplinary Data Analytics & X Double Major Programme",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/indan/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Professional Accountancy",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Professional Accountancy",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/paccn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Quantitative Finance",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Quantitative Finance",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/qfinn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Quantitative Finance and Risk Management Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Quantitative Finance and Risk Management Science",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/qfrmn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Chinese Language Studies (BA) and Chinese Language Education (BEd)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chinese Language Studies (BA) and Chinese Language Education (BEd)",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/cledn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Early Childhood Education",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Early Childhood Education",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/becen/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Early Childhood Education (BA)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Early Childhood Education (BA)",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/chedn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "English Studies (BA) and English Language Education (BEd)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "English Studies (BA) and English Language Education (BEd)",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/eledn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Exercise Science and Health Education",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Exercise Science and Health Education",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/eshen/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Human Movement Science and Health Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Human Movement Science and Health Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/hmshn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Learning Design and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Learning Design and Technology",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/ldten/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Mathematics and Mathematics Education",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mathematics and Mathematics Education",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bmedn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Physical Education, Exercise Science and Health",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Physical Education, Exercise Science and Health",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/peshn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Aerospace Science and Earth Informatics & X Double Major Programme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Aerospace Science and Earth Informatics & X Double Major Programme",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/asein/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Artificial Intelligence: Systems and Technologies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Artificial Intelligence: Systems and Technologies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/aistn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Biomedical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bmegn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Computational Data Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computational Data Science",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/cdasn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Computer Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/cengn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Computer Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Science",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/cscin/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Computer Science and Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Science and Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bcsen/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Electronic Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Electronic Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/elegn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Energy and Environmental Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Energy and Environmental Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/eeenn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Financial Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Financial Technology",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/ftecn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Information Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Information Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/iergn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Materials Science and Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Materials Science and Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/masen/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Mathematics and Information Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mathematics and Information Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/miegn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Mechanical and Automation Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mechanical and Automation Engineering",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/maegn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Robotics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Robotics",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/rosen/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Systems Engineering and Engineering Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Systems Engineering and Engineering Management",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/seemn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Bachelor of Laws",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Laws",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/lawsn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Diplomacy and International Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Diplomacy and International Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/dipln/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Bachelor of Medicine and Bachelor of Surgery – Global Physician-Leadership Stream (MBChB-GPS)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Medicine and Surgery – Global Physician-Leadership Stream (MBChB-GPS)",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/medun-gps/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Bachelor of Medicine and Bachelor of Surgery (MBChB)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Medicine and Surgery (MBChB)",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/medun/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Biomedical Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical Sciences",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bmscn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Chinese Medicine",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chinese Medicine",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bcmen/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Community Health Practice",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Community Health Practice",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/chprn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Gerontology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Gerontology",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bscgb/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Nursing",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Nursing",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/nursn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Pharmacy",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Pharmacy",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/pharn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Public Health",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Public Health",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/phpcn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Earth and Environmental Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Earth and Environmental Sciences",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/eescn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Enrichment Mathematics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Enrichment Mathematics",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/mathn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Enrichment Stream in Theoretical Physics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Theoretical Physics",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/physn%e2%80%90erp/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Natural Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Natural Sciences",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/nscin/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Risk Management Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Risk Management Science",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/rmscn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Science",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bscin/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Architectural Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Architectural Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/archn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Data Science and Policy Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Data Science and Policy Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/dspsn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Economics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Economics",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/econn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Economics (CUHK-Tsinghua University Dual Undergraduate Degree Programme)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Economics (CUHK-Tsinghua University Dual Undergraduate Degree Programme)",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/ecotu/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Gender Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Gender Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/gdrsn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Geography and Resource Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Geography and Resource Management",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/grmdn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Global Communication",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Communication",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/gcomn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Global Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/glsdn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Government and Public Administration",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Government and Public Administration",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/gpadn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Journalism and Communication",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Journalism and Communication",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/commn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Psychology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Psychology",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/psycn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Social Science (Broad-based)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Social Science (Broad-based)",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/bsscn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Social Work",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Social Work",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/sowkn/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Society and Sustainable Development",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Society and Sustainable Development",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/socin-ssd/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Sociology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Sociology",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/socin/"
+  },
+  {
+    "universityId": "cuhk",
+    "title": "Urban Studies",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Urban Studies",
+    "officialUrl": "https://admission.cuhk.edu.hk/programme/urspn/"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Accounting and Finance (Accountancy / Accounting and Finance / Digital Finance and Investment) - BBA (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Accounting and Finance",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3060"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Applied Biology with Biotechnology - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Applied Biology with Biotechnology",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3923"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Applied Mathematics and Finance Analytics (Applied Mathematics / Investment Science and Finance Analytics / Quantitative Finance and FinTech) - BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Applied Mathematics and Finance Analytics",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3220"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Applied Social Sciences (Social Work / Social Policy and Social Entrepreneurship) - BA (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Applied Social Sciences",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3250"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Architectural Studies - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Architectural Studies",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3214"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Aviation Engineering (Aeronautical Engineering / Air Transport Engineering) - BEng (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Aviation Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3140"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Biomedical Engineering - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3150"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Building Engineering and Management - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Building Engineering and Management",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3791"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Building Sciences and Engineering - BEng (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Building Sciences and Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3211"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Business Administration - Bachelor's Degree Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3003"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Chemical Technology - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chemical Technology",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3997"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Chinese History and Culture - BA (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chinese History and Culture",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3320"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Civil Engineering - BEng (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Civil Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3739"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Computer and Mathematical Sciences - Bachelor's Degree Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer and Mathematical Sciences",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3006"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Computing and AI (Computer Science / Enterprise Information Systems) - BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computing and AI",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3868"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Construction and Environment - Bachelor's Degree Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Construction and Environment",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3004"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Data Science and Artificial Intelligence (Artificial Intelligence / Artificial Intelligence with Financial Technology / Data Science and Analytics) - BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Data Science and Artificial Intelligence",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3223"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Design - BA (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Design",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3569"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Electrical Engineering (Electrical Engineering / Transportation Systems Engineering) - BEng (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Electrical Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3170"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Engineering - Bachelor's Degree Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3005"
+  },
+  {
+    "universityId": "polyu",
+    "title": "English and Applied Linguistics - BA (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "English and Applied Linguistics",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3240"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Environmental Engineering and Sustainable Development - BEng (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Environmental Engineering and Sustainable Development",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3375"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Fashion (Fashion Design / Knitwear Design / Contour Fashion and Activewear / Fashion Business / Fashion Innovation and Technology) - BA (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Fashion",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3050"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Food Science and Nutrition (Food Safety and Technology / Human Nutrition and Health) - BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Food Science and Nutrition",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3255"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Global Business and Logistics, Aviation, Maritime, and Supply Chain Management - BBA (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Global Business and Logistics, Aviation, Maritime, and Supply Chain Management",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3070"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Hotel and Tourism Management (Hotel Management / Smart Tourism and Hospitality / Event and Experience Management) - BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Hotel and Tourism Management",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3310"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Humanities - Bachelor's Degree Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Humanities",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3007"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Information and Artificial Intelligence Engineering (Internet-of-Things / Artificial Intelligence / Information Security) - BEng (Hons) / BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Information and Artificial Intelligence Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3180"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Intelligent Supply Chain and Engineering Management - BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Intelligent Supply Chain and Engineering Management",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3237"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Interdisciplinary Studies - Bachelor's Degree Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Interdisciplinary Studies",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3000"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Language Science and Technology - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Language Science and Technology",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3243"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Management and Marketing (Management / Marketing) - BBA (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Management and Marketing",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3080"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Mechanical Engineering (Intelligent Robotics Engineering / Mechanical Engineering) - BEng (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mechanical Engineering",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3741"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Medical Laboratory Science - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Medical Laboratory Science",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3478"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Mental Health Nursing - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mental Health Nursing",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3337"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Nursing - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Nursing",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3648"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Occupational Therapy - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Occupational Therapy",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3624"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Optometry - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Optometry",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3290"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Physics with a Secondary Major in Artificial Intelligence & Data Analytics (AIDA) / Innovation and Entrepreneurship (IE) - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Physics with a Secondary Major in Artificial Intelligence & Data Analytics",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3030"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Physiotherapy - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Physiotherapy",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3636"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Product Innovation and Smart Manufacturing (Product Innovation with Marketing / Smart Manufacturing) - BEng (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Product Innovation and Smart Manufacturing",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3236"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Radiography - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Radiography",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3612"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Science - Bachelor's Degree Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Science",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3008"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Spatial Data Science and Smart Cities (Land Surveying and Geo-Informatics / Urban Informatics and Smart Cities) - BSc (Hons) Scheme",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Spatial Data Science and Smart Cities",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3130"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Speech Therapy - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Speech Therapy",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3242"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Sports Science and Technology - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Sports Science and Technology",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3160"
+  },
+  {
+    "universityId": "polyu",
+    "title": "Surveying - BSc (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Surveying",
+    "officialUrl": "https://www.polyu.edu.hk/study/ug/jupas/2027/js3789"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) (Chinese Language and Literature / Creative and Professional Writing / English Language and Literature / Humanities / Translation)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Arts (Chinese Language and Literature / Creative and Professional Writing / English Language and Lit",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-arts-and-social-sciences/bachelor-of-arts-hons-chinese-language-and-literature-creative-and-professional-writing-english-language-and-literature-humanities-translation-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) in Religion, Philosophy and Ethics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Religion, Philosophy and Ethics",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-arts-and-social-sciences/bachelor-of-arts-hons-in-religion-philosophy-and-ethics-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) / Bachelor of Social Sciences (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Arts / Social Sciences (Applied Psychological Science / European Studies [French/German Stream] / Ge",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-arts-and-social-sciences/bachelor-of-arts-hons-bachelor-of-social-sciences-hons-european-studies-french-german-stream-geography-global-and-china-studies-government-and-international-studies-history-sociology-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) in Physical Education and Recreation Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Physical Education and Recreation Management",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-arts-and-social-sciences/bachelor-of-arts-hons-in-physical-education-and-recreation-management-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Social Work (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Social Work",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-arts-and-social-sciences/bachelor-of-social-work-hons-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Social Sciences (Hons) / Bachelor of Science (Hons) in Innovation in Health and Social Well-Being",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Innovation in Health and Social Well-Being",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-arts-and-social-sciences/bachelor-of-social-sciences-hons-bachelor-of-science-hons-in-innovation-in-health-and-social-well-being-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts and Science (Hons) in Digital Futures and Humanities",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Digital Futures and Humanities",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-arts-and-social-sciences/bachelor-of-arts-and-science-hons-in-digital-futures-and-humanities-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Business Administration (Hons) - Accounting Concentration",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration - Accounting Concentration",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-business/bachelor-of-business-administration-hons-accounting-concentration-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Business Administration (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-business/bachelor-of-business-administration-hons-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Chinese Medicine and Bachelor of Science (Hons) in Biomedical Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical Science",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-chinese-medicine/bachelor-of-chinese-medicine-and-bachelor-of-science-hons-in-biomedical-science-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Pharmacy (Hons) in Chinese Medicine and Pharmaceutical Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Chinese Medicine and Pharmaceutical Sciences",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-chinese-medicine/bachelor-of-pharmacy-hons-in-chinese-medicine-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Communication (Hons) (Journalism and Digital Media / Public Relations and Advertising)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Communication (Journalism and Digital Media / Public Relations and Advertising)",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-communication/bachelor-of-communication-hons-journalism-and-digital-media-public-relations-and-advertising-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Communication (Hons) in Game Design and Animation",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Game Design and Animation",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-communication/bachelor-of-communication-hons-in-game-design-and-animation-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) in Music",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Music",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-creative-arts/bachelor-of-arts-hons-in-music-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Music (Hons) in Creative Industries",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Creative Industries",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-creative-arts/bachelor-of-music-hons-in-creative-industries-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) in Film and Television",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Film and Television",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-creative-arts/bachelor-of-arts-hons-in-film-and-television-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Fine Arts (Hons) in Acting for Global Screen",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Acting for Global Screen",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-creative-arts/bachelor-of-fine-arts-hons-in-acting-for-global-screen-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) in Visual Arts",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Visual Arts",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-creative-arts/bachelor-of-arts-hons-in-visual-arts-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts and Science (Hons) in Arts and Technology",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Arts and Technology",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-creative-arts/bachelor-of-arts-and-science-hons-in-arts-and-technology-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts (Hons) in Business Administration (Global Entertainment)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration (Global Entertainment)",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/school-of-creative-arts/bachelor-of-arts-hons-in-business-administration-global-entertainment-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Science (Hons)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Science",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-science/bachelor-of-science-hons-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Science (Hons) in Business Analytics and Artificial Intelligence",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Analytics and Artificial Intelligence",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/faculty-of-science/bachelor-of-science-hons-in-business-computing-and-data-analytics-year1.html"
+  },
+  {
+    "universityId": "hkbu",
+    "title": "Bachelor of Arts, Science and Technology (Hons) in Individualised Major",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Individualised Major",
+    "officialUrl": "https://admissions.hkbu.edu.hk/programmes/transdisciplinary-individualised-pathway-programmes/bachelor-of-arts-science-and-technology-hons-in-individualised-major-year1.html"
+  }
+]

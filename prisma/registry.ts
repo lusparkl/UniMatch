@@ -1,4 +1,5 @@
 import { db } from "../lib/db";
+import discovered from "./registry-programs.json";
 // Program registry: a human-chosen list of real degrees and the official pages that state their
 // admission, fee and deadline facts. Extraction runs once per registered program over these pages.
 type Entry = {
@@ -8,7 +9,10 @@ type Entry = {
   fieldOfStudy: string;
   officialUrl: string;
 };
-export const programs: Entry[] = [
+// First-year bachelor's programmes open to international applicants, read from each university's
+// official programme list on 2026-10-31. `requirementFilter` is HKUST's program_requirement id.
+const listed = discovered as (Entry & { requirementFilter?: string })[];
+const curatedPrograms: Entry[] = [
   {
     universityId: "hkust",
     title: "BEng/BSc in Computer Science",
@@ -103,74 +107,109 @@ export const programs: Entry[] = [
       "https://admissions.hkbu.edu.hk/programmes/faculty-of-science/bachelor-of-science-hons-year1.html",
   },
 ];
+// Hand-registered entries win over listed ones with the same official page (they keep their titles).
+const curatedUrls = new Set(curatedPrograms.map((p) => p.officialUrl));
+const added = listed.filter((p) => !curatedUrls.has(p.officialUrl));
+export const programs: Entry[] = [
+  ...curatedPrograms,
+  ...added.map((p) => ({
+    universityId: p.universityId,
+    title: p.title,
+    degreeLevel: p.degreeLevel,
+    fieldOfStudy: p.fieldOfStudy,
+    officialUrl: p.officialUrl,
+  })),
+];
 // Institution-level pages for non-local applicants: international qualifications, fees, scholarships.
 // HKUST renders its requirement tables server-side when all three filter parameters are present.
 // The parameter order below is already the sorted canonical form.
 const hkustFilter = (general: string, language = "All", program = "All") =>
   `https://join.hkust.edu.hk/admissions/international-qualifications?general_requirement=${general}&language_requirement=${language}&program_requirement=${program}`;
-// `program` scopes a page to one registered program; unscoped pages serve every program of the university.
-export const pages: { universityId: string; url: string; program?: string }[] =
-  [
-    ...[
-      "https://join.hkust.edu.hk/admissions/international-qualifications",
-      "https://join.hkust.edu.hk/fees-and-scholarships",
-      "https://seng.hkust.edu.hk/academics/undergraduate/faq-info-for-non-jupas-and-non-local-students",
-      "https://join.hkust.edu.hk/admissions",
-    ].map((url) => ({ universityId: "hkust", url })),
-    // One curriculum plus one English test per page: IB/IELTS, A-level/TOEFL, SAT-AP/Duolingo, Canada/PTE, Australia, India.
-    ...[
-      ["46205", "46244"],
-      ["46185", "46245"],
-      ["46180", "46747"],
-      ["46188", "46748"],
-      ["46181", "All"],
-      ["46203", "All"],
-    ].map(([general, language]) => ({
-      universityId: "hkust",
-      url: hkustFilter(general, language),
-    })),
-    // Subject requirements of each registered program.
-    ...[
-      ["46308", "BEng/BSc in Computer Science"],
-      ["46307", "BEng in Computer Engineering"],
-      ["46310", "BEng in Electronic Engineering"],
-      ["46313", "BEng in Artificial Intelligence"],
-    ].map(([id, program]) => ({
-      universityId: "hkust",
-      url: hkustFilter("All", "All", id),
-      program,
-    })),
-    ...[
-      "https://www.admissions.hku.hk/apply/international-qualifications",
-      "https://www.admissions.hku.hk/fees-and-scholarships/fees",
-      "https://www.admissions.hku.hk/fees-and-scholarships/scholarships",
-      "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
-    ].map((url) => ({ universityId: "hku", url })),
-    ...[
-      "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/requirements/",
-      "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/important-dates/",
-      "https://admission.cuhk.edu.hk/fees-financing-your-studies/fees/",
-      "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/",
-      "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/faq/",
-    ].map((url) => ({ universityId: "cuhk", url })),
-    ...[
-      "https://admissions.hkbu.edu.hk/admissions/international-qualifications.html",
-      "https://admissions.hkbu.edu.hk/fees-and-scholarships.html",
-    ].map((url) => ({ universityId: "hkbu", url })),
-    ...[
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications",
-      "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/fees",
-      "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/scholarships",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-frequently",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-general",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-english",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-preferred",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-key-dates",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-additional",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-tuition-fees",
-      "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-other-fees-and",
-    ].map((url) => ({ universityId: "polyu", url })),
-  ];
+// `program` scopes a page to one or more registered programs; unscoped pages serve every program of the university.
+// `fees: "per-program"` marks a fee page whose tuition differs between programs: every program call reads it.
+export const pages: {
+  universityId: string;
+  url: string;
+  program?: string | string[];
+  fees?: "per-program";
+}[] = [
+  ...[
+    "https://join.hkust.edu.hk/admissions/international-qualifications",
+    "https://join.hkust.edu.hk/fees-and-scholarships",
+    "https://seng.hkust.edu.hk/academics/undergraduate/faq-info-for-non-jupas-and-non-local-students",
+    "https://join.hkust.edu.hk/admissions",
+  ].map((url) => ({ universityId: "hkust", url })),
+  // One curriculum plus one English test per page: IB/IELTS, A-level/TOEFL, SAT-AP/Duolingo, Canada/PTE, Australia, India.
+  ...[
+    ["46205", "46244"],
+    ["46185", "46245"],
+    ["46180", "46747"],
+    ["46188", "46748"],
+    ["46181", "All"],
+    ["46203", "All"],
+  ].map(([general, language]) => ({
+    universityId: "hkust",
+    url: hkustFilter(general, language),
+  })),
+  // Subject requirements of each registered program.
+  ...[
+    ["46308", "BEng/BSc in Computer Science"],
+    ["46307", "BEng in Computer Engineering"],
+    ["46310", "BEng in Electronic Engineering"],
+    ["46313", "BEng in Artificial Intelligence"],
+    ...added
+      .filter((p) => p.requirementFilter)
+      .map((p) => [p.requirementFilter!, p.title]),
+  ].map(([id, program]) => ({
+    universityId: "hkust",
+    url: hkustFilter("All", "All", id),
+    program,
+  })),
+  ...[
+    "https://www.admissions.hku.hk/apply/international-qualifications",
+    "https://www.admissions.hku.hk/fees-and-scholarships/scholarships",
+    "https://admissions.hku.hk/apply/international-qualifications/english-language-requirement",
+  ].map((url) => ({ universityId: "hku", url })),
+  // Tuition differs by faculty: STEM, non-STEM, and MBBS/BDS.
+  {
+    universityId: "hku",
+    url: "https://www.admissions.hku.hk/fees-and-scholarships/fees",
+    fees: "per-program",
+  },
+  // Admission page of programme 6999, the scheme both registered HKU computing degrees belong to.
+  {
+    universityId: "hku",
+    url: "https://admissions.hku.hk/programmes/undergraduate-programmes/computing-and-data-science",
+    program: [
+      "Bachelor of Engineering in Computer Science",
+      "Bachelor of Engineering in Artificial Intelligence and Data Science",
+    ],
+  },
+  ...[
+    "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/requirements/",
+    "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/important-dates/",
+    "https://admission.cuhk.edu.hk/fees-financing-your-studies/fees/",
+    "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/",
+    "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/faq/",
+  ].map((url) => ({ universityId: "cuhk", url })),
+  ...[
+    "https://admissions.hkbu.edu.hk/admissions/international-qualifications.html",
+    "https://admissions.hkbu.edu.hk/fees-and-scholarships.html",
+  ].map((url) => ({ universityId: "hkbu", url })),
+  ...[
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications",
+    "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/fees",
+    "https://www.polyu.edu.hk/study/ug/fees-and-scholarships/scholarships",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-frequently",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-general",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-english",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-preferred",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-key-dates",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-additional",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-tuition-fees",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-other-fees-and",
+  ].map((url) => ({ universityId: "polyu", url })),
+];
 // Stand-ins that duplicate a registered degree.
 // Also junk rows (a master's scholarship page, a business scheme) that no registry entry covers.
 const retired: {
@@ -189,6 +228,12 @@ const retired: {
     degreeLevel: "BACHELOR",
   },
   { universityId: "hkust", title: "Engineering MSc", degreeLevel: "MASTER" },
+  {
+    universityId: "polyu",
+    title:
+      "Accounting and Finance (Accountancy / Accounting and Finance / Digital Finance and Investment) - BBA (Hons) Scheme - Bachelor of Business Administration (Honours) Scheme",
+    degreeLevel: "BACHELOR",
+  },
 ];
 // Transfer-student pages: wrong audience for first-year international applicants.
 const demoted = ["https://join.hkust.edu.hk/admissions/post-secondary"];
@@ -212,9 +257,18 @@ export async function seedRegistry() {
       url: p.officialUrl,
     })),
     ...pages,
-  ].map((u) => ({ ...u, program: "program" in u ? u.program : undefined }));
-  for (const { universityId, url, program } of urls) {
-    const purpose = program ? "registry:" + program : "registry";
+  ].map((u) => ({
+    ...u,
+    program: "program" in u ? u.program : undefined,
+    fees: "fees" in u ? u.fees : undefined,
+  }));
+  for (const { universityId, url, program, fees } of urls) {
+    // Several scoped titles are stored one per line.
+    const purpose = program
+      ? "registry:" + [program].flat().join("\n")
+      : fees
+        ? "registry-fees"
+        : "registry";
     await db.approvedSource.upsert({
       where: { universityId_startUrl: { universityId, startUrl: url } },
       create: {
@@ -255,13 +309,5 @@ export async function seedRegistry() {
   await db.approvedSource.updateMany({
     where: { startUrl: { in: demoted }, purpose: "registry" },
     data: { purpose: "admissions" },
-  });
-  // Business schemes are outside the registry scope (computing and engineering only).
-  await db.degreeProgram.updateMany({
-    where: {
-      universityId: "polyu",
-      title: { startsWith: "Accounting and Finance" },
-    },
-    data: { published: false },
   });
 }

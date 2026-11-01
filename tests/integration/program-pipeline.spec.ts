@@ -15,7 +15,7 @@ const pages: Record<string, string> = {
   [feesUrl]:
     "<html><title>Fees</title><main><h1>Tuition fees</h1><p>Annual tuition fee for non-local students: HK$ 280,000 per academic year for all undergraduate programmes in STEM faculties. Living expenses are not included in this fee.</p></main></html>",
 };
-it("registered program: stored pages → one cited candidate → unchanged skip → approval keeps each page's evidence", async () => {
+it("registered program: institution facts once + program pages → one cited candidate → unchanged skip → approval keeps each page's evidence", async () => {
   vi.stubEnv("DEMO_MODE", "false");
   vi.stubEnv("OPENAI_API_KEY", "fixture-only-never-sent");
   vi.stubEnv("MAX_CRAWL_PAGES", "5");
@@ -79,6 +79,16 @@ it("registered program: stored pages → one cited candidate → unchanged skip 
           sourceUrl: programUrl,
         },
       ],
+      costs: [],
+      documents: [],
+      scholarships: [],
+      ambiguities: [],
+    });
+    // The fee page serves every program, so it is read once in institution mode.
+    const shared = extractionSchema.parse({
+      ...payload,
+      program: null,
+      intakes: [],
       costs: [
         {
           tuition: 280000,
@@ -97,35 +107,38 @@ it("registered program: stored pages → one cited candidate → unchanged skip 
     });
     const model = vi
       .spyOn(OpenAIProvider.prototype, "extractProgram")
-      .mockResolvedValue(payload);
+      .mockImplementation(async (_, institution) =>
+        structuredClone(institution ? shared : payload),
+      );
     const job = await db.researchJob.create({
       data: { universityId: university.id, targets: ["Computer Science"] },
     });
     await runResearch(job.id);
-    expect(model).toHaveBeenCalledTimes(1);
-    const call = model.mock.calls[0][0];
-    expect(call.text).toContain("### SOURCE: " + feesUrl);
-    expect(call.text).toContain("### SOURCE: " + programUrl);
+    expect(model).toHaveBeenCalledTimes(2);
+    const [institutionCall, programCall] = model.mock.calls;
+    expect(institutionCall[1]).toBe(true);
+    expect(institutionCall[0].text).toContain("### SOURCE: " + feesUrl);
+    expect(institutionCall[0].text).not.toContain(programUrl);
+    expect(programCall[0].text).toContain("### SOURCE: " + programUrl);
+    expect(programCall[0].text).not.toContain(feesUrl);
     const candidate = await db.extractionCandidate.findFirstOrThrow({
-      where: { jobId: job.id },
+      where: { jobId: job.id, programId: { not: null } },
     });
-    expect(candidate.programId).toBeTruthy();
     expect(candidate.bundleHash).toBeTruthy();
     expect(candidate.issues).toEqual([]);
+    // The program's candidate carries the shared fee, cited to the fee page.
+    const merged = extractionSchema.parse(candidate.payload);
+    expect(merged.costs.map((c) => [c.tuition, c.sourceUrl])).toEqual([
+      [280000, feesUrl],
+    ]);
 
     const second = await db.researchJob.create({
       data: { universityId: university.id, targets: ["Computer Science"] },
     });
     await runResearch(second.id);
-    expect(model).toHaveBeenCalledTimes(1); // unchanged pages cost nothing
+    expect(model).toHaveBeenCalledTimes(2); // unchanged pages cost nothing
 
-    await reviewCandidate(
-      candidate.id,
-      "APPROVE",
-      "test-admin",
-      payload,
-      false,
-    );
+    await reviewCandidate(candidate.id, "APPROVE", "test-admin", merged, false);
     const evidence = await db.sourceEvidence.findMany({
       where: { document: { universityId: university.id } },
     });

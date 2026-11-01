@@ -97,3 +97,43 @@ GPT-5.4 mini list price: $0.75 / 1M input, $4.50 / 1M output (https://developers
 - 2026-10-31 gpt-5.4-mini hkbu: 1 calls, 11341 in / 2804 out tokens, **$0.0211** ($0.0211/call), 0 pages, 0 gated, 1 candidates (1 flagged), 0 errors, 24s. Job cmvwm8oor0000z5v1gf8e6jev.
 
 - 2026-10-31 gpt-5.4-mini hkust: 4 calls, 78378 in / 11824 out tokens, **$0.112** ($0.028/call), 0 pages, 0 gated, 4 candidates (4 flagged), 0 errors, 99s. Job cmvwm98jo0000e1v162k7e4wk.
+
+- 2026-10-31 gpt-5.4-mini hkbu: 24 calls, 126561 in / 44607 out tokens, **$0.2957** ($0.0123/call), 22 pages, 0 gated, 23 candidates (23 flagged), 1 errors, 250s. Job cmvwn5b310000t7v1v290kz1q.
+
+- 2026-10-31 gpt-5.4-mini hku: 62 calls, 261572 in / 25415 out tokens, **$0.3105** ($0.005/call), 52 pages, 0 gated, 62 candidates (61 flagged), 0 errors, 307s. Job cmvwnbuci0000wrv1ttx3isxx.
+
+- 2026-10-31 gpt-5.4-mini cuhk: 87 calls, 383866 in / 33716 out tokens, **$0.4396** ($0.0051/call), 82 pages, 0 gated, 87 candidates (87 flagged), 0 errors, 422s. Job cmvwnbu9c0000wlv1tktnqgbl.
+
+- 2026-10-31 gpt-5.4-mini polyu: 48 calls, 302478 in / 57855 out tokens, **$0.4872** ($0.0102/call), 46 pages, 0 gated, 47 candidates (47 flagged), 1 errors, 483s. Job cmvwnbub80000wqv1ie867twm.
+
+- 2026-10-31 gpt-5.4-mini hkust: 45 calls, 272362 in / 57418 out tokens, **$0.4627** ($0.0103/call), 40 pages, 0 gated, 45 candidates (45 flagged), 0 errors, 611s. Job cmvwnbuan0000wsv1jxvjbcfe.
+
+- 2026-10-31 gpt-5.4-mini hkbu: 1 calls, 4935 in / 2301 out tokens, **$0.0141** ($0.0141/call), 1 pages, 0 gated, 1 candidates (1 flagged), 0 errors, 62s. Job cmvwnpix20000sbv1h3545rhi.
+
+- 2026-10-31 gpt-5.4-mini polyu: 1 calls, 6119 in / 1181 out tokens, **$0.0099** ($0.0099/call), 1 pages, 0 gated, 1 candidates (1 flagged), 0 errors, 128s. Job cmvwnpixw0000sav1vceygg0i.
+
+- 2026-10-31 gpt-5.4-mini hku: 62 calls, 262535 in / 26573 out tokens, **$0.3165** ($0.0051/call), 0 pages, 0 gated, 62 candidates (60 flagged), 0 errors, 320s. Job cmvwnwdbe0000ucv1b90hv4km.
+
+- 2026-10-31 gpt-5.4-mini hku: 62 calls, 294335 in / 51928 out tokens, **$0.4544** ($0.0073/call), 0 pages, 0 gated, 62 candidates (62 flagged), 0 errors, 429s. Job cmvwo5e8400006sv19tqa4r56.
+
+- 2026-10-31 gpt-5.4-mini hkbu: 1 calls, 8667 in / 2730 out tokens, **$0.0188** ($0.0188/call), 0 pages, 0 gated, 24 candidates (24 flagged), 0 errors, 66s. Job cmvwohr340000yyv1tvw1u8om.
+
+- 2026-10-31 gpt-5.4-mini polyu: 1 calls, 18343 in / 2892 out tokens, **$0.0268** ($0.0268/call), 0 pages, 0 gated, 48 candidates (48 flagged), 0 errors, 146s. Job cmvwohr150000zfv1pk7ze14z.
+
+- 2026-10-31 gpt-5.4-mini hku: 1 calls, 6732 in / 3747 out tokens, **$0.0219** ($0.0219/call), 0 pages, 0 gated, 62 candidates (62 flagged), 0 errors, 174s. Job cmvwohr200000zyv1kej2vlsl.
+
+- 2026-10-31 gpt-5.4-mini cuhk: 1 calls, 10859 in / 3663 out tokens, **$0.0246** ($0.0246/call), 0 pages, 0 gated, 87 candidates (87 flagged), 0 errors, 209s. Job cmvwohr2b0000ztv1uxy0aayo.
+
+- 2026-10-31 gpt-5.4-mini hkust: 1 calls, 17932 in / 2287 out tokens, **$0.0237** ($0.0237/call), 0 pages, 0 gated, 45 candidates (45 flagged), 0 errors, 216s. Job cmvwohr0k0000yzv17h5fo837.
+
+- 2026-10-31 gpt-5.4-mini hkbu: 1 calls, 8667 in / 3291 out tokens, **$0.0213** ($0.0213/call), 0 pages, 0 gated, 24 candidates (24 flagged), 0 errors, 70s. Job cmvwonpqk00002rv1eh84hfr1.
+
+- 2026-10-31 gpt-5.4-mini polyu: 1 calls, 18343 in / 3158 out tokens, **$0.028** ($0.028/call), 0 pages, 0 gated, 48 candidates (48 flagged), 0 errors, 140s. Job cmvwonpqc000031v1v35lu9hn.
+
+- 2026-10-31 gpt-5.4-mini hku: 1 calls, 6732 in / 2824 out tokens, **$0.0178** ($0.0178/call), 0 pages, 0 gated, 62 candidates (62 flagged), 0 errors, 166s. Job cmvwonprb00003tv1axwzd6nw.
+
+- 2026-10-31 gpt-5.4-mini cuhk: 1 calls, 10859 in / 4257 out tokens, **$0.0273** ($0.0273/call), 0 pages, 0 gated, 87 candidates (87 flagged), 0 errors, 212s. Job cmvwonpqn00002lv1ilo82j3n.
+
+- 2026-10-31 gpt-5.4-mini hkust: 45 calls, 351294 in / 82236 out tokens, **$0.6335** ($0.0141/call), 0 pages, 0 gated, 45 candidates (45 flagged), 0 errors, 733s. Job cmvwonpqs00003gv14pd1f0j9.
+
+- 2026-10-31 gpt-5.4-mini hkust: 1 calls, 17932 in / 3952 out tokens, **$0.0312** ($0.0312/call), 0 pages, 0 gated, 45 candidates (45 flagged), 0 errors, 223s. Job cmvwp6e5t00000tv1nub69v4u.

@@ -5,7 +5,20 @@ import { salvageExcerpt, widenExcerpt } from "./relevance";
 // as SOURCE_BACKED. Anything doubtful is left out: an unknown value is shown as unknown, never guessed.
 const TYPED_TESTS = ["IELTS", "TOEFL", "PTE", "DUOLINGO"];
 const NUMERIC_TYPES = [...TYPED_TESTS, "SAT", "ACT", "GRADE"];
+const LOCAL_ROUTE =
+  /^\s*(hkdse|hong kong diploma of secondary education|jupas|(chinese )?mainland|.*\b(jee|gaokao)\b|.*post-?secondary|.*sub-?degree|.*associate degree|.*higher diploma)/i;
 const squash = (value: string) => value.replace(/\s+/g, " ").trim();
+const OVERALL_SCORE =
+  /\b(?:overall(?: band)?(?: score)?|total score)(?: of)?:? (\d{1,3}(?:\.\d)?)\b/gi;
+// Scores whose scale depends on the test date stay free text (TOEFL changed scale in January 2026).
+const DATED_SCALE =
+  /\b(before|after|on or after|from) (\d|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i;
+/** The one overall score a test quote states, or null when it states none, several or a dated scale. */
+export function quotedOverall(quote: string) {
+  if (DATED_SCALE.test(quote)) return null;
+  const scores = [...quote.matchAll(OVERALL_SCORE)].map((m) => Number(m[1]));
+  return new Set(scores).size === 1 ? scores[0] : null;
+}
 const DEADLINE_WORDS = /\b(deadline|closes?|closing|due|apply by|submit)\b/i;
 const OPEN_WORDS = /\b(opens?|opening|starts?)\b/i;
 const NOT_A_DEADLINE =
@@ -67,6 +80,26 @@ export function curate(
   const drop = (kind: string, why: string) =>
     dropped.push(`${kind} left out: ${why}`);
 
+  // A claim citing a page that is not registered (a mistyped URL) is re-pointed to the one registered
+  // page that holds its exact quote; with no such page or several, the citation stays and review rejects it.
+  const claims = [
+    ...(payload.program ? [payload.program] : []),
+    ...payload.requirements,
+    ...payload.intakes,
+    ...payload.costs,
+    ...payload.documents,
+    ...payload.scholarships,
+    ...payload.scholarships.flatMap((s) => s.rules),
+  ];
+  for (const claim of claims) {
+    if (!claim.sourceUrl || pageTexts.has(claim.sourceUrl)) continue;
+    const quote = squash(claim.excerpt);
+    const holders = [...pageTexts].filter(([, text]) =>
+      squash(text).includes(quote),
+    );
+    if (holders.length === 1) claim.sourceUrl = holders[0][0];
+  }
+
   // A model sometimes writes the word "null" (or "N/A") instead of leaving a field empty.
   const placeholder =
     /^\s*(null|none|n\/a|na|unknown|not (stated|specified|available)|-+)?\s*$/i;
@@ -111,6 +144,14 @@ export function curate(
   // Requirements: typed numeric rules need their number in their own quote; free-text rules need substance.
   const kept = payload.requirements.filter((r) => {
     const quote = squash(r.excerpt);
+    // Rules scoped only to local routes (HKDSE, Mainland gaokao/JEE, local sub-degree) never reach international applicants.
+    if (
+      r.appliesToQualifications.length &&
+      r.appliesToQualifications.every((q) => LOCAL_ROUTE.test(q))
+    ) {
+      drop(`requirement ${r.type}`, "local admission route only");
+      return false;
+    }
     // Types the matcher compares with a number must really be that score (an SAT section cut-off is not the total).
     if (
       (r.type === "SAT" && (r.minimum ?? 0) < 800) ||
@@ -120,6 +161,13 @@ export function curate(
       drop(`requirement ${r.type}`, "type does not match the quoted score");
       return false;
     }
+    // A score whose scale depends on the test date is kept as free text; otherwise a test rule whose
+    // quote states one overall score gets that score as its minimum.
+    if (TYPED_TESTS.includes(r.type) && DATED_SCALE.test(quote)) {
+      r.type = "OTHER";
+      r.minimum = null;
+    } else if (TYPED_TESTS.includes(r.type) && r.minimum === null)
+      r.minimum = quotedOverall(quote);
     if (NUMERIC_TYPES.includes(r.type)) {
       if (r.minimum === null) {
         drop(`requirement ${r.type}`, "no numeric minimum");

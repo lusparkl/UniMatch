@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { curate, labelWindow } from "../lib/research/curate";
+import { curate, labelWindow, quotedOverall } from "../lib/research/curate";
 import type { Extraction } from "../lib/research/extraction";
 
 const base = (over: Partial<Extraction> = {}): Extraction => ({
@@ -71,6 +71,40 @@ describe("curate", () => {
       pages,
     );
     expect(result.payload.requirements.map((r) => r.type)).toEqual(["IELTS"]);
+  });
+  it("drops rules scoped only to local admission routes", () => {
+    const subjects =
+      "HKDSE elective subjects: any 2 subjects, with one elective being Visual Arts";
+    const result = curate(
+      base({
+        requirements: [
+          rule({}) as never,
+          rule({
+            type: "OTHER",
+            minimum: null,
+            appliesToQualifications: ["HKDSE"],
+            excerpt: subjects,
+          }) as never,
+          rule({
+            type: "OTHER",
+            minimum: null,
+            appliesToQualifications: ["Chinese Mainland JEE"],
+            excerpt: subjects,
+          }) as never,
+          rule({
+            type: "OTHER",
+            minimum: null,
+            appliesToQualifications: ["HKDSE", "International Qualifications"],
+            excerpt: subjects,
+          }) as never,
+        ],
+      }),
+      pages,
+    );
+    expect(
+      result.payload.requirements.map((r) => r.appliesToQualifications),
+    ).toEqual([[], ["HKDSE", "International Qualifications"]]);
+    expect(result.dropped.join()).toContain("local admission route only");
   });
   it("drops the test type when sources disagree on its minimum", () => {
     const result = curate(
@@ -189,5 +223,64 @@ describe("labelWindow", () => {
   });
   it("returns null when the date is absent", () => {
     expect(labelWindow("nothing here", "2026-11-25")).toBeNull();
+  });
+});
+describe("quotedOverall", () => {
+  it("reads one stated overall score and refuses dated or mixed scores", () => {
+    expect(
+      quotedOverall(
+        "IELTS (Academic) An overall band score of 6.0 or above in one sitting",
+      ),
+    ).toBe(6);
+    expect(
+      quotedOverall(
+        "Pearson Test of English Academic (PTE Academic) Overall score of 64 or above",
+      ),
+    ).toBe(64);
+    expect(
+      quotedOverall(
+        "TOEFL (iBT) (For tests taken before 21 January 2026) Total Score of 80 or above",
+      ),
+    ).toBeNull();
+    expect(
+      quotedOverall("Overall score of 6.5, or overall score of 7.0 for Law"),
+    ).toBeNull();
+  });
+});
+describe("dated test scales", () => {
+  it("keeps a TOEFL score tied to a test date as free text", () => {
+    const quote =
+      "For tests taken on or after January 21, 2026: An overall score of 5.0 or above in the TOEFL internet-based test (TOEFL iBT)";
+    const { payload } = curate(
+      base({
+        requirements: [
+          rule({ type: "TOEFL", minimum: 5, excerpt: quote }) as never,
+        ],
+      }),
+      pages,
+    );
+    expect(payload.requirements.map((r) => [r.type, r.minimum])).toEqual([
+      ["OTHER", null],
+    ]);
+  });
+});
+describe("citations", () => {
+  it("re-points a mistyped page URL to the one registered page holding the quote", () => {
+    const quote = "IELTS Academic Overall Band: 6.5 is required for admission";
+    const { payload } = curate(
+      base({
+        requirements: [
+          rule({
+            minimum: 6.5,
+            excerpt: quote,
+            sourceUrl: "https://u.example/typo",
+          }) as never,
+        ],
+      }),
+      new Map([...pages, ["https://u.example/english", "Language: " + quote]]),
+    );
+    expect(payload.requirements[0]?.sourceUrl).toBe(
+      "https://u.example/english",
+    );
   });
 });

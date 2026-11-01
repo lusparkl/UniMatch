@@ -268,6 +268,28 @@ describe("pruneClaims", () => {
     expect(dropped.length).toBe(2);
   });
 
+  it("drops fees quoted for local students only", () => {
+    const p = base();
+    p.costs.push(
+      {
+        tuition: 49500,
+        living: null,
+        other: null,
+        excerpt:
+          "Tuition Fee (Local Students Eligible for Goverment Subsidised Tuition Fees) HKD 49,500 per academic year",
+      },
+      {
+        tuition: 280000,
+        living: null,
+        other: null,
+        excerpt:
+          "Annual Tuition Fees for Local Students not Eligible for Government Subsidised Tuition Fees and Non-Local Students HK$ 280,000",
+      },
+    );
+    pruneClaims(p);
+    expect(p.costs.map((c) => c.tuition)).toEqual([280000]);
+  });
+
   it("keeps one amount per cost entry and requires a living/fee label", () => {
     const p = base();
     p.costs.push(

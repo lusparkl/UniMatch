@@ -167,11 +167,18 @@ export function sameProgram(a: string, b: string) {
   return x.size > 0 && x.size === y.size && [...x].every((w) => y.has(w));
 }
 
-/** Registry sources are "registry" (every program) or "registry:<program title>" (one program). */
+/**
+ * Registry sources are "registry" (every program), "registry:<program titles, one per line>" (those programs)
+ * or "registry-fees" (a fee page that prices programs differently, read by every program).
+ */
 export const isRegistry = (purpose: string) =>
-  purpose === "registry" || purpose.startsWith("registry:");
+  purpose === "registry" ||
+  purpose === "registry-fees" ||
+  purpose.startsWith("registry:");
 export const registryScope = (purpose: string) =>
-  purpose.startsWith("registry:") ? purpose.slice("registry:".length) : null;
+  purpose.startsWith("registry:")
+    ? purpose.slice("registry:".length).split("\n")
+    : null;
 
 const INTERNATIONAL_URL =
   /international|non-?local|non-?jupas|overseas|other-?qualifications|qualification/i;
@@ -338,6 +345,14 @@ type Prunable = {
 export function pruneClaims<T extends Prunable>(payload: T) {
   const dropped: string[] = [];
   payload.costs = payload.costs.filter((cost) => {
+    // A fee quoted for local students only never applies to international applicants.
+    if (
+      /\blocal students?\b/i.test(cost.excerpt.replace(/non-?local/gi, "")) &&
+      !/non-?local/i.test(cost.excerpt)
+    ) {
+      dropped.push("cost: quoted for local students only");
+      return false;
+    }
     for (const field of ["tuition", "living", "other"] as const) {
       const value = cost[field];
       if (value !== null && !amountIn(value, cost.excerpt)) {
@@ -599,14 +614,16 @@ export function rankPages<P extends Page>(
   program: { title: string; officialUrl: string },
   documents: P[],
   registryUrls: Set<string>,
-  scoped: Map<string, string>,
+  scoped: Map<string, string | string[]>,
   otherProgramUrls: string[] = [],
 ) {
   const otherPrograms = new Set(
     otherProgramUrls.filter((u) => u !== program.officialUrl),
   );
   const ownUrls = new Set(
-    [...scoped].filter(([, title]) => title === program.title).map(([u]) => u),
+    [...scoped]
+      .filter(([, titles]) => [titles].flat().includes(program.title))
+      .map(([u]) => u),
   );
   const ranked = documents
     // A page registered for another program never informs this one.

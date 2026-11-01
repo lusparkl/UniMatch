@@ -111,6 +111,12 @@ TARGET PROGRAM MODE. The input names one TARGET program (title, level, field, of
 - English-language test thresholds are alternatives (any one test suffices); matching treats them as one group. Return each as its own rule: type IELTS, TOEFL, DUOLINGO (Duolingo English Test) or PTE (Pearson Test of English Academic), minimum set to the stated overall score, mandatory true, and a label that begins "English proof (any one accepted test)". If a test's score scale differs by date, or the page gives several scores, use type OTHER and no minimum.
 - intakes.academicYear is the calendar year the studies begin. A deadline in November 2026 for autumn entry belongs to 2027. Return an intake only when the cited page ties the dates to that entry year ("2027 intake", "2027/28", "Sept 2027 Entry"); otherwise leave it out and add an ambiguity note.
 - Typical useful facts: English-language test thresholds, qualification or grade thresholds, application opening and closing dates with explicit years, annual tuition for non-local students (currency and period exact), required documents, scholarships open to international applicants. If a fact is not stated, leave it out and add one ambiguity note instead of guessing.`;
+// Institution pages (international admission, fees, scholarships) are read once per university;
+// the result is merged into every program's candidate, so it must hold only facts that cover all of them.
+export const INSTITUTION_INSTRUCTIONS =
+  PROGRAM_INSTRUCTIONS +
+  `
+INSTITUTION MODE. The TARGET is not one program: it stands for every first-year bachelor's programme of the university. Extract only facts that the pages state for all such programmes, or for all applicants of a stated group (for example "non-local students", "applicants with the IB Diploma"). Skip any fact the page ties to particular programmes, faculties, schools or majors (for example a higher English score for Law, subject prerequisites for Medicine, a scholarship for one faculty). Skip fees that the page gives for particular programmes only. Every excerpt must contain the value it supports: for an English test, quote the line with its score (for example "IELTS ... Overall Band: 6.0"), never a nearby note.`;
 export function validateEvidence(
   payload: ExtractionInput,
   text: string | Map<string, string>,

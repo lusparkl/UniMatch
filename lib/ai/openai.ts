@@ -8,6 +8,7 @@ import {
   extractionJsonSchema,
   EXTRACTION_INSTRUCTIONS,
   PROGRAM_INSTRUCTIONS,
+  INSTITUTION_INSTRUCTIONS,
   type Extraction,
 } from "../research/extraction";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -232,18 +233,21 @@ export class OpenAIProvider {
       extractionSchema,
     );
   }
-  extractProgram(input: {
-    program: {
-      title: string;
-      degreeLevel: string;
-      fieldOfStudy: string;
-      officialUrl: string;
-      university: string;
-    };
-    text: string;
-  }): Promise<Extraction> {
+  extractProgram(
+    input: {
+      program: {
+        title: string;
+        degreeLevel: string;
+        fieldOfStudy: string;
+        officialUrl: string;
+        university: string;
+      };
+      text: string;
+    },
+    institution = false,
+  ): Promise<Extraction> {
     return this.structured(
-      PROGRAM_INSTRUCTIONS,
+      institution ? INSTITUTION_INSTRUCTIONS : PROGRAM_INSTRUCTIONS,
       input,
       extractionJsonSchema,
       extractionSchema,
