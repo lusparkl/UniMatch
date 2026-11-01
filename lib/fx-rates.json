@@ -1,0 +1,16 @@
+{
+  "source": "National Bank of Ukraine",
+  "url": "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json",
+  "date": "2026-11-02",
+  "unit": "UAH per 1 unit of currency",
+  "rates": {
+    "UAH": 1,
+    "USD": 45.3526,
+    "EUR": 50.6843,
+    "HKD": 5.7805,
+    "HUF": 0.138382,
+    "SGD": 35.4788,
+    "GBP": 60.7861,
+    "INR": 0.47764
+  }
+}

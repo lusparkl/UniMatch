@@ -1,5 +1,7 @@
 import type { Profile, Program, Requirement, Verification } from "./domain";
+import { convert, fxSource } from "./fx";
 export type Truth = "PASS" | "FAIL" | "UNKNOWN";
+const FX_MARGIN = 0.05;
 export type Check = {
   label: string;
   state: Truth;
@@ -13,6 +15,8 @@ export type Scenario = {
   eligibility: Truth;
   remaining: number | null;
   currency: string | null;
+  /** `remaining` in the student's budget currency when the program charges in another one. */
+  converted: number | null;
   affordable: Truth;
   fullRide: boolean;
   reason: string;
@@ -27,6 +31,48 @@ export const trusted = (s: Verification) =>
   s === "ADMIN_VERIFIED" || s === "SOURCE_BACKED";
 const eq = (a: string, b: string) =>
   a.trim().toLowerCase() === b.trim().toLowerCase();
+// Autumn and Fall name the same September entry.
+const season = (term: string) => (eq(term, "Autumn") ? "Fall" : term);
+export const sameTerm = (a: string, b: string) => eq(season(a), season(b));
+const FIELD_ALIASES: Record<string, string> = {
+  ai: "artificial intelligence",
+  cs: "computer science",
+  it: "information technology",
+  ml: "machine learning",
+  econ: "economics",
+  bba: "business administration",
+};
+const FIELD_NOISE = new Set(
+  "a an and the of in for with bachelor bachelors master masters degree programme program scheme hons honours bsc ba beng msc ma".split(
+    " ",
+  ),
+);
+// Crude suffix stripping, applied identically to both sides: computer/computing, engineer/engineering.
+const stem = (word: string) => {
+  let w = word;
+  for (let next = w; ; w = next) {
+    next = w.replace(/(ings|ing|ers|er|ies|s)$/, "");
+    if (next === w || next.length < 4) return w;
+  }
+};
+const fieldWords = (text: string) =>
+  text
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .flatMap((w) => (FIELD_ALIASES[w] ?? w).split(" "))
+    .filter((w) => w && !FIELD_NOISE.has(w))
+    .map(stem);
+/** Every meaningful word of the student's field appears in the program's field or title. */
+export function fieldMatches(
+  program: { fieldOfStudy: string; title: string },
+  field: string,
+) {
+  const wanted = fieldWords(field);
+  const offered = new Set(
+    fieldWords(program.fieldOfStudy + " " + program.title),
+  );
+  return wanted.length > 0 && wanted.every((w) => offered.has(w));
+}
 export function evaluateRule(rule: Requirement, p: Profile): Check | null {
   if (
     rule.appliesToNationalities.length &&
@@ -125,6 +171,11 @@ const TEST_NAMES: Record<string, string> = {
   DUOLINGO: "Duolingo",
   PTE: "PTE",
 };
+const ENGLISH_LABEL = "English proof (any one accepted test)";
+// Alternatives that cannot be scored (a date-dependent TOEFL scale, an IB English grade) carry the
+// group label as an OTHER rule; they keep a low score on another test from becoming a FAIL.
+const isEnglish = (r: Requirement) =>
+  ENGLISH_TESTS.includes(r.type) || r.label.startsWith(ENGLISH_LABEL);
 /**
  * Accepted English tests are alternatives: one passing result satisfies the requirement.
  * A confirmed FAIL needs a result below the minimum for every accepted test; otherwise another
@@ -139,7 +190,7 @@ export function evaluateEnglish(
     .filter((c): c is { rule: Requirement; check: Check } => c.check !== null);
   if (!checks.length) return null;
   if (checks.length === 1) return checks[0].check;
-  const label = "English proof (any one accepted test)";
+  const label = ENGLISH_LABEL;
   const kind = "ENGLISH";
   const passed = checks.find((c) => c.check.state === "PASS");
   if (passed)
@@ -147,8 +198,9 @@ export function evaluateEnglish(
   const wanted = checks
     .map(
       ({ rule }) =>
-        (TEST_NAMES[rule.type] ?? rule.type) +
-        (rule.minimum !== null ? " " + rule.minimum : ""),
+        (TEST_NAMES[rule.type] ??
+          (rule.label.slice(ENGLISH_LABEL.length).replace(/^[:\s]+/, "") ||
+            rule.label)) + (rule.minimum !== null ? " " + rule.minimum : ""),
     )
     .join(", ");
   if (checks.every((c) => c.check.state === "FAIL"))
@@ -185,20 +237,15 @@ export function matchProgram(
     },
     {
       label: "Field of study",
-      state: eq(program.fieldOfStudy, profile.fieldOfStudy)
-        ? "PASS"
-        : "UNKNOWN",
+      state: fieldMatches(program, profile.fieldOfStudy) ? "PASS" : "UNKNOWN",
       reason: program.fieldOfStudy,
     },
   ];
   const application: Check[] = [];
   const mandatory = program.requirements.filter((r) => r.mandatory);
-  const english = evaluateEnglish(
-    mandatory.filter((r) => ENGLISH_TESTS.includes(r.type)),
-    profile,
-  );
+  const english = evaluateEnglish(mandatory.filter(isEnglish), profile);
   if (english) academic.push(english);
-  for (const rule of mandatory.filter((r) => !ENGLISH_TESTS.includes(r.type))) {
+  for (const rule of mandatory.filter((r) => !isEnglish(r))) {
     const check = evaluateRule(rule, profile);
     if (check)
       (["NATIONALITY", "EDUCATION_COUNTRY"].includes(rule.type)
@@ -226,7 +273,7 @@ export function matchProgram(
     });
   const [year, term] = profile.intake.split("-");
   const intakes = program.intakes.filter(
-    (i) => i.academicYear === year && eq(i.term, term),
+    (i) => i.academicYear === year && sameTerm(i.term, term),
   );
   const routes: Check[] = intakes.map((i) =>
     !trusted(i.status) || !i.deadline || !i.timezone
@@ -279,12 +326,39 @@ export function matchProgram(
       ? cost.tuition + cost.living + cost.other
       : null;
   const currency = cost?.currency ?? null;
-  const affordability = (amount: number | null): Truth =>
-    amount === null || currency !== profile.currency
-      ? "UNKNOWN"
-      : amount <= profile.budget
-        ? "PASS"
-        : "FAIL";
+  // The amount in the student's budget currency; other currencies use the dated reference rate.
+  const inBudget = (amount: number | null) =>
+    amount === null || currency === null
+      ? null
+      : convert(amount, currency, profile.currency);
+  const converted = currency !== null && currency !== profile.currency;
+  const affordability = (amount: number | null): Truth => {
+    const value = inBudget(amount);
+    if (value === null) return "UNKNOWN";
+    // A converted amount within the margin of the budget could fall either side on the payment day.
+    if (
+      converted &&
+      Math.abs(value - profile.budget) <= FX_MARGIN * profile.budget
+    )
+      return "UNKNOWN";
+    return value <= profile.budget ? "PASS" : "FAIL";
+  };
+  const conversionNote = (amount: number | null) => {
+    const value = inBudget(amount);
+    return converted && value !== null
+      ? " About " +
+          Math.round(value).toLocaleString("en") +
+          " " +
+          profile.currency +
+          " at the " +
+          fxSource.name +
+          " rate of " +
+          fxSource.date +
+          "; results within " +
+          FX_MARGIN * 100 +
+          "% of your budget stay unknown."
+      : "";
+  };
   const scenarios: Scenario[] = [
     {
       name: "Without scholarship",
@@ -292,14 +366,16 @@ export function matchProgram(
       eligibility: "PASS",
       remaining: total,
       currency,
+      converted: converted ? inBudget(total) : null,
       affordable: affordability(total),
       fullRide: false,
       reason:
         total === null
           ? "Complete, comparable annual costs are unavailable."
-          : currency !== profile.currency
-            ? "Currency differs from your budget; no exchange rate has been assumed."
-            : "Tuition + living expenses + mandatory costs.",
+          : inBudget(total) === null
+            ? "No reference rate for this currency; no conversion was assumed."
+            : "Tuition + living expenses + mandatory costs." +
+              conversionNote(total),
     },
   ];
   for (const s of program.scholarships) {
@@ -313,17 +389,16 @@ export function matchProgram(
       trusted(s.status) ? "PASS" : "UNKNOWN",
       s.deadline ? (new Date(s.deadline) < now ? "FAIL" : "PASS") : "UNKNOWN",
     ]);
-    const comparable =
-      cost &&
-      s.tuitionCoverage !== null &&
-      s.stipendAmount !== null &&
-      (s.stipendAmount === 0 || s.currency === currency);
+    // A stipend in another currency is converted to the cost's currency at the reference rate.
+    const stipend =
+      s.stipendAmount === 0
+        ? 0
+        : s.stipendAmount !== null && s.currency && currency
+          ? convert(s.stipendAmount, s.currency, currency)
+          : null;
     const remaining =
-      total !== null && comparable
-        ? Math.max(
-            0,
-            total - cost!.tuition! * s.tuitionCoverage! - s.stipendAmount!,
-          )
+      total !== null && cost && s.tuitionCoverage !== null && stipend !== null
+        ? Math.max(0, total - cost.tuition! * s.tuitionCoverage - stipend)
         : null;
     const guaranteed =
       s.fundingCategory === "GUARANTEED" &&
@@ -335,6 +410,7 @@ export function matchProgram(
       eligibility,
       remaining,
       currency,
+      converted: converted ? inBudget(remaining) : null,
       affordable:
         eligibility === "FAIL"
           ? "FAIL"
@@ -346,7 +422,8 @@ export function matchProgram(
         (guaranteed
           ? "Published guaranteed funding; confirm award terms."
           : "Eligibility to apply is not an award. ") +
-        checks.map((c) => c.reason).join(" "),
+        checks.map((c) => c.reason).join(" ") +
+        conversionNote(remaining),
     });
   }
   const suitable = scenarios.filter(

@@ -235,6 +235,20 @@ const retired: {
     degreeLevel: "BACHELOR",
   },
 ];
+// CUHK programmes open only for senior-year (second-year) entry; checked 2026-11-01.
+const seniorYearOnly = [
+  "bmbln",
+  "histn-puh",
+  "chedn",
+  "eshen",
+  "cengn",
+  "cscin",
+  "chprn",
+  "bscgb",
+  "nscin",
+  "gdrsn",
+  "socin-ssd",
+].map((code) => `https://admission.cuhk.edu.hk/programme/${code}/`);
 // Transfer-student pages: wrong audience for first-year international applicants.
 const demoted = ["https://join.hkust.edu.hk/admissions/post-secondary"];
 export async function seedRegistry() {
@@ -306,6 +320,10 @@ export async function seedRegistry() {
       where: r,
       data: { published: false },
     });
+  await db.degreeProgram.updateMany({
+    where: { universityId: "cuhk", officialUrl: { in: seniorYearOnly } },
+    data: { published: false },
+  });
   await db.approvedSource.updateMany({
     where: { startUrl: { in: demoted }, purpose: "registry" },
     data: { purpose: "admissions" },

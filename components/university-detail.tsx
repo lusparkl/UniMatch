@@ -6,7 +6,13 @@ import { Button } from "./ui/button";
 import { loadProfile, usePriorities } from "./account-client";
 import { PriorityButton } from "./priority-button";
 import { ReadinessPanel } from "./readiness-panel";
-import { costHeadline, money, nextDeadline, statusLabel } from "./results";
+import {
+  costHeadline,
+  formatDate,
+  money,
+  nextDeadline,
+  statusLabel,
+} from "./results";
 import {
   defaultProfile,
   type Evidence,
@@ -14,6 +20,7 @@ import {
   type Profile,
 } from "@/lib/domain";
 import { matchProgram, trusted } from "@/lib/matching";
+import { fxSource } from "@/lib/fx";
 const tabs = [
   ["req", "Requirements"],
   ["dead", "Deadlines"],
@@ -145,6 +152,7 @@ export function UniversityDetail({
                 p,
                 base.scenarios[0].remaining,
                 base.scenarios[0].currency,
+                profile?.currency,
               )}
             </div>
           </div>
@@ -259,9 +267,8 @@ export function UniversityDetail({
                 >
                   <p>
                     {trusted(i.status) && i.deadline
-                      ? new Date(i.deadline).toLocaleDateString("en", {
+                      ? formatDate(i.deadline, i.timezone, {
                           dateStyle: "long",
-                          timeZone: "UTC",
                         }) +
                         " · " +
                         (i.timezone ?? "Timezone not verified")
@@ -375,6 +382,8 @@ export function UniversityDetail({
                       <strong className="tiny">{s.name}</strong>
                       <h3 className="amount">
                         {money(s.remaining, s.currency)}
+                        {s.converted !== null &&
+                          " ≈ " + money(s.converted, profile!.currency)}
                       </h3>
                       <p>Estimated remaining annual cost</p>
                       <span className={"tag " + s.affordable}>
@@ -395,7 +404,9 @@ export function UniversityDetail({
                 ))}
                 <p className="tiny muted" style={{ marginTop: 18 }}>
                   Awards are evaluated separately. Scholarships are never
-                  automatically stacked. No currency conversion is assumed.
+                  automatically stacked. Other currencies are converted at{" "}
+                  {fxSource.name} reference rates of {fxSource.date}; treat
+                  converted amounts as estimates.
                 </p>
               </>
             )}

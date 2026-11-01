@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "test:model": "tsx --env-file=.env scripts/model-smoke.ts",
     "test:cost": "tsx --env-file=.env scripts/cost-benchmark.ts",
+    "fx:update": "tsx scripts/update-fx.ts",
     "test:live": "tsx --env-file=.env scripts/live-smoke.ts",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",

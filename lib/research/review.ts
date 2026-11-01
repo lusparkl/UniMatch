@@ -4,6 +4,7 @@ import { extractionSchema, validateEvidence } from "./extraction";
 import { allowedUrl } from "./security";
 import { ruleSchema } from "../domain";
 import { sameProgram } from "./relevance";
+import { institutionDate, institutionZone } from "./timezone";
 type PageRow = {
   id: string;
   url: string;
@@ -217,7 +218,9 @@ export async function reviewCandidate(
             },
           });
         }
+        const country = candidate.document.university.country;
         for (const i of payload.intakes) {
+          const deadline = institutionDate(i.deadline, country, true);
           await tx.applicationIntake.deleteMany({
             where: {
               programId: p!.id,
@@ -225,7 +228,7 @@ export async function reviewCandidate(
               // The same entry year and deadline is one fact, whatever the page calls the term or route.
               OR: [
                 { intakeTerm: i.term, applicationRoute: i.route },
-                ...(i.deadline ? [{ deadline: new Date(i.deadline) }] : []),
+                ...(deadline ? [{ deadline: new Date(deadline) }] : []),
               ],
             },
           });
@@ -236,9 +239,9 @@ export async function reviewCandidate(
               academicYear: i.academicYear,
               intakeTerm: i.term,
               applicationRoute: i.route,
-              openDate: i.openDate,
-              deadline: i.deadline,
-              deadlineTimezone: i.timezone,
+              openDate: institutionDate(i.openDate, country, false),
+              deadline,
+              deadlineTimezone: institutionZone(country)?.zone ?? i.timezone,
               verificationStatus: status,
               status: "PUBLISHED",
               sourceEvidenceId: e.id,

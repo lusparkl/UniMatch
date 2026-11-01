@@ -17,6 +17,8 @@ import {
   type Profile,
 } from "@/lib/domain";
 export { readLocalProfile as readProfile, PROFILE_KEY };
+// Matching compares qualification names exactly; these are the names published requirements use.
+const qualifications = ["IB Diploma", "GCE A-Level", "International A-Level"];
 export function ProfileWizard() {
   const [profile, setProfile] = useState<Profile>(defaultProfile),
     [step, setStep] = useState(0),
@@ -34,6 +36,7 @@ export function ProfileWizard() {
     label: string,
     placeholder = "",
     required = false,
+    suggestions: string[] = [],
   ) => (
     <label>
       {label}
@@ -42,8 +45,16 @@ export function ProfileWizard() {
         value={String(profile[key] ?? "")}
         placeholder={placeholder}
         required={required}
+        list={suggestions.length ? key + "-options" : undefined}
         onChange={(e) => set(key, e.target.value)}
       />
+      {suggestions.length > 0 && (
+        <datalist id={key + "-options"}>
+          {suggestions.map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
+      )}
     </label>
   );
   const number = (key: keyof Profile, label: string, max = 10000000) => (
@@ -211,6 +222,8 @@ export function ProfileWizard() {
                 "qualification",
                 "Current qualification",
                 "Exact qualification name",
+                false,
+                qualifications,
               )}
               {text(
                 "gradingScale",

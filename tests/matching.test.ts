@@ -10,8 +10,11 @@ import {
   combine,
   evaluateEnglish,
   evaluateRule,
+  fieldMatches,
   matchProgram,
 } from "../lib/matching";
+import { institutionDate } from "../lib/research/timezone";
+import { convert, fxSource } from "../lib/fx";
 const profile: Profile = {
   ...defaultProfile,
   nationality: "Ukraine",
@@ -129,10 +132,54 @@ describe("three-valued matching", () => {
     );
     expect(match(p).scenarios[1].eligibility).toBe("FAIL");
   });
-  it("does not compare currencies", () =>
-    expect(match(program(), { ...profile, currency: "EUR" }).financial).toBe(
+  it("converts other currencies at the reference rate", () => {
+    const eur = convert(31000, "USD", "EUR")!; // demo total is 31,000 USD
+    const budget = (factor: number) =>
+      match(program(), { ...profile, currency: "EUR", budget: eur * factor })
+        .scenarios[0];
+    expect(budget(1.3).affordable).toBe("PASS");
+    expect(budget(1.3).converted).toBeCloseTo(eur, 0);
+    expect(budget(1.3).reason).toContain(fxSource.name);
+    expect(budget(0.7).affordable).toBe("FAIL");
+  });
+  it("keeps converted amounts near the budget unknown", () => {
+    const eur = convert(31000, "USD", "EUR")!;
+    expect(
+      match(program(), { ...profile, currency: "EUR", budget: eur * 1.02 })
+        .scenarios[0].affordable,
+    ).toBe("UNKNOWN");
+  });
+  it("does not compare currencies without a reference rate", () =>
+    expect(match(program(), { ...profile, currency: "JPY" }).financial).toBe(
       "UNKNOWN",
     ));
+  it("matches the field of study by its words", () => {
+    const p = { fieldOfStudy: "Business Administration", title: "BBA" };
+    expect(fieldMatches(p, "Business")).toBe(true);
+    expect(fieldMatches(p, "business administration")).toBe(true);
+    expect(
+      fieldMatches(
+        { fieldOfStudy: "Computing and Data Science", title: "BEng" },
+        "Computer Science",
+      ),
+    ).toBe(true);
+    expect(
+      fieldMatches(
+        {
+          fieldOfStudy: "Engineering",
+          title: "BEng in Artificial Intelligence",
+        },
+        "AI",
+      ),
+    ).toBe(true);
+    expect(
+      fieldMatches(
+        { fieldOfStudy: "Political Science", title: "BSSc" },
+        "Computer Science",
+      ),
+    ).toBe(false);
+    expect(fieldMatches(p, "and")).toBe(false);
+  });
   it("preserves missing costs", () => {
     const p = program();
     p.costs[0].living = null;
@@ -236,5 +283,74 @@ describe("English tests as alternatives", () => {
     const result = matchProgram(p, { ...profile, ielts: null, toefl: 95 }, now);
     const english = result.academic.find((c) => c.label.startsWith("English"))!;
     expect(english.state).toBe("PASS");
+  });
+
+  it("groups unscored English alternatives instead of failing or adding checks", () => {
+    const p = program();
+    p.requirements = [
+      test("IELTS", 6),
+      r({
+        type: "OTHER",
+        label:
+          "English proof (any one accepted test): Grade 4 or above in IB English",
+        minimum: null,
+        scale: null,
+        allowed: [],
+        mandatory: true,
+        appliesToNationalities: [],
+        appliesToQualifications: [],
+      }),
+    ];
+    const low = matchProgram(p, { ...profile, ielts: 5 }, now);
+    const english = low.academic.filter((c) => c.label.startsWith("English"));
+    expect(english).toHaveLength(1);
+    expect(english[0].state).toBe("UNKNOWN");
+    expect(english[0].reason).toContain("Grade 4 or above in IB English");
+    expect(
+      matchProgram(p, { ...profile, ielts: 6.5 }, now).academic.find((c) =>
+        c.label.startsWith("English"),
+      )!.state,
+    ).toBe("PASS");
+  });
+});
+
+describe("intake terms", () => {
+  it("treats Autumn and Fall as the same entry", () => {
+    const p = program();
+    p.intakes = p.intakes.map((i) => ({ ...i, term: "Fall" }));
+    const [year] = profile.intake.split("-");
+    const fall = matchProgram(p, { ...profile, intake: year + "-Fall" }, now);
+    const autumn = matchProgram(
+      p,
+      { ...profile, intake: year + "-Autumn" },
+      now,
+    );
+    expect(autumn.application).toEqual(fall.application);
+    expect(fall.application.at(-1)!.reason).not.toContain(
+      "Requested intake is not verified",
+    );
+  });
+});
+
+describe("institution time zones", () => {
+  it("reads Hong Kong dates as Hong Kong time", () => {
+    expect(institutionDate("2026-11-17T00:00:00Z", "Hong Kong", true)).toBe(
+      "2026-11-17T23:59:59+08:00",
+    );
+    expect(institutionDate("2026-10-02T00:00:00Z", "Hong Kong", false)).toBe(
+      "2026-10-02T00:00:00+08:00",
+    );
+    expect(institutionDate("2027-08-25T12:00:00Z", "Hong Kong", true)).toBe(
+      "2027-08-25T12:00:00+08:00",
+    );
+  });
+  it("keeps explicit offsets and other countries unchanged", () => {
+    expect(
+      institutionDate("2027-08-25T12:00:00+08:00", "Hong Kong", true),
+    ).toBe("2027-08-25T12:00:00+08:00");
+    expect(institutionDate("2027-01-15T00:00:00Z", "Hungary", true)).toBe(
+      "2027-01-15T00:00:00Z",
+    );
+    expect(institutionDate(null, "Hong Kong", true)).toBeNull();
   });
 });

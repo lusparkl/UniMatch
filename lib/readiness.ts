@@ -1,6 +1,6 @@
 import type { Profile, Program } from "./domain";
 import { documentChecklist, type ChecklistItem } from "./documents";
-import { matchProgram, trusted, type Check } from "./matching";
+import { matchProgram, sameTerm, trusted, type Check } from "./matching";
 
 const TEST_KINDS = [
   "ENGLISH",
@@ -41,8 +41,10 @@ export function readiness(
     .filter(
       (i) =>
         i.academicYear === year &&
-        i.term.toLowerCase() === term.toLowerCase() &&
+        sameTerm(i.term, term) &&
         trusted(i.status) &&
+        // Same rule as matching: a deadline without a time zone is not verified.
+        i.timezone &&
         i.deadline &&
         new Date(i.deadline) >= now,
     )

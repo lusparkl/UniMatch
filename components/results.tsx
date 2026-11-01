@@ -8,6 +8,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { Button } from "./ui/button";
+import { convert } from "@/lib/fx";
 import { loadProfile, usePriorities } from "./account-client";
 import { PriorityButton } from "./priority-button";
 import {
@@ -20,6 +21,8 @@ import {
   trusted,
   compareMatches,
   matchProgram,
+  sameTerm,
+  type Match,
   type Truth,
 } from "@/lib/matching";
 export const statusLabel: Record<Truth, string> = {
@@ -35,13 +38,54 @@ export const money = (amount: number | null, currency: string | null) =>
         currency,
         maximumFractionDigits: 0,
       }).format(amount);
+/** A date as the institution states it: in its own time zone, else as stored (UTC). */
+export const formatDate = (
+  iso: string,
+  timezone: string | null,
+  options: Intl.DateTimeFormatOptions,
+) => {
+  try {
+    return new Date(iso).toLocaleDateString("en", {
+      ...options,
+      timeZone: timezone ?? "UTC",
+    });
+  } catch {
+    return new Date(iso).toLocaleDateString("en", {
+      ...options,
+      timeZone: "UTC",
+    });
+  }
+};
+/** Annual cost before aid in the budget currency, for sorting; unknown or unconvertible sorts last. */
+const budgetCost = (m: Match, profile: Profile | null) => {
+  const s = m.scenarios[0];
+  return (
+    s.converted ??
+    (!profile || s.currency === profile.currency ? s.remaining : null) ??
+    Infinity
+  );
+};
+/** " (≈ US$30,590)" when an amount is charged in a currency other than the student's budget currency. */
+export const approx = (
+  amount: number,
+  currency: string | null,
+  target: string | null | undefined,
+) => {
+  const value =
+    currency && target && currency !== target
+      ? convert(amount, currency, target)
+      : null;
+  return value === null ? "" : " (≈ " + money(value, target!) + ")";
+};
 /** Annual cost headline: the full total when known, otherwise only the verified parts, never a guess. */
 export const costHeadline = (
   program: Program,
   remaining: number | null,
   currency: string | null,
+  target?: string | null,
 ) => {
-  if (remaining !== null) return money(remaining, currency);
+  if (remaining !== null)
+    return money(remaining, currency) + approx(remaining, currency, target);
   const annual = program.costs.filter(
     (c) => trusted(c.status) && c.period === "ANNUAL",
   );
@@ -54,16 +98,11 @@ export const costHeadline = (
   return tuitions.length === 1
     ? "Partial · tuition " +
         money(tuitions[0], tuitionCurrency) +
+        approx(tuitions[0], tuitionCurrency, target) +
         " only; total not verified"
     : "Information unavailable";
 };
-const sameTerm = (a: string, b: string) => {
-  const norm = (t: string) => {
-    const v = t.trim().toLowerCase();
-    return v === "autumn" ? "fall" : v;
-  };
-  return norm(a) === norm(b);
-};
+
 /**
  * Next verified application deadline for the student's intake (any intake without a profile). A date the
  * source gives without a time zone is still shown, marked as such; the matching engine keeps requiring one.
@@ -83,11 +122,10 @@ export const nextDeadline = (program: Program, profile: Profile | null) => {
   const now = new Date().toISOString();
   const intake = dated.find((i) => i.deadline! >= now) ?? dated.at(-1);
   if (!intake?.deadline) return "Not verified";
-  const label = new Date(intake.deadline).toLocaleDateString("en", {
+  const label = formatDate(intake.deadline, intake.timezone, {
     month: "short",
     day: "numeric",
     year: "numeric",
-    timeZone: "UTC",
   });
   return (
     label +
@@ -147,9 +185,7 @@ export function Results({ programs }: { programs: Program[] }) {
           sort === "name"
             ? (a, b) => a.program.university.localeCompare(b.program.university)
             : sort === "cost"
-              ? (a, b) =>
-                  (a.scenarios[0].remaining ?? Infinity) -
-                  (b.scenarios[0].remaining ?? Infinity)
+              ? (a, b) => budgetCost(a, profile) - budgetCost(b, profile)
               : sort === "fresh"
                 ? (a, b) =>
                     (b.program.lastResearched ?? "").localeCompare(
@@ -395,6 +431,7 @@ export function Results({ programs }: { programs: Program[] }) {
                       m.program,
                       m.scenarios[0].remaining,
                       m.scenarios[0].currency,
+                      profile?.currency,
                     )}
                   </div>
                 </div>

@@ -227,6 +227,11 @@ details > summary {
   font-size: 13px;
   color: var(--fg-2);
   white-space: nowrap;
+  max-width: 100%;
+}
+/* Long page-quoted values (durations, languages) wrap instead of widening the card. */
+.actions .tag {
+  white-space: normal;
 }
 .tag.PASS,
 .tag.UNKNOWN,
@@ -1102,7 +1107,7 @@ footer .brand img {
   }
   .layout,
   .detail-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .filters {
     position: static;

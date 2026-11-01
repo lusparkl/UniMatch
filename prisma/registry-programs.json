@@ -773,13 +773,6 @@
   },
   {
     "universityId": "cuhk",
-    "title": "Bimodal Bilingual Studies",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Bimodal Bilingual Studies",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/bmbln/"
-  },
-  {
-    "universityId": "cuhk",
     "title": "China Studies",
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "China Studies",
@@ -847,13 +840,6 @@
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "Philosophy",
     "officialUrl": "https://admission.cuhk.edu.hk/programme/philn/"
-  },
-  {
-    "universityId": "cuhk",
-    "title": "Public History",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Public History",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/histn-puh/"
   },
   {
     "universityId": "cuhk",
@@ -976,24 +962,10 @@
   },
   {
     "universityId": "cuhk",
-    "title": "Early Childhood Education (BA)",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Early Childhood Education (BA)",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/chedn/"
-  },
-  {
-    "universityId": "cuhk",
     "title": "English Studies (BA) and English Language Education (BEd)",
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "English Studies (BA) and English Language Education (BEd)",
     "officialUrl": "https://admission.cuhk.edu.hk/programme/eledn/"
-  },
-  {
-    "universityId": "cuhk",
-    "title": "Exercise Science and Health Education",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Exercise Science and Health Education",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/eshen/"
   },
   {
     "universityId": "cuhk",
@@ -1050,20 +1022,6 @@
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "Computational Data Science",
     "officialUrl": "https://admission.cuhk.edu.hk/programme/cdasn/"
-  },
-  {
-    "universityId": "cuhk",
-    "title": "Computer Engineering",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Computer Engineering",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/cengn/"
-  },
-  {
-    "universityId": "cuhk",
-    "title": "Computer Science",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Computer Science",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/cscin/"
   },
   {
     "universityId": "cuhk",
@@ -1179,20 +1137,6 @@
   },
   {
     "universityId": "cuhk",
-    "title": "Community Health Practice",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Community Health Practice",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/chprn/"
-  },
-  {
-    "universityId": "cuhk",
-    "title": "Gerontology",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Gerontology",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/bscgb/"
-  },
-  {
-    "universityId": "cuhk",
     "title": "Nursing",
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "Nursing",
@@ -1235,13 +1179,6 @@
   },
   {
     "universityId": "cuhk",
-    "title": "Natural Sciences",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Natural Sciences",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/nscin/"
-  },
-  {
-    "universityId": "cuhk",
     "title": "Risk Management Science",
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "Risk Management Science",
@@ -1281,13 +1218,6 @@
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "Economics (CUHK-Tsinghua University Dual Undergraduate Degree Programme)",
     "officialUrl": "https://admission.cuhk.edu.hk/programme/ecotu/"
-  },
-  {
-    "universityId": "cuhk",
-    "title": "Gender Studies",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Gender Studies",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/gdrsn/"
   },
   {
     "universityId": "cuhk",
@@ -1344,13 +1274,6 @@
     "degreeLevel": "BACHELOR",
     "fieldOfStudy": "Social Work",
     "officialUrl": "https://admission.cuhk.edu.hk/programme/sowkn/"
-  },
-  {
-    "universityId": "cuhk",
-    "title": "Society and Sustainable Development",
-    "degreeLevel": "BACHELOR",
-    "fieldOfStudy": "Society and Sustainable Development",
-    "officialUrl": "https://admission.cuhk.edu.hk/programme/socin-ssd/"
   },
   {
     "universityId": "cuhk",
