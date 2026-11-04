@@ -86,6 +86,37 @@ export function classifyDocument(name: string) {
 /** Common to almost every application; shown, clearly marked unverified, when a program lists no documents. */
 export const typicalKinds = ["passport", "transcript", "diploma", "english"];
 
+// Documents tied to one school system ("Standard X results", "HKDSE certificate") apply only to students who
+// hold that qualification. `holder` recognises the student's qualification name for the same system.
+const SYSTEMS: { pattern: RegExp; holder: RegExp }[] = [
+  {
+    pattern:
+      /\b(standard|std\.?|class)\s*(x|xii|10|12)\b|\bCBSE\b|\bICSE\b|\bISC\b/i,
+    holder: /CBSE|ICSE|\bISC\b|Indian|standard\s*(x|xii)|class\s*(10|12)/i,
+  },
+  { pattern: /\bHKDSE\b|\bHKALE\b/i, holder: /HKDSE|HKALE|Hong Kong Diploma/i },
+  {
+    pattern: /\bgaokao\b|national college entrance/i,
+    holder: /gaokao|national college entrance/i,
+  },
+  {
+    pattern: /\bIB\b|international baccalaureate/i,
+    holder: /\bIB\b|international baccalaureate/i,
+  },
+  { pattern: /\bA[- ]?levels?\b|\bGCE\b/i, holder: /\bA[- ]?level|\bGCE\b/i },
+];
+export type DocumentScope = "APPLIES" | "NOT_APPLICABLE" | "UNVERIFIED";
+/** Whether a listed document applies to this student; a system-specific one is unverified without a qualification. */
+export function documentScope(
+  name: string,
+  qualification: string,
+): DocumentScope {
+  const system = SYSTEMS.find((s) => s.pattern.test(name));
+  if (!system) return "APPLIES";
+  if (!qualification.trim()) return "UNVERIFIED";
+  return system.holder.test(qualification) ? "APPLIES" : "NOT_APPLICABLE";
+}
+
 export type HaveStatus = "HAVE" | "IN_PROGRESS" | "MISSING" | "UNTRACKED";
 export type ChecklistItem = {
   name: string;
@@ -94,6 +125,8 @@ export type ChecklistItem = {
   mandatory: boolean;
   have: HaveStatus;
   typical: boolean;
+  /** Applies only to one school system and the student's qualification is unknown: shown, not counted as missing. */
+  unverified: boolean;
 };
 type Owned = Record<string, "HAVE" | "IN_PROGRESS">;
 
@@ -121,12 +154,19 @@ export function documentChecklist(
     ? typicalKinds.map((id) => ({
         name: documentKinds.find((k) => k.id === id)!.label,
         mandatory: true,
+        scope: "APPLIES" as DocumentScope,
       }))
-    : listed;
+    : listed
+        .map((d) => ({
+          ...d,
+          scope: documentScope(d.name, profile.qualification),
+        }))
+        .filter((d) => d.scope !== "NOT_APPLICABLE");
   const seen = new Set<string>();
   const items: ChecklistItem[] = [];
   for (const row of rows) {
-    const kind = classifyDocument(row.name);
+    const unverified = row.scope === "UNVERIFIED";
+    const kind = unverified ? null : classifyDocument(row.name);
     // Two listed documents of one kind (for example two transcripts) are one thing to prepare.
     if (kind && seen.has(kind.id)) continue;
     if (kind) seen.add(kind.id);
@@ -137,6 +177,7 @@ export function documentChecklist(
       mandatory: row.mandatory,
       have: kind ? (owned[kind.id] ?? "MISSING") : "UNTRACKED",
       typical,
+      unverified,
     });
   }
   return items;

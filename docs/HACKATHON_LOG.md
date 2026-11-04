@@ -77,3 +77,62 @@ Running log for the hackathon plan (`docs/hackathon/`). Each entry records what 
 **Owner actions pending:**
 
 - Approve `git push` of `main`: 2 earlier commits plus Part 1.
+
+## 2026-11-04 16:30: Part 2 done (W2a–W2f, section 3 reviewer)
+
+**Changed (engine, `lib/matching.ts`):**
+
+- **W2a lower bound.** With a partial total, tuition is a floor: no-aid floor = tuition; scholarship floor = max(0, tuition × (1 − coverage) − stipend).
+  - A floor converted to the budget currency above budget × 1.05 (or above the budget exactly, in the same currency) makes that scenario FAIL.
+  - Financial is FAIL only when every scenario allowed by the funding preference fails; if the preference allows none, every scenario must fail.
+  - A partial total never gives PASS.
+  - `Scenario` gains `lowerBound`, `lowerBoundConverted` and `partial` for the Part 4 arithmetic panel.
+- **Cost rows combine by part.** Rows may each quote one part (tuition, living, other). Parts in one currency now add up to a total.
+  - Previously any two rows counted as "differing estimates", so a complete total could never form from separate quotations. This was a blocker for W4.
+  - Two different figures for one part, or rows in different currencies, give UNKNOWN with "Official figures disagree: …" (W2f). The smallest tuition still bounds from below.
+- **W2b.** Other-year evidence still gives UNKNOWN. The reason now reads "Published for the {year} cycle; {intake} not yet published.", and `Check.url` carries the evidence URL.
+  - Other-year costs say the same, prefixed "Costs:".
+  - The default intake stays 2027-Fall: the coverage report shows 0 programmes blocked by the year alone.
+- **Intake terms.** "Sept…" and "September…" now equal Fall. Round names stay unmapped.
+- **W2c field tiers** (`fieldTier`):
+  - Tier 1: the field or title equals the query.
+  - Tier 2: the query words are in the title's first conjunct.
+  - Tier 3: the words appear only in a later conjunct or inside parentheses. This gives a "Related field" check with UNKNOWN.
+  - `compareMatches` sorts tiers 1–2, then 3, then 0.
+- **W2d.** A-level route rules use the existing `appliesToQualifications`. Tests cover PASS, FAIL, not applicable to IB students, and UNKNOWN without a qualification. Data is in Part 3.
+- **W2e.** `documentScope`: documents tied to one school system (Standard X/CBSE, HKDSE, Gaokao, IB, A-level) are dropped for other qualifications. Without a qualification they are shown as unverified and not counted as missing.
+- **Other modules:**
+  - `lib/trust.ts`: three trust tiers and the review disclosure text.
+  - `lib/research/timezone.ts`: South Korea, `Asia/Seoul` +09:00.
+
+**Changed (reviewer):**
+
+- `lib/research/auto-review.ts` holds pure rules 3.1(1–6) and the 3.2 checklist.
+- `scripts/auto-review.ts` (`npm run review:auto`, `APPLY=1` writes) runs them against the database.
+- It publishes `SOURCE_BACKED` through `reviewCandidate` with reviewer `claude-code-auto`.
+- It marks contradicted machine-reviewed rows `CONFLICTING` and records an `AUTO_CONFLICT` ReviewRecord.
+- It sets `requirementsComplete` (never clears it) with an `AUTO_COMPLETE` ReviewRecord.
+- It exits on `OWNER_APPROVED`.
+- Human-reviewed rows are never replaced or demoted. Claims that would replace one are withheld. Programme duration and language only fill gaps.
+- The reviewer pre-checks what `reviewCandidate` would reject wholesale: the programme quotation, intake year in the quote, and an approved scholarship `officialUrl`. One bad claim no longer blocks a whole candidate.
+
+**Decided (checklist 3.2, item 3):** a qualification "route" counts only as a mandatory `QUALIFICATION` allow-list that applies to every applicant.
+
+- A route rule scoped to IB is skipped for an A-level student. Marking such a programme complete would let that student reach a wrong PASS.
+- The allow-list makes unlisted qualifications UNKNOWN ("equivalency not verified"). The 4 owner-reviewed flagships already use this pattern.
+
+**Measured:**
+
+- typecheck, lint and Prettier clean.
+- `npm test`: 189/189 (new: `tests/engine-part2.test.ts` 24, `tests/auto-review.test.ts` 20).
+- Integration: 4/4. E2E: public 5/5, private 3/3.
+- The hedge-guard test was vacuous at first (`snapExcerpt` returned null before the guard ran). It was rebuilt so that the snap succeeds and only the guard refuses it.
+- `npm run review:auto` dry run on the current database:
+  - 0 pending candidates (all were reviewed before).
+  - 4 programmes already complete.
+  - 246 left UNKNOWN: all 246 lack an applicant-wide qualification allow-list; 98 also lack an English minimum. This is Part 3 data work.
+- Old engine (`b03cd0e`) against new, real catalog (250 programmes), three profiles:
+  - **No new PASS anywhere.**
+  - Application UNKNOWN → PASS on 30 programmes (September terms).
+  - Financial UNKNOWN → FAIL on 39 programmes for a US$12k budget, 39 for a US$15k full-ride seeker, and 2 for US$40k (tuition-only lower bound).
+  - Academic: no change.

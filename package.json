@@ -25,7 +25,8 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:crawl": "tsx --env-file=.env scripts/crawl-smoke.ts",
     "format": "prettier --write .",
-    "coverage": "tsx --env-file=.env scripts/coverage-report.ts"
+    "coverage": "tsx --env-file=.env scripts/coverage-report.ts",
+    "review:auto": "tsx --env-file=.env scripts/auto-review.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.1",

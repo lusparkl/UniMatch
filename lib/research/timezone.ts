@@ -1,7 +1,9 @@
 // Owner decision (2026-11-01): Hong Kong institutions publish admission dates in Hong Kong time.
-// Hong Kong has no daylight saving, so a fixed offset is exact.
+// Neither zone has daylight saving, so a fixed offset is exact.
 const zones: Record<string, { zone: string; offset: string }> = {
   "Hong Kong": { zone: "Asia/Hong_Kong", offset: "+08:00" },
+  // Korean institutions publish dates in Korea Standard Time, which also has no daylight saving.
+  "South Korea": { zone: "Asia/Seoul", offset: "+09:00" },
 };
 export const institutionZone = (country: string) => zones[country] ?? null;
 /**

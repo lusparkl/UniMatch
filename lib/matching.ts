@@ -8,6 +8,8 @@ export type Check = {
   reason: string;
   // Rule type (or "ENGLISH" for the any-of English group); lets callers split tests from other checks.
   kind?: string;
+  /** Official page behind the check, so an UNKNOWN can link to where it is resolved. */
+  url?: string;
 };
 export type Scenario = {
   name: string;
@@ -17,6 +19,15 @@ export type Scenario = {
   currency: string | null;
   /** `remaining` in the student's budget currency when the program charges in another one. */
   converted: number | null;
+  /**
+   * With a partial total (tuition known, living or other costs missing), the least the student could pay:
+   * tuition alone, less this scholarship's coverage and stipend. Null when even that is unknown.
+   */
+  lowerBound: number | null;
+  /** `lowerBound` in the budget currency. */
+  lowerBoundConverted: number | null;
+  /** True when the total cost is incomplete, so `remaining` is null and only the lower bound is known. */
+  partial: boolean;
   affordable: Truth;
   fullRide: boolean;
   reason: string;
@@ -31,8 +42,10 @@ export const trusted = (s: Verification) =>
   s === "ADMIN_VERIFIED" || s === "SOURCE_BACKED";
 const eq = (a: string, b: string) =>
   a.trim().toLowerCase() === b.trim().toLowerCase();
-// Autumn and Fall name the same September entry.
-const season = (term: string) => (eq(term, "Autumn") ? "Fall" : term);
+// Autumn, Fall and September name the same entry ("Sept", "September entry", "Sept 2027 entry").
+// Admission round names ("regular round", "final") state no term and are left as they are.
+const season = (term: string) =>
+  /^\s*(autumn|fall|sept(ember)?)\b/i.test(term) ? "Fall" : term;
 export const sameTerm = (a: string, b: string) => eq(season(a), season(b));
 const FIELD_ALIASES: Record<string, string> = {
   ai: "artificial intelligence",
@@ -67,12 +80,52 @@ export function fieldMatches(
   program: { fieldOfStudy: string; title: string },
   field: string,
 ) {
+  return fieldTier(program, field) > 0;
+}
+// The parts of a combined title: "Biotechnology and Business", "Business Administration - Accounting".
+// Words inside parentheses are left out, so they can only ever count as a related field.
+const conjuncts = (text: string) =>
+  text
+    .replace(/\([^)]*\)/g, " ")
+    .split(/\band\b|&|\bwith\b|,|;|\/|\s[-–]\s/i)
+    .map(fieldWords)
+    .filter((part) => part.length);
+function textTier(text: string, wanted: string[]): FieldTier {
+  const words = fieldWords(text);
+  if (!wanted.every((w) => words.includes(w))) return 0;
+  if (new Set(words).size === new Set(wanted).size) return 1;
+  const first = conjuncts(text)[0] ?? [];
+  return wanted.every((w) => first.includes(w)) ? 2 : 3;
+}
+/**
+ * How closely a program matches the student's field: 1 the field or title is the field, 2 the title leads
+ * with it ("Business Administration" for "Business"), 3 the words appear only inside a combined title
+ * ("Biotechnology and Business"), 0 no match. Tiers 1 and 2 pass the field check; 3 is a related field.
+ */
+export type FieldTier = 0 | 1 | 2 | 3;
+export function fieldTier(
+  program: { fieldOfStudy: string; title: string },
+  field: string,
+): FieldTier {
   const wanted = fieldWords(field);
+  if (!wanted.length) return 0;
+  const tiers = [program.fieldOfStudy, program.title]
+    .map((t) => textTier(t, wanted))
+    .filter((t) => t > 0);
+  if (tiers.length) return Math.min(...tiers) as FieldTier;
+  // Words split between the field and the title still relate, but never lead.
   const offered = new Set(
     fieldWords(program.fieldOfStudy + " " + program.title),
   );
-  return wanted.length > 0 && wanted.every((w) => offered.has(w));
+  return wanted.every((w) => offered.has(w)) ? 3 : 0;
 }
+/** Evidence for another admission cycle never decides this one; the reason says which cycle it was. */
+export const cycleReason = (evidenceYear: string, intakeYear: string) =>
+  "Published for the " +
+  evidenceYear +
+  " cycle; " +
+  intakeYear +
+  " not yet published.";
 export function evaluateRule(rule: Requirement, p: Profile): Check | null {
   if (
     rule.appliesToNationalities.length &&
@@ -95,12 +148,16 @@ export function evaluateRule(rule: Requirement, p: Profile): Check | null {
     state,
     reason,
     kind: rule.type,
+    ...(rule.evidence?.url ? { url: rule.evidence.url } : {}),
   });
   if (
     rule.evidence?.academicYear &&
     rule.evidence.academicYear !== p.intake.slice(0, 4)
   )
-    return result("UNKNOWN", "Evidence refers to a different academic year.");
+    return result(
+      "UNKNOWN",
+      cycleReason(rule.evidence.academicYear, p.intake.slice(0, 4)),
+    );
   if (!trusted(rule.status))
     return result(
       "UNKNOWN",
@@ -195,6 +252,7 @@ export function evaluateEnglish(
   const passed = checks.find((c) => c.check.state === "PASS");
   if (passed)
     return { label, kind, state: "PASS", reason: passed.check.reason };
+  const url = checks.find((c) => c.check.url)?.check.url;
   const wanted = checks
     .map(
       ({ rule }) =>
@@ -207,6 +265,7 @@ export function evaluateEnglish(
     return {
       label,
       kind,
+      url,
       state: "FAIL",
       reason:
         "Every accepted test result is below its minimum (" + wanted + ").",
@@ -215,6 +274,7 @@ export function evaluateEnglish(
   return {
     label,
     kind,
+    url,
     state: "UNKNOWN",
     reason: below.length
       ? "Your result is below the minimum for some tests, but another accepted test could qualify: " +
@@ -229,6 +289,7 @@ export function matchProgram(
   profile: Profile,
   now = new Date(),
 ) {
+  const tier = fieldTier(program, profile.fieldOfStudy);
   const academic: Check[] = [
     {
       label: "Degree level",
@@ -237,8 +298,13 @@ export function matchProgram(
     },
     {
       label: "Field of study",
-      state: fieldMatches(program, profile.fieldOfStudy) ? "PASS" : "UNKNOWN",
-      reason: program.fieldOfStudy,
+      state: tier === 1 || tier === 2 ? "PASS" : "UNKNOWN",
+      reason:
+        tier === 3
+          ? "Related field: " +
+            program.fieldOfStudy +
+            ". Your field is only part of this combined programme."
+          : program.fieldOfStudy,
     },
   ];
   const application: Check[] = [];
@@ -312,20 +378,52 @@ export function matchProgram(
       routes.map((r) => r.label + ": " + r.reason).join("; ") ||
       "Requested intake is not verified.",
   });
-  const validCosts = program.costs.filter(
-    (c) =>
-      trusted(c.status) &&
-      c.period === "ANNUAL" &&
-      (!c.evidence?.academicYear ||
-        c.evidence.academicYear === profile.intake.slice(0, 4)),
+  const intakeYear = profile.intake.slice(0, 4);
+  const annual = program.costs.filter(
+    (c) => trusted(c.status) && c.period === "ANNUAL",
   );
-  // Multiple differing estimates are uncertain, never select the cheapest.
-  const cost = validCosts.length === 1 ? validCosts[0] : undefined;
-  const total =
-    cost && cost.tuition !== null && cost.living !== null && cost.other !== null
-      ? cost.tuition + cost.living + cost.other
+  const validCosts = annual.filter(
+    (c) => !c.evidence?.academicYear || c.evidence.academicYear === intakeYear,
+  );
+  const otherCycle = validCosts.length
+    ? null
+    : (annual.find((c) => c.evidence?.academicYear)?.evidence?.academicYear ??
+      null);
+  // Rows may each quote one part (tuition from the fee page, living costs from the housing page). Parts
+  // combine only in one currency; two different official figures for one part are a conflict, never averaged
+  // and never resolved by picking one.
+  const currency =
+    validCosts.length &&
+    validCosts.every((c) => c.currency === validCosts[0].currency)
+      ? validCosts[0].currency
       : null;
-  const currency = cost?.currency ?? null;
+  const part = (key: "tuition" | "living" | "other") => [
+    ...new Set(validCosts.flatMap((c) => (c[key] === null ? [] : [c[key]]))),
+  ];
+  const parts = {
+    tuition: part("tuition"),
+    living: part("living"),
+    other: part("other"),
+  };
+  const disagree =
+    validCosts.length > 1 &&
+    (currency === null || Object.values(parts).some((v) => v.length > 1));
+  const known = (values: number[]) =>
+    currency !== null && !disagree && values.length === 1 ? values[0] : null;
+  const tuition = known(parts.tuition),
+    living = known(parts.living),
+    other = known(parts.other);
+  const total =
+    tuition !== null && living !== null && other !== null
+      ? tuition + living + other
+      : null;
+  // The least the student could pay before aid is tuition alone (living and other costs are never negative).
+  // With conflicting tuition figures in one currency, only the smallest bounds from below.
+  const floorTuition =
+    total === null && currency !== null && parts.tuition.length
+      ? Math.min(...parts.tuition)
+      : null;
+  const partial = floorTuition !== null;
   // The amount in the student's budget currency; other currencies use the dated reference rate.
   const inBudget = (amount: number | null) =>
     amount === null || currency === null
@@ -343,6 +441,25 @@ export function matchProgram(
       return "UNKNOWN";
     return value <= profile.budget ? "PASS" : "FAIL";
   };
+  // Above the budget (plus the exchange-rate margin when converted) even before the unknown parts are added.
+  const cutoff = profile.budget * (converted ? 1 + FX_MARGIN : 1);
+  const floorFails = (amount: number | null) => {
+    const value = inBudget(amount);
+    return value !== null && value > cutoff;
+  };
+  const show = (value: number, code: string) =>
+    Math.round(value).toLocaleString("en") + " " + code;
+  const floorReason = (lead: string, amount: number) =>
+    lead +
+    show(amount, currency!) +
+    (converted ? " ≈ " + show(inBudget(amount)!, profile.currency) : "") +
+    ", above " +
+    (converted
+      ? show(cutoff, profile.currency) +
+        " (your budget plus the " +
+        FX_MARGIN * 100 +
+        "% exchange-rate margin)."
+      : "your budget of " + show(profile.budget, profile.currency) + ".");
   const conversionNote = (amount: number | null) => {
     const value = inBudget(amount);
     return converted && value !== null
@@ -359,6 +476,19 @@ export function matchProgram(
           "% of your budget stay unknown."
       : "";
   };
+  const disagreement = () =>
+    "Official figures disagree: " +
+    (currency === null
+      ? "costs are quoted in different currencies"
+      : (["tuition", "living", "other"] as const)
+          .filter((k) => parts[k].length > 1)
+          .map(
+            (k) =>
+              k + " " + parts[k].map((v) => show(v, currency)).join(" vs "),
+          )
+          .join("; ")) +
+    ".";
+  const noAidFails = partial && floorFails(floorTuition);
   const scenarios: Scenario[] = [
     {
       name: "Without scholarship",
@@ -367,15 +497,33 @@ export function matchProgram(
       remaining: total,
       currency,
       converted: converted ? inBudget(total) : null,
-      affordable: affordability(total),
+      lowerBound: floorTuition,
+      lowerBoundConverted: converted ? inBudget(floorTuition) : null,
+      partial,
+      affordable:
+        total !== null ? affordability(total) : noAidFails ? "FAIL" : "UNKNOWN",
       fullRide: false,
       reason:
-        total === null
-          ? "Complete, comparable annual costs are unavailable."
-          : inBudget(total) === null
+        total !== null
+          ? inBudget(total) === null
             ? "No reference rate for this currency; no conversion was assumed."
             : "Tuition + living expenses + mandatory costs." +
-              conversionNote(total),
+              conversionNote(total)
+          : (disagree ? disagreement() + " " : "") +
+            (noAidFails
+              ? floorReason(
+                  "Even tuition alone exceeds your budget: ",
+                  floorTuition!,
+                )
+              : partial
+                ? "Tuition is " +
+                  show(floorTuition!, currency!) +
+                  "; living or other mandatory costs are not verified, so the total is incomplete."
+                : disagree
+                  ? ""
+                  : otherCycle
+                    ? "Costs: " + cycleReason(otherCycle, intakeYear)
+                    : "Complete, comparable annual costs are unavailable."),
     },
   ];
   for (const s of program.scholarships) {
@@ -397,9 +545,14 @@ export function matchProgram(
           ? convert(s.stipendAmount, s.currency, currency)
           : null;
     const remaining =
-      total !== null && cost && s.tuitionCoverage !== null && stipend !== null
-        ? Math.max(0, total - cost.tuition! * s.tuitionCoverage - stipend)
+      total !== null && s.tuitionCoverage !== null && stipend !== null
+        ? Math.max(0, total - tuition! * s.tuitionCoverage - stipend)
         : null;
+    const lowerBound =
+      partial && s.tuitionCoverage !== null && stipend !== null
+        ? Math.max(0, floorTuition! * (1 - s.tuitionCoverage) - stipend)
+        : null;
+    const boundFails = floorFails(lowerBound);
     const guaranteed =
       s.fundingCategory === "GUARANTEED" &&
       s.status === "ADMIN_VERIFIED" &&
@@ -411,8 +564,11 @@ export function matchProgram(
       remaining,
       currency,
       converted: converted ? inBudget(remaining) : null,
+      lowerBound,
+      lowerBoundConverted: converted ? inBudget(lowerBound) : null,
+      partial,
       affordable:
-        eligibility === "FAIL"
+        eligibility === "FAIL" || boundFails
           ? "FAIL"
           : eligibility === "UNKNOWN"
             ? "UNKNOWN"
@@ -423,7 +579,13 @@ export function matchProgram(
           ? "Published guaranteed funding; confirm award terms."
           : "Eligibility to apply is not an award. ") +
         checks.map((c) => c.reason).join(" ") +
-        conversionNote(remaining),
+        (boundFails
+          ? " " +
+            floorReason(
+              "Even with this award, tuition alone leaves ",
+              lowerBound!,
+            )
+          : conversionNote(remaining)),
     });
   }
   const suitable = scenarios.filter(
@@ -440,6 +602,8 @@ export function matchProgram(
             )
           : true),
   );
+  // A partial total never passes. It fails only when the lower bound already rules out every option the
+  // funding preference allows (or, when none is allowed, every option there is).
   const financial: Truth = suitable.some(
     (s) =>
       s.affordable === "PASS" &&
@@ -451,9 +615,14 @@ export function matchProgram(
           (s) => s.affordable === "UNKNOWN" || s.affordable === "PASS",
         )
       ? "UNKNOWN"
-      : total === null
-        ? "UNKNOWN"
-        : "FAIL";
+      : total !== null
+        ? "FAIL"
+        : partial &&
+            (suitable.length ? suitable : scenarios).every(
+              (s) => s.affordable === "FAIL",
+            )
+          ? "FAIL"
+          : "UNKNOWN";
   const academicState = combine(academic.map((c) => c.state)),
     applicationState = combine(application.map((c) => c.state));
   const status = combine([academicState, applicationState, financial]);
@@ -466,16 +635,19 @@ export function matchProgram(
     financial,
     status,
     scenarios,
+    fieldTier: tier,
     completeness: [...academic, ...application].filter(
       (c) => c.state !== "UNKNOWN",
     ).length,
   };
 }
 export type Match = ReturnType<typeof matchProgram>;
+// Leading-field programmes first, then related fields, then the rest.
+const fieldRank = (tier: FieldTier) =>
+  tier === 1 || tier === 2 ? 0 : tier === 3 ? 1 : 2;
 export const compareMatches = (a: Match, b: Match) =>
   Number(a.status === "FAIL") - Number(b.status === "FAIL") ||
-  Number(b.academic[1].state === "PASS") -
-    Number(a.academic[1].state === "PASS") ||
+  fieldRank(a.fieldTier) - fieldRank(b.fieldTier) ||
   { PASS: 0, UNKNOWN: 1, FAIL: 2 }[a.financial] -
     { PASS: 0, UNKNOWN: 1, FAIL: 2 }[b.financial] ||
   b.completeness - a.completeness ||
