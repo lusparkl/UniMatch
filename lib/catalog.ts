@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { effectiveStatus } from "./research/freshness";
 import { db } from "./db";
-import { demoMode } from "./config";
+import { demoMode, enabledCountries } from "./config";
 import { demoPrograms } from "./demo";
 import { ruleSchema, type Evidence, type Program } from "./domain";
 import type { SourceEvidence, SourceDocument } from "@/generated/prisma/client";
@@ -19,9 +19,11 @@ const evidence = (e: LoadedEvidence): Evidence => ({
   status: state(e.verificationStatus, e),
 });
 export async function getPrograms(forceReal = false): Promise<Program[]> {
-  if (demoMode() && !forceReal) return demoPrograms;
+  const enabled = enabledCountries();
+  if (demoMode() && !forceReal)
+    return demoPrograms.filter((p) => enabled.includes(p.country));
   const rows = await db.degreeProgram.findMany({
-    where: { published: true },
+    where: { published: true, university: { country: { in: enabled } } },
     include: {
       university: {
         include: {

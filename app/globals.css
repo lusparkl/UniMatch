@@ -630,6 +630,32 @@ footer .brand img {
   padding: 6px 0;
   margin: 0 !important;
 }
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.segmented legend {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.segmented button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--neutral-300);
+  border-radius: 999px;
+  background: var(--neutral-0);
+  font-size: 14px;
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--neutral-0);
+}
 .results-bar {
   display: flex;
   justify-content: space-between;

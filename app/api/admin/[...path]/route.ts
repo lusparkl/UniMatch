@@ -9,7 +9,7 @@ import {
 import { db } from "@/lib/db";
 import { enqueueResearch, redisConnection } from "@/lib/queue";
 import { demoMode, limits } from "@/lib/config";
-import { countries, profileSchema } from "@/lib/domain";
+import { researchCountries, profileSchema } from "@/lib/domain";
 import { resolvePublic } from "@/lib/research/security";
 import { reviewCandidate } from "@/lib/research/review";
 import { getPrograms } from "@/lib/catalog";
@@ -93,7 +93,7 @@ export async function POST(request: Request, { params }: Context) {
         .object({
           id: z.string().optional(),
           name: z.string().min(3).max(150),
-          country: z.enum(countries),
+          country: z.enum(researchCountries),
           city: z.string().min(2).max(100),
           officialWebsite: z.string().url(),
         })

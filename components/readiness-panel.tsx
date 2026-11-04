@@ -1,7 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { api, loadDocuments, type TrackedDocuments } from "./account-client";
+import { useTrackedDocuments } from "./local-store";
 import { readiness } from "@/lib/readiness";
 import type { Profile, Program } from "@/lib/domain";
 import type { Truth } from "@/lib/matching";
@@ -21,16 +20,12 @@ const haveLabel = {
 export function ReadinessPanel({
   program,
   profile,
-  signedIn,
 }: {
   program: Program;
   profile: Profile | null;
-  signedIn: boolean | null;
 }) {
-  const [tracked, setTracked] = useState<TrackedDocuments>({});
-  useEffect(() => {
-    if (signedIn) void loadDocuments().then((d) => setTracked(d ?? {}));
-  }, [signedIn]);
+  // Stored in this browser only.
+  const { tracked, mark } = useTrackedDocuments();
   if (!profile)
     return (
       <section className="panel">
@@ -42,16 +37,6 @@ export function ReadinessPanel({
       </section>
     );
   const r = readiness(program, profile, tracked);
-  async function mark(kind: string, status: string) {
-    const done = await api("/api/account/documents/" + kind, "PUT", { status });
-    if (done)
-      setTracked((t) => {
-        const next = { ...t };
-        if (status === "NONE") delete next[kind];
-        else next[kind] = status as "HAVE" | "IN_PROGRESS";
-        return next;
-      });
-  }
   return (
     <section className="panel">
       <h3>What you need to apply</h3>
@@ -96,14 +81,16 @@ export function ReadinessPanel({
             <span className="tag UNKNOWN" style={{ alignSelf: "start" }}>
               Check official page
             </span>
-          ) : signedIn ? (
+          ) : (
             <select
               aria-label={"Status of " + d.label}
               value={d.have}
               onChange={(e) =>
-                void mark(
+                mark(
                   d.kind!,
-                  e.target.value === "MISSING" ? "NONE" : e.target.value,
+                  e.target.value === "MISSING"
+                    ? "NONE"
+                    : (e.target.value as "HAVE" | "IN_PROGRESS"),
                 )
               }
               disabled={
@@ -118,22 +105,12 @@ export function ReadinessPanel({
                 </option>
               ))}
             </select>
-          ) : (
-            <span
-              className={"tag " + (d.have === "HAVE" ? "PASS" : "UNKNOWN")}
-              style={{ alignSelf: "start" }}
-            >
-              {haveLabel[d.have as keyof typeof haveLabel] ?? "—"}
-            </span>
           )}
         </div>
       ))}
-      {signedIn === false && (
-        <p className="muted tiny">
-          <Link href="/account">Sign in</Link> to track which documents you
-          already have.
-        </p>
-      )}
+      <p className="muted tiny">
+        Document status is saved in this browser only.
+      </p>
     </section>
   );
 }

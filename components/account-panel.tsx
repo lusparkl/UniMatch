@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import { api, loadDocuments, type TrackedDocuments } from "./account-client";
+import { deleteProfile } from "./local-store";
 import { documentKinds } from "@/lib/documents";
 
 const options = [
@@ -45,7 +46,7 @@ export function AccountPanel({ email }: { email: string }) {
       const body = await response.json().catch(() => null);
       return setMessage(body?.error ?? "Could not delete the account.");
     }
-    localStorage.removeItem("unimatch-profile-v1");
+    deleteProfile();
     router.push("/");
     router.refresh();
   }
@@ -65,7 +66,7 @@ export function AccountPanel({ email }: { email: string }) {
           <Link href="/profile">Edit profile and test results</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/priorities">My priorities</Link>
+          <Link href="/shortlist">My shortlist</Link>
         </Button>
         <Button variant="outline" onClick={() => void signOut()}>
           Sign out

@@ -26,7 +26,7 @@ it("local fixture → real BullMQ retry → extraction → PostgreSQL → review
     data: {
       id,
       name: "Integration Test University",
-      country: "Germany",
+      country: "Hong Kong",
       city: "Test",
       officialWebsite: "https://university.edu",
       sources: {

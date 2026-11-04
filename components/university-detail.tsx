@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { Button } from "./ui/button";
-import { loadProfile, usePriorities } from "./account-client";
-import { PriorityButton } from "./priority-button";
+import { readProfile, useShortlist } from "./local-store";
+import { ShortlistButton } from "./shortlist-button";
 import { ReadinessPanel } from "./readiness-panel";
 import {
   costHeadline,
@@ -82,10 +82,8 @@ export function UniversityDetail({
   const [selected, setSelected] = useState(initialId ?? programs[0].id),
     [tab, setTab] = useState<Tab>("req"),
     [profile, setProfile] = useState<Profile | null>(null);
-  const priorities = usePriorities();
-  useEffect(() => {
-    void loadProfile().then(setProfile);
-  }, []);
+  const shortlist = useShortlist();
+  useEffect(() => setProfile(readProfile()), []);
   const p = programs.find((p) => p.id === selected) ?? programs[0],
     match = profile ? matchProgram(p, profile) : null,
     base = match ?? matchProgram(p, defaultProfile),
@@ -93,7 +91,7 @@ export function UniversityDetail({
   return (
     <>
       <Link href="/results" className="back">
-        <ArrowLeft size={14} /> Back to your shortlist
+        <ArrowLeft size={14} /> Back to results
       </Link>
       <div className="eyebrow">
         {p.country} · {p.city}
@@ -132,11 +130,10 @@ export function UniversityDetail({
           <span className={"tag " + (match ? match.status : "UNKNOWN")}>
             {match ? statusLabel[match.status] : "Profile needed"}
           </span>
-          <PriorityButton
-            programId={p.id}
-            saved={priorities.ids.includes(p.id)}
-            signedIn={priorities.signedIn}
-            toggle={priorities.toggle}
+          <ShortlistButton
+            saved={shortlist.ids.includes(p.id)}
+            ready={shortlist.ready}
+            onToggle={() => shortlist.toggle(p.id)}
           />
           {p.officialUrl && (
             <a href={p.officialUrl} target="_blank" rel="noopener noreferrer">
@@ -433,11 +430,7 @@ export function UniversityDetail({
               </p>
             </section>
           )}
-          <ReadinessPanel
-            program={p}
-            profile={profile}
-            signedIn={priorities.signedIn}
-          />
+          <ReadinessPanel program={p} profile={profile} />
         </aside>
       </div>
     </>

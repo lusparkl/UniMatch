@@ -9,8 +9,8 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { convert } from "@/lib/fx";
-import { loadProfile, usePriorities } from "./account-client";
-import { PriorityButton } from "./priority-button";
+import { readProfile, useShortlist } from "./local-store";
+import { ShortlistButton } from "./shortlist-button";
 import {
   countries,
   defaultProfile,
@@ -133,37 +133,34 @@ export const nextDeadline = (program: Program, profile: Profile | null) => {
     (intake.timezone ? "" : " · time zone not stated")
   );
 };
-export function Results({ programs }: { programs: Program[] }) {
+export function Results({
+  programs,
+  initialCountry = "",
+}: {
+  programs: Program[];
+  initialCountry?: string;
+}) {
   const [profile, setProfile] = useState<Profile | null>(null),
     [ready, setReady] = useState(false),
-    [country, setCountry] = useState(""),
-    [degree, setDegree] = useState(""),
+    [country, setCountry] = useState(initialCountry),
     [search, setSearch] = useState(""),
     [funding, setFunding] = useState(""),
     [eligibility, setEligibility] = useState(""),
     [sort, setSort] = useState("fit"),
     [filtersOpen, setFiltersOpen] = useState(false);
-  const priorities = usePriorities();
+  const shortlist = useShortlist();
   useEffect(() => {
-    void loadProfile().then((saved) => {
-      setProfile(saved);
-      if (saved) setDegree(saved.degreeLevel);
-      setReady(true);
-    });
+    setProfile(readProfile());
+    setReady(true);
   }, []);
   const results = useMemo(
     () =>
       programs
         .filter(
           (p) =>
-            (!country
-              ? p.country &&
-                (profile?.preferredCountries.includes(
-                  p.country as (typeof countries)[number],
-                ) ??
-                  true)
-              : p.country === country) &&
-            (!degree || p.degreeLevel === degree) &&
+            // Bachelor's only for now; the engine still supports master's programmes.
+            p.degreeLevel === "BACHELOR" &&
+            (!country || p.country === country) &&
             (!search ||
               (p.title + " " + p.university + " " + p.fieldOfStudy)
                 .toLowerCase()
@@ -193,21 +190,16 @@ export function Results({ programs }: { programs: Program[] }) {
                     )
                 : compareMatches,
         ),
-    [programs, profile, country, degree, search, funding, eligibility, sort],
+    [programs, profile, country, search, funding, eligibility, sort],
   );
   const resetFilters = () => {
     setCountry("");
-    setDegree("");
     setSearch("");
     setFunding("");
     setEligibility("");
   };
   const chips = [
     country && { label: country, clear: () => setCountry("") },
-    degree && {
-      label: degree === "MASTER" ? "Master’s" : "Bachelor’s",
-      clear: () => setDegree(""),
-    },
     funding && {
       label:
         funding === "full"
@@ -241,7 +233,7 @@ export function Results({ programs }: { programs: Program[] }) {
           <span>
             {profile
               ? [
-                  profile.degreeLevel === "MASTER" ? "Master’s" : "Bachelor’s",
+                  "Bachelor’s",
                   profile.fieldOfStudy,
                   profile.intake,
                   profile.budget > 0
@@ -276,26 +268,21 @@ export function Results({ programs }: { programs: Program[] }) {
               onChange={(e) => setSearch(e.target.value)}
             />
           </label>
-          <label>
-            Destination
-            <select
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-            >
-              <option value="">All preferred destinations</option>
-              {countries.map((c) => (
-                <option key={c}>{c}</option>
-              ))}
-            </select>
-          </label>
-          <label>
-            Degree level
-            <select value={degree} onChange={(e) => setDegree(e.target.value)}>
-              <option value="">All degrees</option>
-              <option value="BACHELOR">Bachelor’s degree</option>
-              <option value="MASTER">Master’s degree</option>
-            </select>
-          </label>
+          <fieldset className="segmented">
+            <legend>Destination</legend>
+            {[["", "Both"], ...countries.map((c) => [c, c])].map(
+              ([value, label]) => (
+                <button
+                  key={value}
+                  type="button"
+                  aria-pressed={country === value}
+                  onClick={() => setCountry(value)}
+                >
+                  {label}
+                </button>
+              ),
+            )}
+          </fieldset>
           <label>
             Funding options
             <select
@@ -462,11 +449,10 @@ export function Results({ programs }: { programs: Program[] }) {
                     : "Awaiting research"}
                 </span>
                 <div className="actions" style={{ gap: 8 }}>
-                  <PriorityButton
-                    programId={m.program.id}
-                    saved={priorities.ids.includes(m.program.id)}
-                    signedIn={priorities.signedIn}
-                    toggle={priorities.toggle}
+                  <ShortlistButton
+                    saved={shortlist.ids.includes(m.program.id)}
+                    ready={shortlist.ready}
+                    onToggle={() => shortlist.toggle(m.program.id)}
                   />
                   <Button asChild variant="dark" size="sm">
                     <Link

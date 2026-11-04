@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Compass } from "lucide-react";
 import { MainNav, TabBar } from "./nav";
+import { isPublicMode } from "@/lib/config";
 export function Shell({
   children,
   demo = false,
@@ -9,6 +10,7 @@ export function Shell({
   children: React.ReactNode;
   demo?: boolean;
 }) {
+  const local = !isPublicMode();
   return (
     <>
       {demo && (
@@ -28,7 +30,7 @@ export function Shell({
           />
           UniMatch
         </Link>
-        <MainNav />
+        <MainNav accounts={local} />
       </header>
       {children}
       <footer>
@@ -42,8 +44,11 @@ export function Shell({
           />
           UniMatch
         </Link>
-        <p>A clearer path to your next chapter.</p>
-        <Link href="/admin">Research administration</Link>
+        <p>
+          Study in Hong Kong and South Korea, with every answer traced to an
+          official source.
+        </p>
+        {local && <Link href="/admin">Research administration</Link>}
       </footer>
       <TabBar />
     </>

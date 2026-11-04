@@ -3,22 +3,16 @@ import { ArrowRight, LockKeyhole } from "lucide-react";
 import { Shell } from "@/components/shell";
 import { Button } from "@/components/ui/button";
 import { demoMode } from "@/lib/config";
+import { countries } from "@/lib/domain";
 const dims = [
   ["Academic requirements", "Evidence-led"],
   ["Application eligibility", "Deadline-aware"],
   ["Financial feasibility", "Tuition + living"],
 ];
-const countries = [
-  "United States",
-  "Hong Kong",
-  "Hungary",
-  "Germany",
-  "Singapore",
-];
 const features = [
   [
     "Start with your story",
-    "Tell us what you want to study, your qualifications and what you can spend. No document uploads.",
+    "Tell us what you want to study, your qualifications and what you can spend. No account, no document uploads.",
   ],
   [
     "Find a meaningful fit",
@@ -40,8 +34,8 @@ export default function Home() {
               Your next chapter. <em>Within reach.</em>
             </h1>
             <p className="hero-copy">
-              Find universities that fit your ambitions, your qualifications and
-              your budget. Make your next move with evidence you can trust.
+              Find out where you can really get in and afford to study in Asia,
+              with every answer traced to an official source.
             </p>
             <div className="actions">
               <Button asChild>
@@ -54,8 +48,8 @@ export default function Home() {
               </Button>
             </div>
             <p className="hero-note">
-              <LockKeyhole size={14} /> No account needed. Your profile stays on
-              your device.
+              <LockKeyhole size={14} /> No account needed. Your profile stays in
+              your browser.
             </p>
           </div>
           <div className="hero-art" aria-label="How matching works">
@@ -72,9 +66,13 @@ export default function Home() {
         </section>
         <div className="band">
           <div className="destinations">
-            <span className="eyebrow">Five destinations</span>
+            <span className="eyebrow">Hong Kong and South Korea</span>
             {countries.map((c) => (
-              <Link className="dest-pill" href="/results" key={c}>
+              <Link
+                className="dest-pill"
+                href={"/results?country=" + encodeURIComponent(c)}
+                key={c}
+              >
                 {c}
               </Link>
             ))}

@@ -3,7 +3,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "UniMatch — Your next chapter, within reach",
   description:
-    "Evidence-led university research and personalized international study matching.",
+    "Find out where you can really get in and afford to study in Asia, with every answer traced to an official source.",
 };
 export default function RootLayout({
   children,

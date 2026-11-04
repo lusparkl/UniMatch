@@ -6,22 +6,23 @@ import { Button } from "./ui/button";
 const links = [
   { href: "/results", label: "Explore" },
   { href: "/profile", label: "My profile" },
-  { href: "/priorities", label: "Priorities" },
-  { href: "/account", label: "Account" },
+  { href: "/shortlist", label: "Shortlist" },
 ];
 const tabs = [
   { href: "/", label: "Home", Icon: House },
   { href: "/results", label: "Explore", Icon: Compass },
-  { href: "/priorities", label: "Priorities", Icon: ListChecks },
-  { href: "/account", label: "Account", Icon: UserRound },
+  { href: "/shortlist", label: "Shortlist", Icon: ListChecks },
+  { href: "/profile", label: "Profile", Icon: UserRound },
 ];
+// Accounts exist only outside PUBLIC_MODE; the public site keeps everything in the browser.
+const account = { href: "/account", label: "Account" };
 const current = (path: string, href: string) =>
   (href === "/" ? path === "/" : path.startsWith(href)) ? "page" : undefined;
-export function MainNav() {
+export function MainNav({ accounts }: { accounts: boolean }) {
   const path = usePathname();
   return (
     <nav aria-label="Main navigation">
-      {links.map((l) => (
+      {(accounts ? [...links, account] : links).map((l) => (
         <Link key={l.href} href={l.href} aria-current={current(path, l.href)}>
           {l.label}
         </Link>

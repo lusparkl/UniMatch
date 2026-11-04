@@ -3,31 +3,23 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, ArrowRight, LockKeyhole, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
-import {
-  PROFILE_KEY,
-  api,
-  loadProfile,
-  readLocalProfile,
-  saveProfile,
-} from "./account-client";
-import {
-  countries,
-  defaultProfile,
-  profileSchema,
-  type Profile,
-} from "@/lib/domain";
-export { readLocalProfile as readProfile, PROFILE_KEY };
+import { deleteProfile, readProfile, saveProfile } from "./local-store";
+import { defaultProfile, profileSchema, type Profile } from "@/lib/domain";
 // Matching compares qualification names exactly; these are the names published requirements use.
 const qualifications = ["IB Diploma", "GCE A-Level", "International A-Level"];
 export function ProfileWizard() {
   const [profile, setProfile] = useState<Profile>(defaultProfile),
     [step, setStep] = useState(0),
-    [error, setError] = useState("");
+    [error, setError] = useState(""),
+    // Blank until the student enters a budget; a saved profile restores its own.
+    [budget, setBudget] = useState("");
   const router = useRouter();
   useEffect(() => {
-    void loadProfile().then((saved) => {
-      if (saved) setProfile(saved);
-    });
+    const saved = readProfile();
+    if (saved) {
+      setProfile(saved);
+      setBudget(String(saved.budget));
+    }
   }, []);
   const set = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setProfile((p) => ({ ...p, [key]: value }));
@@ -79,19 +71,23 @@ export function ProfileWizard() {
       step === 0 &&
       (!profile.nationality.trim() ||
         !profile.educationCountry.trim() ||
-        !profile.fieldOfStudy.trim() ||
-        !profile.preferredCountries.length)
+        !profile.fieldOfStudy.trim())
     ) {
-      setError(
-        "Complete your citizenship, education country, field, and at least one destination.",
-      );
+      setError("Complete your citizenship, education country and field.");
       return;
     }
     if (step < 2) {
       setStep(step + 1);
       return;
     }
-    const result = profileSchema.safeParse(profile);
+    if (budget.trim() === "" || !(Number(budget) >= 0)) {
+      setError("Enter your available annual budget.");
+      return;
+    }
+    const result = profileSchema.safeParse({
+      ...profile,
+      budget: Number(budget),
+    });
     if (!result.success) {
       setError(
         result.error.issues
@@ -100,13 +96,11 @@ export function ProfileWizard() {
       );
       return;
     }
-    void saveProfile(result.data).then(
-      () => router.push("/results"),
-      () =>
-        setError(
-          "Browser storage is unavailable. Enable local storage to save your profile.",
-        ),
-    );
+    if (saveProfile(result.data)) router.push("/results");
+    else
+      setError(
+        "Browser storage is unavailable. Enable local storage to save your profile.",
+      );
   }
   return (
     <div className="wizard">
@@ -134,7 +128,7 @@ export function ProfileWizard() {
         <h2 style={{ fontSize: 23 }}>
           {
             [
-              "Where do you want to go?",
+              "What do you want to study?",
               "What are you bringing with you?",
               "Make it financially possible.",
             ][step]
@@ -154,18 +148,6 @@ export function ProfileWizard() {
               "e.g. Ukraine",
               true,
             )}
-            <label>
-              Intended degree
-              <select
-                value={profile.degreeLevel}
-                onChange={(e) =>
-                  set("degreeLevel", e.target.value as Profile["degreeLevel"])
-                }
-              >
-                <option value="BACHELOR">Bachelor’s degree</option>
-                <option value="MASTER">Master’s degree</option>
-              </select>
-            </label>
             {text("fieldOfStudy", "Field of study", "Computer Science", true)}
             <label>
               Desired academic intake
@@ -182,33 +164,6 @@ export function ProfileWizard() {
                 )}
               </select>
             </label>
-            <fieldset className="full">
-              <legend
-                className="tiny"
-                style={{ marginBottom: 12, fontWeight: 600 }}
-              >
-                Preferred study destinations
-              </legend>
-              <div className="checkbox-grid">
-                {countries.map((c) => (
-                  <label className="checkbox-chip" key={c}>
-                    <input
-                      type="checkbox"
-                      checked={profile.preferredCountries.includes(c)}
-                      onChange={(e) =>
-                        set(
-                          "preferredCountries",
-                          e.target.checked
-                            ? [...profile.preferredCountries, c]
-                            : profile.preferredCountries.filter((x) => x !== c),
-                        )
-                      }
-                    />
-                    {c}
-                  </label>
-                ))}
-              </div>
-            </fieldset>
           </div>
         )}
         {step === 1 && (
@@ -255,18 +210,27 @@ export function ProfileWizard() {
         )}
         {step === 2 && (
           <div className="form-grid">
-            {number("budget", "Available annual budget")}
+            <label>
+              Available annual budget
+              <input
+                aria-label="Available annual budget"
+                type="number"
+                min="0"
+                step="any"
+                required
+                value={budget}
+                onChange={(e) => setBudget(e.target.value)}
+              />
+            </label>
             <label>
               Budget currency
               <select
                 value={profile.currency}
                 onChange={(e) => set("currency", e.target.value)}
               >
-                {["USD", "EUR", "HKD", "HUF", "SGD", "GBP", "UAH", "INR"].map(
-                  (c) => (
-                    <option key={c}>{c}</option>
-                  ),
-                )}
+                {["USD", "EUR", "GBP", "HKD", "KRW", "INR", "UAH"].map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
               </select>
             </label>
             <label className="full">
@@ -319,11 +283,11 @@ export function ProfileWizard() {
         className="back"
         style={{ marginTop: 22 }}
         onClick={() => {
-          localStorage.removeItem(PROFILE_KEY);
-          void api("/api/account/profile", "DELETE");
+          deleteProfile();
           setProfile(defaultProfile);
+          setBudget("");
           setStep(0);
-          setError("Profile deleted from this device and your account.");
+          setError("Profile deleted from this device.");
         }}
       >
         <Trash2 size={14} /> Delete my saved profile

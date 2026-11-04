@@ -1,9 +1,8 @@
 "use client";
-import { profileSchema, type Profile } from "@/lib/domain";
-
-export const PROFILE_KEY = "unimatch-profile-v1";
-
-export type TrackedDocuments = Record<string, "HAVE" | "IN_PROGRESS">;
+// Account API helpers. Used only by the account pages (not in PUBLIC_MODE); student pages keep data in
+// the browser through ./local-store.
+import type { TrackedDocuments } from "./local-store";
+export type { TrackedDocuments };
 
 /** JSON call to the account API. Resolves to null on a non-2xx answer, so callers fall back to local data. */
 export async function api<T>(
@@ -24,39 +23,9 @@ export async function api<T>(
   }
 }
 
-export function readLocalProfile(): Profile | null {
-  try {
-    const data = JSON.parse(localStorage.getItem(PROFILE_KEY) ?? "null");
-    const result = profileSchema.safeParse(data);
-    return result.success ? result.data : null;
-  } catch {
-    return null;
-  }
-}
-
 export async function signedInEmail() {
   const me = await api<{ user: { email: string } | null }>("/api/auth/me");
   return me?.user?.email ?? null;
-}
-
-/** Account profile when signed in, otherwise the one saved in this browser. */
-export async function loadProfile(): Promise<Profile | null> {
-  const remote = await api<{ profile: unknown }>("/api/account/profile");
-  if (remote) {
-    const parsed = profileSchema.safeParse(remote.profile);
-    if (parsed.success) return parsed.data;
-    // Signed in without a saved account profile: keep this browser's profile and upload it.
-    const local = readLocalProfile();
-    if (local) await api("/api/account/profile", "PUT", local);
-    return local;
-  }
-  return readLocalProfile();
-}
-
-/** Always keeps a local copy; also stores it on the account when signed in. */
-export async function saveProfile(profile: Profile) {
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
-  await api("/api/account/profile", "PUT", profile);
 }
 
 export async function loadDocuments(): Promise<TrackedDocuments | null> {

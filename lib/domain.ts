@@ -1,7 +1,10 @@
 import { z } from "zod";
-export const countries = [
+/** Destinations students can browse. The catalog is filtered further by ENABLED_COUNTRIES. */
+export const countries = ["Hong Kong", "South Korea"] as const;
+/** Countries the research workspace can still manage; data for the others stays in the database, unpublished to students. */
+export const researchCountries = [
+  ...countries,
   "United States",
-  "Hong Kong",
   "Hungary",
   "Germany",
   "Singapore",
@@ -24,7 +27,8 @@ export const profileSchema = z.object({
   educationCountry: z.string().min(2).max(80),
   degreeLevel: z.enum(["BACHELOR", "MASTER"]),
   fieldOfStudy: z.string().min(2).max(100),
-  preferredCountries: z.array(z.enum(countries)).min(1),
+  // No longer asked: students see every enabled destination. Kept so stored profiles still parse.
+  preferredCountries: z.array(z.string().max(80)).default([...countries]),
   budget: z.number().min(0).max(10000000),
   currency: currencySchema,
   intake: z.string().regex(/^\d{4}-(Fall|Spring|Autumn|Winter|Summer)$/),

@@ -1,8 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
-import { hashSync } from "bcryptjs";
-// Only this test server receives these credentials; never written to .env.
+// Public deployment shape: PUBLIC_MODE on, fictional fixtures, no admin or accounts.
+// Admin and account flows run separately in playwright.private.config.ts.
 export default defineConfig({
-  testDir: "./tests/e2e",
+  testDir: "./tests/e2e/public",
   fullyParallel: false,
   workers: 1,
   timeout: 30000,
@@ -15,12 +15,12 @@ export default defineConfig({
     timeout: 60000,
     env: {
       DEMO_MODE: "DEMO_FIXTURES",
+      PUBLIC_MODE: "true",
+      ENABLED_COUNTRIES: "Hong Kong,South Korea",
       NEXT_PUBLIC_APP_URL: "http://localhost:3001",
       OPENAI_API_KEY: "",
-      ADMIN_EMAIL: "test-admin@example.test",
-      ADMIN_PASSWORD_HASH:
-        "base64:" +
-        Buffer.from(hashSync("test-only-password-123", 4)).toString("base64"),
+      // Unreachable on purpose: public pages must not need Redis.
+      REDIS_URL: "redis://127.0.0.1:1",
     },
   },
 });

@@ -2,12 +2,21 @@ import { Shell } from "@/components/shell";
 import { Results } from "@/components/results";
 import { getPrograms } from "@/lib/catalog";
 import { demoMode } from "@/lib/config";
+import { countries } from "@/lib/domain";
 export const dynamic = "force-dynamic";
-export default async function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ country?: string }>;
+}) {
+  const { country } = await searchParams;
   return (
     <Shell demo={demoMode()}>
       <main className="container">
-        <Results programs={await getPrograms()} />
+        <Results
+          programs={await getPrograms()}
+          initialCountry={countries.find((c) => c === country) ?? ""}
+        />
       </main>
     </Shell>
   );

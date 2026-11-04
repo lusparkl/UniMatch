@@ -15,7 +15,7 @@
     "schedule": "tsx --env-file=.env scripts/schedule.ts",
     "admin:password": "tsx scripts/password.ts",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "playwright test && playwright test -c playwright.private.config.ts",
     "test:model": "tsx --env-file=.env scripts/model-smoke.ts",
     "test:cost": "tsx --env-file=.env scripts/cost-benchmark.ts",
     "fx:update": "tsx scripts/update-fx.ts",
@@ -24,7 +24,8 @@
     "lint": "eslint .",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:crawl": "tsx --env-file=.env scripts/crawl-smoke.ts",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "coverage": "tsx --env-file=.env scripts/coverage-report.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "7.10.1",

@@ -2,7 +2,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "./ui/button";
 import { LogOut, RefreshCw, ShieldCheck } from "lucide-react";
-import { countries } from "@/lib/domain";
+import { researchCountries } from "@/lib/domain";
 type University = {
   id: string;
   name: string;
@@ -71,7 +71,7 @@ export function Admin({ authenticated }: { authenticated: boolean }) {
       "Computer Science admissions and scholarships",
     );
   const [name, setName] = useState(""),
-    [country, setCountry] = useState<string>(countries[0]),
+    [country, setCountry] = useState<string>(researchCountries[0]),
     [city, setCity] = useState(""),
     [website, setWebsite] = useState(""),
     [editId, setEditId] = useState("");
@@ -350,7 +350,7 @@ export function Admin({ authenticated }: { authenticated: boolean }) {
                             value={country}
                             onChange={(e) => setCountry(e.target.value)}
                           >
-                            {countries.map((c) => (
+                            {researchCountries.map((c) => (
                               <option key={c}>{c}</option>
                             ))}
                           </select>
