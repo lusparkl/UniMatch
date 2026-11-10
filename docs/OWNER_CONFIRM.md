@@ -28,10 +28,19 @@ Listed 2026-11-10. The quotations are copied verbatim from the pages, as fetched
 - Question: Confirm that every international undergraduate receives this allowance.
 - Copies: 6.
 
+## 4. GIST tuition waiver (international students)
+
+- Source: https://www.gist.ac.kr/iuadm/img/sub02/2027_Fall_Undergraduate_Admission_Guideline_Final.pdf (2027 Fall guideline). The copy was opened in a browser at your request, because GIST's robots.txt disallows automated crawlers.
+- Stored as: full tuition (coverage 1.0), supported for 8 semesters. The stored cost row gives tuition as ₩4,050,000 per semester.
+- Quote: "Tuition fee Fully waived (₩4,050,000/semester) • Granted to all international students without any conditions"
+- Question: Confirm that every admitted international student receives the full tuition waiver.
+- Copies: 6.
+
 ## Not listed (competitive)
 
 - UNIST tuition scholarship: the Fall 2027 guideline also admits students "through the non-scholarship track", so the scholarship is not guaranteed.
 - Korea University Anam Global Scholarship: every freshman is considered automatically, but awards depend on the admission evaluation.
+- UIC Admissions Scholarship: recipients are "selected from admitted applicants according to their academic credentials".
 
 ## How to confirm
 
@@ -43,4 +52,4 @@ OWNER_CONFIRMED=1 OWNER_NAME="<your name>" npx tsx --env-file=.env scripts/owner
 
 To confirm only some items, add `ONLY="<exact name>|<exact name>"`. Without `OWNER_CONFIRMED=1`, the script only lists the rows.
 
-Status: **not confirmed**. Until the owner confirms, all three stay unverified, and the demo moment "a guaranteed scholarship makes a programme affordable" is not available.
+Status: **not confirmed**. Until the owner confirms, all four stay unverified, and the demo moment "a guaranteed scholarship makes a programme affordable" is not available.

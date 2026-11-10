@@ -296,3 +296,36 @@ Built in a separate worktree (`../UniMatch-p45`), because the Part 3 session wor
 - A misparsed HKUST accommodation row (HK$21,000 "per semester"; the page gives a range per residential year) remains ADMIN_VERIFIED.
 - Curation dry runs fetch and store page versions (no facts are written).
 - Korea falls short on institutions (4/6), programmes (19/25) and requirementsComplete (0/15). Guaranteed scholarships await the owner.
+
+## 2026-11-10 23:30: Part 3 addendum: UIC, GIST and SKKU through browser copies
+
+**Owner decision:** the pages of Yonsei UIC, GIST and SKKU that the crawler may not fetch (robots.txt) are to be opened in a browser at the owner's request.
+
+- `scripts/import-browser.ts` (APPLY) opened 18 official pages and PDFs one at a time in plain headless Chromium, 2 s apart, with no stealth and no bot-check handling. It stored 17 as page versions; one UIC download had an unknown file type and was skipped.
+- Their approved sources have purpose `owner-browser-copy`. The pipeline and `recheck-sources.ts` never re-fetch them automatically, so their freshness ages normally. A later refresh means rerunning the import.
+- Hanyang showed a Cloudflare bot check and DGIST timed out in the browser too. Both were left out.
+
+**Curated** by `scripts/curate-korea-browser.ts` (SOURCE_BACKED, verbatim quotes, no model calls):
+
+- **Yonsei UIC (6 majors):**
+  - From the 2027 intake, English proof is required, with no minimum.
+  - Eligibility (non-Korean applicant and parents) is an OTHER rule.
+  - Spring 2027 1st round closed on 22 Sep 2026. Fall 2027 2nd round: online application in "March, 2027", dates TBD.
+  - 2026 tuition per semester: KRW 8,202,000 + 56,000.
+  - Admissions Scholarship: COMPETITIVE.
+- **GIST (6 majors, 2027 Fall guideline):**
+  - Application from 1 Dec 2026 to 29 Jan 2027.
+  - English report required, no minimum; at least one standardized test report.
+  - Tuition KRW 4,050,000 per semester.
+  - The tuition waiver is "Granted to all international students without any conditions": GUARANTEED, added to `docs/OWNER_CONFIRM.md` as item 4.
+- **SKKU (5 English-track units, 2027 Spring guide):**
+  - Spring 2027 2nd round closes 13 Nov 2026 at 17:00 KST. Fall 2027 is listed for Computer Science and Engineering, with dates not yet published.
+  - English report required, no admission minimum (IELTS 6.5 / TOEFL 80 for major placement).
+  - The tuition table names no period, so it is not stored.
+
+**Totals:**
+
+- South Korea: **7 institutions, 36 programmes** (plan: ≥6 and ≥25, met).
+- requirementsComplete: still 0, because no institution publishes an accepted-qualification list.
+- Complete cost: 6 (KAIST).
+- `scripts/evidence-report.ts`: 0 non-verbatim quotations.

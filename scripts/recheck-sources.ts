@@ -20,8 +20,14 @@ for (const u of universities) {
     select: { document: { select: { url: true } } },
     distinct: ["documentId"],
   });
-  const urls = [...new Set(cited.map((e) => e.document.url))].filter((url) =>
-    allowedUrl(url, u.sources),
+  // Owner-requested browser copies (scripts/import-browser.ts) sit on hosts the crawler may not fetch.
+  const browserCopies = new Set(
+    u.sources
+      .filter((s) => s.purpose === "owner-browser-copy")
+      .map((s) => s.startUrl),
+  );
+  const urls = [...new Set(cited.map((e) => e.document.url))].filter(
+    (url) => allowedUrl(url, u.sources) && !browserCopies.has(url),
   );
   console.log(`${u.id}: ${urls.length} cited pages on approved hosts`);
   if (!apply || !urls.length) continue;

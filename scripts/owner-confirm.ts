@@ -8,6 +8,7 @@ const listed = [
   "KAIST Scholarship (international undergraduate admission)",
   "POSTECH Tuition Scholarship (tuition waiver)",
   "POSTECH Living Allowance (International Admissions, KRW 500,000 per month)",
+  "GIST tuition waiver (international students)",
 ];
 const only = process.env.ONLY?.split("|");
 const names = only ? listed.filter((n) => only.includes(n)) : listed;
