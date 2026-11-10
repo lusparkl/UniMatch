@@ -136,3 +136,47 @@ Running log for the hackathon plan (`docs/hackathon/`). Each entry records what 
   - Application UNKNOWN → PASS on 30 programmes (September terms).
   - Financial UNKNOWN → FAIL on 39 programmes for a US$12k budget, 39 for a US$15k full-ride seeker, and 2 for US$40k (tuition-only lower bound).
   - Academic: no change.
+
+## 2026-11-10 19:40: open items from Parts 1–2 closed
+
+**Changed:**
+
+- **Push:** `main` pushed to `origin` (`066db3e..5bdd9d5`), owner-approved.
+- **Results payload:** `listPrograms()` in `lib/catalog.ts` drops the retrieved-page `sources` and the evidence excerpts. `/results` and `/shortlist` use it; the detail page keeps both.
+  - `/results` HTML: 5.7 MB to 3.4 MB (97 KB gzipped). `/shortlist`: 2.6 MB (81 KB gzipped).
+- **Home page live numbers (7.10):** `/` is now dynamic. It shows programmes, universities, "fully checked for 2027" and the latest source retrieval date.
+  - Fully checked = `requirementsComplete` and a complete trusted annual cost. The cost part reuses the new `annualCost()` from `lib/matching.ts`, which `matchProgram` now calls, so the home page and matching agree.
+  - Current values: 250 programmes, 5 universities, 0 fully checked, sources last retrieved 31 Oct 2026.
+- **W2f PolyU cost decision** (`scripts/polyu-costs.ts`, `APPLY=1` writes, rerun-safe). The live other-fees page was re-read today:
+  - The items add up to HK$330,272 (US$42,344), while the page states HK$290,272 (US$37,214). Both figures stand.
+  - Tuition HK$240,000 stays: the tuition-fees page states it for 2027/28, and its US$30,770 agrees.
+  - Every living figure quoted from the other-fees page is now `CONFLICTING`: 2 flagship rows were split, and 45 accommodation-only rows were marked.
+  - The 45 "initial fee HK$20,000" rows were removed. They were a misread: the tuition page says the fee "will be converted to form part of the first semester tuition fee upon admission".
+  - Each change has a `POLYU_COST_*` ReviewRecord.
+- **HKU and HKBU requirements** (`scripts/curate-hku-hkbu.ts`, `APPLY=1` writes, `SOURCE_BACKED`, additive):
+  - **HKU, what was tried:** the "Admissions Standards" selector rendered in Chromium, but it shows standards only after a qualification and a programme are chosen. It loads them from `/api/international_qualification/admission_standard/<country>`.
+  - **HKU, result:** IB Diploma and GCE A-level standards are identical for Ukraine, India, the UK and Singapore. They are stored as a new version of the international-qualifications page, as the selector renders them.
+  - **HKU, encoded:** 57 programmes get the IB and GCE A-level "lower boundary for admissions" and subject requirements, scoped by qualification. Lower boundaries are OTHER rules (UNKNOWN), because the page does not call them minimums.
+  - **HKU, skipped:** BEng CS and BEng AI and Data Science already carry the CDS standards. Global Leadership (self-financed) and MBBS Distinguished MedScholar are not on the standards list.
+  - **HKBU:** the accordions were already in the stored page text. For all 23 programmes we now encode:
+    - the IB Diploma entrance route (QUALIFICATION, scoped to IB);
+    - the A-level/IAL route (OTHER, scoped);
+    - IELTS 6.0;
+    - TOEFL 79, SAT EBRW 590, IB English and GCE AS/A-level English as English alternatives.
+  - **HKBU, fix:** the old "SAT evidence-based reading and writing minimum" rule applied to every applicant, which made every HKBU programme UNKNOWN for everyone. It was removed and recorded as `SUPERSEDED_REQUIREMENT`.
+  - **Not set:** no `requirementsComplete`. Neither university has an accepted-qualification list that applies to every applicant.
+
+**Measured:**
+
+- typecheck and lint clean. `npm test`: 189/189. Integration: 4/4. E2E: public 5/5, private 3/3.
+- `npm run review:auto` dry run: programmes with no English minimum fell from 98 to 75 (HKBU fixed). 246 still lack an applicant-wide qualification list.
+- IB profile:
+  - HKBU BBA: "General entrance requirement: IB Diploma" PASS; English UNKNOWN (IELTS 5.5 is below 6.0, but other tests could qualify).
+  - HKU BBA: lower boundary 38 and subject requirements shown, UNKNOWN.
+- DB backups (outside the repo, temporary): `unimatch-before-open-items.dump` and `unimatch-before-hku-hkbu.dump` in the session scratchpad.
+
+**Still open:**
+
+- HKBU "Authorization for verification of results" is an OTHER rule for everyone, so HKBU academic results stay UNKNOWN.
+- Several HKU English-route rules ("Bachelor's or higher degree study in English", "Mature applicant rule") are stored as requirements for everyone.
+- HKBU deadlines (an image) are not verified.

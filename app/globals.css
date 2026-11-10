@@ -496,6 +496,27 @@ footer .brand img {
   background: var(--neutral-50);
   border-block: 1px solid var(--border-1);
 }
+.home-stats {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+}
+.home-stats div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.home-stats dd {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--fg-1);
+}
+.home-stats dt {
+  font-size: 14px;
+  color: var(--fg-3);
+}
 .destinations {
   max-width: 1200px;
   margin: 0 auto;

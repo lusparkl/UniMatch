@@ -18,6 +18,22 @@ const evidence = (e: LoadedEvidence): Evidence => ({
   retrievedAt: e.retrievedAt.toISOString(),
   status: state(e.verificationStatus, e),
 });
+const brief = <T extends { evidence?: Evidence }>(x: T): T =>
+  x.evidence ? { ...x, evidence: { ...x.evidence, excerpt: "" } } : x;
+/** Programs for list views (results, shortlist): no retrieved-page sources and no evidence excerpts, which only the detail page shows. */
+export const listPrograms = async (): Promise<Program[]> =>
+  (await getPrograms()).map((p) => ({
+    ...p,
+    sources: undefined,
+    requirements: p.requirements.map(brief),
+    intakes: p.intakes.map(brief),
+    costs: p.costs.map(brief),
+    documents: p.documents.map(brief),
+    scholarships: p.scholarships.map((s) => ({
+      ...brief(s),
+      rules: s.rules.map(brief),
+    })),
+  }));
 export async function getPrograms(forceReal = false): Promise<Program[]> {
   const enabled = enabledCountries();
   if (demoMode() && !forceReal)

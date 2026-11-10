@@ -2,8 +2,11 @@ import Link from "next/link";
 import { ArrowRight, LockKeyhole } from "lucide-react";
 import { Shell } from "@/components/shell";
 import { Button } from "@/components/ui/button";
+import { getPrograms } from "@/lib/catalog";
 import { demoMode } from "@/lib/config";
-import { countries } from "@/lib/domain";
+import { countries, defaultProfile } from "@/lib/domain";
+import { annualCost } from "@/lib/matching";
+export const dynamic = "force-dynamic";
 const dims = [
   ["Academic requirements", "Evidence-led"],
   ["Application eligibility", "Deadline-aware"],
@@ -23,7 +26,23 @@ const features = [
     "Follow official sources, understand funding conditions and see what still needs verification.",
   ],
 ];
-export default function Home() {
+export default async function Home() {
+  const programs = await getPrograms();
+  const intakeYear = defaultProfile.intake.slice(0, 4);
+  // Fully checked: reviewed complete requirements and a complete trusted annual cost for the default intake.
+  const checked = programs.filter(
+    (p) => p.requirementsComplete && annualCost(p, intakeYear).total !== null,
+  ).length;
+  const latest = programs
+    .map((p) => p.lastResearched)
+    .filter((d) => d !== null)
+    .sort()
+    .at(-1);
+  const stats = [
+    [programs.length, "programmes"],
+    [new Set(programs.map((p) => p.universityId)).size, "universities"],
+    [checked, "fully checked for " + intakeYear],
+  ] as const;
   return (
     <Shell demo={demoMode()}>
       <main className="home">
@@ -65,6 +84,27 @@ export default function Home() {
           </div>
         </section>
         <div className="band">
+          <dl className="home-stats">
+            {stats.map(([value, label]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd>{value.toLocaleString("en")}</dd>
+              </div>
+            ))}
+            {latest && (
+              <div>
+                <dt>sources last retrieved</dt>
+                <dd>
+                  {new Date(latest).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                    timeZone: "UTC",
+                  })}
+                </dd>
+              </div>
+            )}
+          </dl>
           <div className="destinations">
             <span className="eyebrow">Hong Kong and South Korea</span>
             {countries.map((c) => (

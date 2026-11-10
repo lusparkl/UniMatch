@@ -284,6 +284,48 @@ export function evaluateEnglish(
   };
 }
 
+/** The trusted annual cost rows for an intake year, combined by part (see matchProgram). */
+export function annualCost(program: Program, intakeYear: string) {
+  const annual = program.costs.filter(
+    (c) => trusted(c.status) && c.period === "ANNUAL",
+  );
+  const validCosts = annual.filter(
+    (c) => !c.evidence?.academicYear || c.evidence.academicYear === intakeYear,
+  );
+  const otherCycle = validCosts.length
+    ? null
+    : (annual.find((c) => c.evidence?.academicYear)?.evidence?.academicYear ??
+      null);
+  // Rows may each quote one part (tuition from the fee page, living costs from the housing page). Parts
+  // combine only in one currency; two different official figures for one part are a conflict, never averaged
+  // and never resolved by picking one.
+  const currency =
+    validCosts.length &&
+    validCosts.every((c) => c.currency === validCosts[0].currency)
+      ? validCosts[0].currency
+      : null;
+  const part = (key: "tuition" | "living" | "other") => [
+    ...new Set(validCosts.flatMap((c) => (c[key] === null ? [] : [c[key]]))),
+  ];
+  const parts = {
+    tuition: part("tuition"),
+    living: part("living"),
+    other: part("other"),
+  };
+  const disagree =
+    validCosts.length > 1 &&
+    (currency === null || Object.values(parts).some((v) => v.length > 1));
+  const known = (values: number[]) =>
+    currency !== null && !disagree && values.length === 1 ? values[0] : null;
+  const tuition = known(parts.tuition),
+    living = known(parts.living),
+    other = known(parts.other);
+  const total =
+    tuition !== null && living !== null && other !== null
+      ? tuition + living + other
+      : null;
+  return { otherCycle, currency, parts, disagree, tuition, total };
+}
 export function matchProgram(
   program: Program,
   profile: Profile,
@@ -379,44 +421,10 @@ export function matchProgram(
       "Requested intake is not verified.",
   });
   const intakeYear = profile.intake.slice(0, 4);
-  const annual = program.costs.filter(
-    (c) => trusted(c.status) && c.period === "ANNUAL",
+  const { otherCycle, currency, parts, disagree, tuition, total } = annualCost(
+    program,
+    intakeYear,
   );
-  const validCosts = annual.filter(
-    (c) => !c.evidence?.academicYear || c.evidence.academicYear === intakeYear,
-  );
-  const otherCycle = validCosts.length
-    ? null
-    : (annual.find((c) => c.evidence?.academicYear)?.evidence?.academicYear ??
-      null);
-  // Rows may each quote one part (tuition from the fee page, living costs from the housing page). Parts
-  // combine only in one currency; two different official figures for one part are a conflict, never averaged
-  // and never resolved by picking one.
-  const currency =
-    validCosts.length &&
-    validCosts.every((c) => c.currency === validCosts[0].currency)
-      ? validCosts[0].currency
-      : null;
-  const part = (key: "tuition" | "living" | "other") => [
-    ...new Set(validCosts.flatMap((c) => (c[key] === null ? [] : [c[key]]))),
-  ];
-  const parts = {
-    tuition: part("tuition"),
-    living: part("living"),
-    other: part("other"),
-  };
-  const disagree =
-    validCosts.length > 1 &&
-    (currency === null || Object.values(parts).some((v) => v.length > 1));
-  const known = (values: number[]) =>
-    currency !== null && !disagree && values.length === 1 ? values[0] : null;
-  const tuition = known(parts.tuition),
-    living = known(parts.living),
-    other = known(parts.other);
-  const total =
-    tuition !== null && living !== null && other !== null
-      ? tuition + living + other
-      : null;
   // The least the student could pay before aid is tuition alone (living and other costs are never negative).
   // With conflicting tuition figures in one currency, only the smallest bounds from below.
   const floorTuition =
