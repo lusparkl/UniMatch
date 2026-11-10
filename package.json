@@ -26,6 +26,7 @@
     "test:crawl": "tsx --env-file=.env scripts/crawl-smoke.ts",
     "format": "prettier --write .",
     "coverage": "tsx --env-file=.env scripts/coverage-report.ts",
+    "catalog:export": "tsx --env-file=.env scripts/catalog-export.ts",
     "review:auto": "tsx --env-file=.env scripts/auto-review.ts"
   },
   "dependencies": {

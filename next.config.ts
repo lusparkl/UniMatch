@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 const config: NextConfig = {
+  // CATALOG_SOURCE=snapshot reads this file at run time.
+  outputFileTracingIncludes: { "/**": ["./data/catalog-snapshot.json"] },
   serverExternalPackages: [
     "@prisma/client",
     "@prisma/adapter-pg",
