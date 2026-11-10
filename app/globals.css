@@ -48,7 +48,7 @@
   --brand-hover: var(--crimson-600);
   --fg-1: var(--neutral-900);
   --fg-2: var(--neutral-600);
-  --fg-3: var(--neutral-400);
+  --fg-3: var(--neutral-500);
   --fg-on-dark-2: #bdbab6;
   --border-1: var(--neutral-200);
   --border-2: var(--neutral-300);
@@ -721,8 +721,17 @@ footer .brand img {
 .card-top .tag {
   margin-left: auto;
 }
-.card-top h3 {
+.card-top h3,
+.card-top .card-uni {
   line-height: 1.25;
+}
+/* University name above the programme title: styled as a heading, not one in the outline. */
+.card-top .card-uni {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--fg-1);
+  letter-spacing: -0.01em;
 }
 .card-top p {
   margin: 0;
@@ -1276,11 +1285,12 @@ footer .brand img {
   font-size: 14px;
 }
 .ledger-line > span:first-child {
-  flex: 1 1 35%;
-  min-width: 0;
+  flex: 1 1 0;
+  min-width: 7.5em;
 }
 .ledger-line .value {
-  flex: 0 1 65%;
+  flex: 0 1 auto;
+  max-width: 65%;
   color: var(--fg-1);
   font-weight: 600;
   text-align: right;

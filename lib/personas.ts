@@ -74,8 +74,18 @@ export const personas: Persona[] = [
         ),
         "no Hong Kong programme fails on the tuition lower bound",
       ),
-      // Korean data arrives in Part 3; the Korean half of the story is checked once it is published.
-      ...(ms.some(kr)
+      // The Korean half needs a guaranteed Korean scholarship confirmed by the owner (ADMIN_VERIFIED, plan
+      // 3.7), which is what the engine treats as guaranteed, and a KRW reference rate. Until both exist, only
+      // the Hong Kong half is checked.
+      ...(ms.some(
+        (m) =>
+          kr(m) &&
+          m.program.scholarships.some(
+            (s) =>
+              s.fundingCategory === "GUARANTEED" &&
+              s.status === "ADMIN_VERIFIED",
+          ),
+      )
         ? need(
             ms.some(
               (m) =>

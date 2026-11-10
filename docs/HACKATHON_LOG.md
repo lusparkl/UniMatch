@@ -180,3 +180,59 @@ Running log for the hackathon plan (`docs/hackathon/`). Each entry records what 
 - HKBU "Authorization for verification of results" is an OTHER rule for everyone, so HKBU academic results stay UNKNOWN.
 - Several HKU English-route rules ("Bachelor's or higher degree study in English", "Mature applicant rule") are stored as requirements for everyone.
 - HKBU deadlines (an image) are not verified.
+
+## 2026-11-10 21:00: Part 5A (no deploy) and Part 4, on branch `hackathon-part-4-5`
+
+Built in a separate worktree (`../UniMatch-p45`), because the Part 3 session works in the main checkout. This branch never writes to the database. The first deployment waits for the owner's server.
+
+**Changed (Part 5A):**
+
+- **Catalog modes** (`lib/catalog.ts`):
+  - `queryRows()` returns rows ordered by id, without page text per evidence. `toProgram(row, now)` applies freshness when the catalog is read.
+  - `CATALOG_SOURCE=snapshot` reads `data/catalog-snapshot.json` (`CATALOG_SNAPSHOT_PATH` overrides) and never imports the database module.
+- **Export:** `npm run catalog:export` writes the snapshot with sorted keys and IDs. `next.config.ts` traces the file into the build.
+- **`/api/health`:** catalog source, programme and institution counts, last verified date, commit.
+- **Smoke test:** `npm run smoke -- <url>` checks HTTP 200 and no browser errors on every page. It also checks each persona's story against the local snapshot, and that the site shows each persona the same top result and status.
+- **Screenshots:** `npm run screens -- <url>` writes `docs/screens/` at 390 and 1440 px and checks for horizontal overflow.
+
+**Changed (Part 4):** all P0 and P1 items.
+
+- **7.1 Sample students:** `lib/personas.ts`, with buttons on the home page and the wizard.
+- **7.2 Live drawer:** "Adjust scores and budget" on `/results`. Edits re-rank at once and are saved 250 ms after the last change.
+- **7.3 What would change this?:** `lib/whatif.ts`, shown on the detail page.
+- **7.4 Cost ledger:** `lib/arithmetic.ts`. Each part shows its source, plus the dated exchange rate, the ±5% budget band and the lower-bound FAIL line.
+- **7.5 Actions:** `lib/actions.ts`. Actions appear in "Why this result?", on cards (first action) and on the shortlist. `/profile#field` opens the right step with the field focused.
+- **7.6 Trust:** a trust badge on every card and evidence block, and a "Fully checked only" filter. `fullyChecked` in `lib/trust.ts` is shared with the home page count.
+- **7.7 Compare:** `/compare?ids=`, with selection from cards and "Compare top 3" on the shortlist.
+- **7.8 Deadlines:** `/deadlines`, grouped by month in each intake's time zone, with a toggle for passed deadlines.
+- **7.9 Printable shortlist:** print stylesheet, "Copy link" (`/shortlist?ids=`) and "Save to my shortlist".
+- **Section 8 polish:**
+  - one status token set with icons; skeletons for results and detail;
+  - `--fg-3` darkened to meet AA contrast;
+  - university names on cards are no longer headings;
+  - focus ring;
+  - programmes with complete requirements come first within a relevance tier;
+  - money is shown as US$/HK$ everywhere.
+
+**Measured:**
+
+- Re-ranking 250 programmes takes about 11 ms in development (target: under 50 ms).
+- typecheck, lint and Prettier clean. `npm test`: 206/206. Integration: 9/9 (new: snapshot parity, 4 persona stories). E2E: public 11/11, private 3/3.
+- **Snapshot-mode production build:** `PUBLIC_MODE=true`, unreachable `DATABASE_URL` and `REDIS_URL`, 270 programmes in an 8.0 MB snapshot.
+  - `/api/health` is OK.
+  - `npm run smoke` passes for all 4 personas.
+  - `npm run screens` finds no overflow and no errors.
+- **Lighthouse accessibility:** `/results` 100; detail page 95 (remaining issues: heading order, link-in-text-block).
+
+**Decided:**
+
+- The persona A-level story's Korean half is checked only once a Korean GUARANTEED scholarship is `ADMIN_VERIFIED`, because only then does the engine treat it as guaranteed (plan 3.7).
+- The Part 3 data now has Korean GUARANTEED scholarships as `SOURCE_BACKED`, and there is no KRW rate in `lib/fx-rates.json`. Korean costs therefore cannot be compared with a USD budget yet.
+- The snapshot is not committed until the data freeze (5B step 4).
+
+**Owner actions pending:**
+
+- Provide the server.
+- Approve Korean guaranteed scholarships.
+- Run `npm run fx:update` once KRW is needed.
+- Merge `hackathon-part-4-5` into `main`.

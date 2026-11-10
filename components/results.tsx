@@ -460,7 +460,7 @@ export function Results({
                   <GraduationCap size={24} />
                 </div>
                 <div>
-                  <h3>{m.program.university}</h3>
+                  <p className="card-uni">{m.program.university}</p>
                   <p className="muted">
                     <MapPin size={11} style={{ display: "inline" }} />{" "}
                     {m.program.city}, {m.program.country}

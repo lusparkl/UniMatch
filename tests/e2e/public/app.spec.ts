@@ -103,7 +103,11 @@ test("shortlist works without an account: add, reorder, remove, persist", async 
   await expect(
     page.getByRole("button", { name: "Remove from shortlist" }),
   ).toHaveCount(2);
-  const firstUni = await cards.nth(0).locator("h3").first().textContent();
+  const firstUni = await cards
+    .nth(0)
+    .locator(".card-uni")
+    .first()
+    .textContent();
 
   await page.goto("/shortlist");
   await expect(
