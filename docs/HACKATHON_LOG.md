@@ -236,3 +236,63 @@ Built in a separate worktree (`../UniMatch-p45`), because the Part 3 session wor
 - Approve Korean guaranteed scholarships.
 - Run `npm run fx:update` once KRW is needed.
 - Merge `hackathon-part-4-5` into `main`.
+
+## 2026-11-10 22:30: Part 3 (W4, W5, W6, sections 2.1–4)
+
+**Authorised by the owner for this run:** live crawling of the official sites (guarded crawler: approved hosts, robots.txt, 2 s delay, SSRF checks), and a model budget of up to 1M tokens. **No model calls were made** (0 `ModelUsage` rows since Part 2). Every fact is quoted by reviewer scripts from pages fetched through the crawler. Backups (`pg_dump -Fc`) were taken before each write step in the session scratchpad: `unimatch-before-{part3,hkust-reqs,auto-review-hk,auto-review-cuhk,korea}.dump`.
+
+**Token budget (§1):** measured 714 earlier Hong Kong programme calls, about 7k tokens each. It was not needed, because the curation scripts quote pages directly.
+
+**Hong Kong (W4):**
+
+- 2.1/2.2 `scripts/add-tuition-hk.ts`: one SOURCE_BACKED cost row per part, quoted from the re-fetched fee pages.
+  - Tuition for 2027/28: CUHK HK$230,000 (all except the two dual-degree programmes), HKUST HK$260,000, PolyU HK$240,000 (government-funded JUPAS programmes), HKBU HK$240,000 (already present).
+  - HKU tuition goes by the programme page's FACULTY field against the fee page's lists: STEM HK$280,000, non-STEM HK$250,000, MBBS/BDS HK$590,000. 13 programmes get none: 11 "HKU Business School" (the fee page names "Business and Economics") and 2 without a FACULTY field.
+  - CUHK living: about HK$17,000 accommodation plus about HK$45,000 living expenses, HK$62,000 in total. This supersedes the 73 rows of HK$45,000 (living expenses only), by owner decision 2026-11-10; the old rows are kept in ReviewRecords.
+  - CUHK other: HK$450 caution fee paid on enrolment (owner decision).
+  - HKU, HKUST and HKBU accommodation are ranges, so their totals stay partial.
+- 2.3 The CUHK IB guide PDF (2027 entry) is now an approved registry source. `scripts/curate-cuhk-requirements.ts` encodes for 73 programmes: IB Diploma 30/45 (GRADE), IB Chinese grade 4 (OTHER, Dean may exempt), the A-level route (OTHER), and English (IELTS 6.0 and alternatives). The guide says subject preferences "are NOT subject requirements". Dual-degree programmes are untouched.
+- `scripts/curate-hkust-requirements.ts` covers 42 programmes in the flagship pattern: IB/A-level allow-list, English alternatives, and the subject requirement quoted from each programme's requirement page. Application choice and interview are informational.
+- Freshness: `scripts/recheck-sources.ts` re-fetched the 151 cited HK pages without model calls. Evidence whose quotation is still verbatim moved to the current page version (4,082 rows). HKUST changed its date format ("Nov. 25"), so `scripts/curate-intakes.ts` re-quoted the HKUST intakes.
+- W6 hygiene rule: CUHK rounds were stored as terms. The date table states "Early Sep 2027 1st teaching term commences", so the term is now Fall and the round is the route.
+- 2.4 HKU/HKBU (`scripts/curate-hku-hkbu.ts`, run earlier today): HKU standards were read from the selector's API. HKBU's IB and A-level routes and English alternatives are encoded. Neither university gets `requirementsComplete`.
+- 2.6 `scripts/polyu-costs.ts` (earlier today): both PolyU figures still stand, so the living rows are CONFLICTING, and the misread HK$20,000 initial-fee rows were removed.
+- 2.5 `npm run review:auto` (APPLY): requirementsComplete set on 42 HKUST + 73 CUHK. Total complete is now 119 (HKUST 44, CUHK 73, PolyU 2). **Accept: 119 ≥ 10.** Complete annual cost: **73 (CUHK) ≥ 20.**
+- 2.7 A-level routes (scoped OTHER rules) are encoded for every HKUST and CUHK complete programme. The 2 PolyU flagships still have the IB route only.
+
+**South Korea (W5):**
+
+- Selection (§3.1). Kept: KAIST (script-rendered; approved with browser rendering), POSTECH, UNIST, Korea University (English track only).
+  - Skipped Yonsei UIC, GIST, SKKU (admission-global): robots.txt disallows the admission pages.
+  - Skipped DGIST (connection reset / timeout), Hanyang (HTTP 403), SNU (no English-taught route page reached).
+  - **4 institutions, short of 6.**
+- Programmes: 19 in total. KAIST 6, POSTECH 6 and UNIST 6 are majors listed on the admission pages (all three admit to an undeclared major). KU has 1: International Studies (English Track). **Short of 25.** The registry is `prisma/registry-programs-kr.json` plus Korean universities and pages in `prisma/registry.ts`; `npm run db:seed` applies them.
+- `scripts/curate-korea.ts` writes the facts:
+  - eligibility (OTHER: parents' citizenship is not in the profile, so it stays UNKNOWN), intakes in `Asia/Seoul`, costs and scholarships;
+  - intakes: KAIST regular Fall 2027 closes 2027-01-14 18:00 KST; UNIST Fall 2027 is 2026-12-02 to 2027-01-22 16:00 KST; POSTECH Fall 2027 is "late March to early April 2027" (no dates); the POSTECH and KU Spring 2027 rounds are closed.
+- **requirementsComplete: 0 (target 15).** No institution publishes an accepted-qualification list (any recognised high school graduation). KAIST and POSTECH publish no 2027 English rule: KAIST's guideline PDF is the 2025 edition, and POSTECH's Fall 2027 guideline is due in late January / early February 2027. UNIST and KU ask for an English report without a minimum.
+- **Complete cost: KAIST (6 programmes)**, from the cost-of-attendance table: KRW 6,866,000 tuition + 6,803,000 housing and food + 1,216,680 insurance and books. The table states no year, so it counts for any intake.
+  - KU tuition is per semester for 2026 (stored, not annual).
+  - UNIST tuition has no stated period, so it is not stored.
+- KRW added to `npm run fx:update`. The NBU table lists KRW; rates are dated 2026-11-11.
+- Scholarships:
+  - COMPETITIVE: UNIST tuition waiver (the guideline also admits through a non-scholarship track), KU Anam Global.
+  - GUARANTEED candidates: KAIST Scholarship, POSTECH tuition waiver, POSTECH living allowance. They are listed in `docs/OWNER_CONFIRM.md` and promoted only by `scripts/owner-confirm.ts` with `OWNER_CONFIRMED=1`.
+  - **Not confirmed yet:** until the owner confirms, the "guaranteed scholarship" demo moment is unavailable.
+
+**W6 hygiene:**
+
+- `scripts/evidence-report.ts` (read-only): every published requirement, intake, cost and document quotation is verbatim in its cited page version (0 failures).
+- 1 pending candidate is left (Debrecen; Hungary is not enabled).
+- `scripts/coverage-report.ts` now counts complete costs by part, as matching does. The result is in `docs/coverage-after.md`.
+
+**Measured:** typecheck and lint clean; Prettier clean on changed files; `npm test` 193/193 (new `tests/curation.test.ts`, 4 tests). Not run: `npm run test:integration`, `npm run test:e2e`, `npm run build`.
+
+**Still open:**
+
+- 185 HKU requirement quotations cite the page version that `curate-hku-hkbu.ts` extended with the selector's API data. A plain re-fetch no longer contains them, so they age out after 30 days unless that script is rerun.
+- HKU "final" intakes have no September statement on the page, so they stay unmatched for Fall (59 programmes).
+- PolyU (45) and HKBU (23) are not complete: no applicant-wide allow-list, and PolyU programme subject requirements are unchecked.
+- A misparsed HKUST accommodation row (HK$21,000 "per semester"; the page gives a range per residential year) remains ADMIN_VERIFIED.
+- Curation dry runs fetch and store page versions (no facts are written).
+- Korea falls short on institutions (4/6), programmes (19/25) and requirementsComplete (0/15). Guaranteed scholarships await the owner.

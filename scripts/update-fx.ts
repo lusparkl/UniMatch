@@ -2,7 +2,7 @@ import { writeFileSync } from "node:fs";
 // Refreshes lib/fx-rates.json from the National Bank of Ukraine's official daily rates, which cover every
 // budget currency the profile offers (including UAH). Run manually; matching never fetches rates itself.
 const url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
-const wanted = ["USD", "EUR", "HKD", "HUF", "SGD", "GBP", "INR"];
+const wanted = ["USD", "EUR", "HKD", "HUF", "SGD", "GBP", "INR", "KRW"];
 const rows = (await (await fetch(url)).json()) as {
   cc: string;
   rate: number;

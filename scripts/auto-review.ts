@@ -303,6 +303,13 @@ try {
       if (!complete) {
         tally("left UNKNOWN (checklist)");
         for (const m of missing) tally("checklist gap: " + shape(m));
+        if (process.env.VERBOSE)
+          console.log(
+            "   ",
+            program.universityId,
+            program.title,
+            missing.join("; "),
+          );
         continue;
       }
       tally("requirementsComplete set");

@@ -1,6 +1,6 @@
 import { getPrograms } from "../lib/catalog";
 import { db } from "../lib/db";
-import { trusted } from "../lib/matching";
+import { annualCost, trusted } from "../lib/matching";
 import type { Program } from "../lib/domain";
 // Read-only coverage audit of the published catalog, as students see it (read-time freshness applied).
 // Prints Markdown: per university and intake, how much of the data matching needs is verified.
@@ -8,16 +8,8 @@ import type { Program } from "../lib/domain";
 const [year, term] = (process.env.INTAKE ?? "2027-Fall").split("-");
 const season = (t: string) =>
   t.toLowerCase() === "autumn" ? "fall" : t.toLowerCase();
-const completeCost = (p: Program, y: string) =>
-  p.costs.some(
-    (c) =>
-      trusted(c.status) &&
-      c.period === "ANNUAL" &&
-      c.tuition !== null &&
-      c.living !== null &&
-      c.other !== null &&
-      (!c.evidence?.academicYear || c.evidence.academicYear === y),
-  );
+// Rows combine by part (tuition, living, other), as in matching.
+const completeCost = (p: Program, y: string) => annualCost(p, y).total !== null;
 const otherYear = (y: string, evidenceYear?: string | null) =>
   !!evidenceYear && evidenceYear !== y;
 try {
