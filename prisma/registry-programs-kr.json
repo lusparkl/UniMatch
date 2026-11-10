@@ -1,0 +1,135 @@
+[
+  {
+    "universityId": "kaist",
+    "title": "BS in Computer Science",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Science",
+    "officialUrl": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+  },
+  {
+    "universityId": "kaist",
+    "title": "BS in Electrical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Electrical Engineering",
+    "officialUrl": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+  },
+  {
+    "universityId": "kaist",
+    "title": "BS in Mechanical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mechanical Engineering",
+    "officialUrl": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+  },
+  {
+    "universityId": "kaist",
+    "title": "BS in Industrial & Systems Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Industrial Engineering",
+    "officialUrl": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+  },
+  {
+    "universityId": "kaist",
+    "title": "BS in Business and Technology Management",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business",
+    "officialUrl": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+  },
+  {
+    "universityId": "kaist",
+    "title": "BS in Mathematical Sciences",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mathematics",
+    "officialUrl": "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01"
+  },
+  {
+    "universityId": "postech",
+    "title": "BS in Computer Science & Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Science",
+    "officialUrl": "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do"
+  },
+  {
+    "universityId": "postech",
+    "title": "BS in Electrical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Electrical Engineering",
+    "officialUrl": "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do"
+  },
+  {
+    "universityId": "postech",
+    "title": "BS in Mechanical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mechanical Engineering",
+    "officialUrl": "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do"
+  },
+  {
+    "universityId": "postech",
+    "title": "BS in Industrial & Management Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Industrial Engineering",
+    "officialUrl": "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do"
+  },
+  {
+    "universityId": "postech",
+    "title": "BS in Mathematics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mathematics",
+    "officialUrl": "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do"
+  },
+  {
+    "universityId": "postech",
+    "title": "BS in Physics",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Physics",
+    "officialUrl": "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do"
+  },
+  {
+    "universityId": "unist",
+    "title": "BS in Computer Science and Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Computer Science",
+    "officialUrl": "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download"
+  },
+  {
+    "universityId": "unist",
+    "title": "BS in Electrical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Electrical Engineering",
+    "officialUrl": "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download"
+  },
+  {
+    "universityId": "unist",
+    "title": "BS in Mechanical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Mechanical Engineering",
+    "officialUrl": "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download"
+  },
+  {
+    "universityId": "unist",
+    "title": "BS in Industrial Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Industrial Engineering",
+    "officialUrl": "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download"
+  },
+  {
+    "universityId": "unist",
+    "title": "BS in Biomedical Engineering",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Biomedical Engineering",
+    "officialUrl": "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download"
+  },
+  {
+    "universityId": "unist",
+    "title": "BBA in Business Administration",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "Business Administration",
+    "officialUrl": "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download"
+  },
+  {
+    "universityId": "korea",
+    "title": "International Studies (English Track)",
+    "degreeLevel": "BACHELOR",
+    "fieldOfStudy": "International Studies",
+    "officialUrl": "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf"
+  }
+]

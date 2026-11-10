@@ -1,5 +1,6 @@
 import { db } from "../lib/db";
 import discovered from "./registry-programs.json";
+import korea from "./registry-programs-kr.json";
 // Program registry: a human-chosen list of real degrees and the official pages that state their
 // admission, fee and deadline facts. Extraction runs once per registered program over these pages.
 type Entry = {
@@ -110,8 +111,40 @@ const curatedPrograms: Entry[] = [
 // Hand-registered entries win over listed ones with the same official page (they keep their titles).
 const curatedUrls = new Set(curatedPrograms.map((p) => p.officialUrl));
 const added = listed.filter((p) => !curatedUrls.has(p.officialUrl));
+// South Korea (W5, 2026-11-10): institutions with an English-taught first-year route for international
+// applicants whose official pages are crawlable. KAIST, POSTECH and UNIST admit to an undeclared major;
+// the registered majors are the ones their admission pages list. Skipped: Yonsei UIC, GIST and SKKU
+// (robots.txt disallows the admission pages), DGIST (connections reset or timed out), Hanyang (HTTP 403),
+// SNU (no English-taught route page reached).
+export const universities = [
+  {
+    id: "kaist",
+    name: "KAIST (Korea Advanced Institute of Science and Technology)",
+    city: "Daejeon",
+    officialWebsite: "https://www.kaist.ac.kr/en/",
+  },
+  {
+    id: "postech",
+    name: "POSTECH (Pohang University of Science and Technology)",
+    city: "Pohang",
+    officialWebsite: "https://www.postech.ac.kr/eng/",
+  },
+  {
+    id: "unist",
+    name: "UNIST (Ulsan National Institute of Science and Technology)",
+    city: "Ulsan",
+    officialWebsite: "https://www.unist.ac.kr/",
+  },
+  {
+    id: "korea",
+    name: "Korea University",
+    city: "Seoul",
+    officialWebsite: "https://www.korea.edu/",
+  },
+].map((u) => ({ ...u, country: "South Korea" }));
 export const programs: Entry[] = [
   ...curatedPrograms,
+  ...(korea as Entry[]),
   ...added.map((p) => ({
     universityId: p.universityId,
     title: p.title,
@@ -132,6 +165,8 @@ export const pages: {
   url: string;
   program?: string | string[];
   fees?: "per-program";
+  // Script-rendered pages: the approved source allows browser rendering when the HTML is nearly empty.
+  render?: true;
 }[] = [
   ...[
     "https://join.hkust.edu.hk/admissions/international-qualifications",
@@ -191,6 +226,8 @@ export const pages: {
     "https://admission.cuhk.edu.hk/fees-financing-your-studies/fees/",
     "https://admission.cuhk.edu.hk/fees-financing-your-studies/scholarships/",
     "https://admission.cuhk.edu.hk/application/overseas-other-qualifications-non-local-international-team/faq/",
+    // IB guide for 2027 entry (linked from the requirements page): IB Chinese condition and subject preferences.
+    "https://www.cuhk.edu.hk/adm/intl/adm_guide/IB.pdf",
   ].map((url) => ({ universityId: "cuhk", url })),
   ...[
     "https://admissions.hkbu.edu.hk/admissions/international-qualifications.html",
@@ -209,6 +246,27 @@ export const pages: {
     "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-tuition-fees",
     "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-other-fees-and",
   ].map((url) => ({ universityId: "polyu", url })),
+  ...[
+    "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
+    "https://admission.kaist.ac.kr/intl-undergraduate/before/sub02",
+    "https://admission.kaist.ac.kr/intl-undergraduate/application/ApplicationGuide/ApplicationTimeline",
+    "https://admission.kaist.ac.kr/intl-undergraduate/support/coa",
+    "https://admission.kaist.ac.kr/intl-undergraduate/support/scholarships/kaist",
+  ].map((url) => ({ universityId: "kaist", url, render: true as const })),
+  ...[
+    "https://adm-iu.postech.ac.kr/user/comm/menu/3317587a17a23d4dacdb9ffc4762bf4a/content/index.do",
+    "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do",
+    "https://adm-iu.postech.ac.kr/user/comm/menu/e2afb97fa1b8f43c574be0dabef78f87/content/index.do",
+  ].map((url) => ({ universityId: "postech", url })),
+  ...[
+    "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download",
+    "https://admu-intl.unist.ac.kr/admission-eng/life/scholarships.do",
+  ].map((url) => ({ universityId: "unist", url })),
+  ...[
+    "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",
+    "https://oia.korea.ac.kr/oia2026/Tuition.do",
+    "https://oia.korea.ac.kr/oia2026/KU-Scholarships.do",
+  ].map((url) => ({ universityId: "korea", url })),
 ];
 // Stand-ins that duplicate a registered degree.
 // Also junk rows (a master's scholarship page, a business scheme) that no registry entry covers.
@@ -252,6 +310,12 @@ const seniorYearOnly = [
 // Transfer-student pages: wrong audience for first-year international applicants.
 const demoted = ["https://join.hkust.edu.hk/admissions/post-secondary"];
 export async function seedRegistry() {
+  for (const { id, ...u } of universities)
+    await db.university.upsert({
+      where: { id },
+      create: { id, ...u },
+      update: { country: u.country, city: u.city },
+    });
   for (const p of programs) {
     await db.degreeProgram.upsert({
       where: {
@@ -275,8 +339,9 @@ export async function seedRegistry() {
     ...u,
     program: "program" in u ? u.program : undefined,
     fees: "fees" in u ? u.fees : undefined,
+    render: "render" in u ? u.render : undefined,
   }));
-  for (const { universityId, url, program, fees } of urls) {
+  for (const { universityId, url, program, fees, render } of urls) {
     // Several scoped titles are stored one per line.
     const purpose = program
       ? "registry:" + [program].flat().join("\n")
@@ -291,8 +356,9 @@ export async function seedRegistry() {
         hostname: new URL(url).hostname,
         purpose,
         allowSubdomains: false,
+        browserRendering: !!render,
       },
-      update: { purpose },
+      update: { purpose, ...(render ? { browserRendering: true } : {}) },
     });
   }
   // Registry sources dropped from this list stop feeding the pipeline.
