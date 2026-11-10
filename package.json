@@ -28,6 +28,7 @@
     "coverage": "tsx --env-file=.env scripts/coverage-report.ts",
     "catalog:export": "tsx --env-file=.env scripts/catalog-export.ts",
     "screens": "tsx scripts/screens.ts",
+    "smoke": "CATALOG_SOURCE=snapshot DEMO_MODE=false FRESHNESS_DEADLINE_DAYS=${FRESHNESS_DEADLINE_DAYS:-30} tsx scripts/smoke.ts",
     "review:auto": "tsx --env-file=.env scripts/auto-review.ts"
   },
   "dependencies": {

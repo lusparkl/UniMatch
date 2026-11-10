@@ -126,6 +126,17 @@ npm run test:integration     # real PostgreSQL/Redis + local fixtures + Chromium
 npm run test:e2e             # Chromium; starts its own test app on port 3001
 ```
 
+Snapshot deployment (no PostgreSQL or Redis on the host):
+
+```bash
+npm run catalog:export       # data/catalog-snapshot.json from the published catalog
+CATALOG_SOURCE=snapshot PUBLIC_MODE=true DEMO_MODE=false npm run build && npm start
+npm run smoke -- <url>       # pages, browser errors and sample-student results against the snapshot
+npm run screens -- <url>     # docs/screens/ at 390 and 1440 px, with an overflow check
+```
+
+`/api/health` reports the catalog source, counts, last verification and commit. Freshness still expires at read time, so set `FRESHNESS_DEADLINE_DAYS` on the host as well.
+
 Integration/E2E prerequisites: start Compose, apply migrations, seed, and install Chromium. Tests never call OpenAI or real universities. Integration tests use unique temporary records/queues and clean them up. E2E credentials exist only in the test-server environment and are not a deployed login. E2E screenshots are written to ignored `output/playwright/`.
 
 Optional live tests:
