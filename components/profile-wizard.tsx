@@ -5,6 +5,25 @@ import { ArrowLeft, ArrowRight, LockKeyhole, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { deleteProfile, readProfile, saveProfile } from "./local-store";
 import { defaultProfile, profileSchema, type Profile } from "@/lib/domain";
+import { PersonaButtons } from "./persona-buttons";
+import { budgetCurrencies } from "./profile-drawer";
+// Fields on the second and third steps; /profile#ielts opens the step and focuses the field.
+const stepOf = (field: string) =>
+  [
+    "qualification",
+    "gradingScale",
+    "grade",
+    "ielts",
+    "toefl",
+    "duolingo",
+    "pte",
+    "sat",
+    "act",
+  ].includes(field)
+    ? 1
+    : ["budget", "currency", "funding"].includes(field)
+      ? 2
+      : 0;
 // Matching compares qualification names exactly; these are the names published requirements use.
 const qualifications = ["IB Diploma", "GCE A-Level", "International A-Level"];
 export function ProfileWizard() {
@@ -12,7 +31,8 @@ export function ProfileWizard() {
     [step, setStep] = useState(0),
     [error, setError] = useState(""),
     // Blank until the student enters a budget; a saved profile restores its own.
-    [budget, setBudget] = useState("");
+    [budget, setBudget] = useState(""),
+    [focusField, setFocusField] = useState("");
   const router = useRouter();
   useEffect(() => {
     const saved = readProfile();
@@ -20,7 +40,16 @@ export function ProfileWizard() {
       setProfile(saved);
       setBudget(String(saved.budget));
     }
+    const field = window.location.hash.slice(1);
+    if (!field) return;
+    setStep(stepOf(field));
+    setFocusField(field);
   }, []);
+  // Focus a linked field once its step has rendered.
+  useEffect(() => {
+    const el = focusField && document.getElementById(focusField);
+    if (el) el.focus();
+  }, [focusField, step]);
   const set = <K extends keyof Profile>(key: K, value: Profile[K]) =>
     setProfile((p) => ({ ...p, [key]: value }));
   const text = (
@@ -33,6 +62,7 @@ export function ProfileWizard() {
     <label>
       {label}
       <input
+        id={key}
         aria-label={label}
         value={String(profile[key] ?? "")}
         placeholder={placeholder}
@@ -53,6 +83,7 @@ export function ProfileWizard() {
     <label>
       {label}
       <input
+        id={key}
         aria-label={label}
         type="number"
         min="0"
@@ -109,6 +140,7 @@ export function ProfileWizard() {
       <p className="muted">
         A few details help us turn possibilities into a useful shortlist.
       </p>
+      {step === 0 && <PersonaButtons />}
       <div className="steps">
         {["Your direction", "Your qualifications", "Your budget"].map(
           (s, i) => (
@@ -213,6 +245,7 @@ export function ProfileWizard() {
             <label>
               Available annual budget
               <input
+                id="budget"
                 aria-label="Available annual budget"
                 type="number"
                 min="0"
@@ -225,10 +258,11 @@ export function ProfileWizard() {
             <label>
               Budget currency
               <select
+                id="currency"
                 value={profile.currency}
                 onChange={(e) => set("currency", e.target.value)}
               >
-                {["USD", "EUR", "GBP", "HKD", "KRW", "INR", "UAH"].map((c) => (
+                {budgetCurrencies.map((c) => (
                   <option key={c}>{c}</option>
                 ))}
               </select>
@@ -236,6 +270,7 @@ export function ProfileWizard() {
             <label className="full">
               Funding preference
               <select
+                id="funding"
                 value={profile.funding}
                 onChange={(e) =>
                   set("funding", e.target.value as Profile["funding"])

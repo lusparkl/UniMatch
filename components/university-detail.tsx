@@ -19,8 +19,13 @@ import {
   type Program,
   type Profile,
 } from "@/lib/domain";
-import { matchProgram, trusted } from "@/lib/matching";
+import { matchProgram, trusted, type Truth } from "@/lib/matching";
+import { actionFor } from "@/lib/actions";
+import { arithmetic, type Line } from "@/lib/arithmetic";
+import { suggestions } from "@/lib/whatif";
+import { trustTier } from "@/lib/trust";
 import { fxSource } from "@/lib/fx";
+import { ActionLink, StatusTag, TrustBadge, shortDate } from "./status";
 const tabs = [
   ["req", "Requirements"],
   ["dead", "Deadlines"],
@@ -32,11 +37,19 @@ const verification = (status: string) => status.replaceAll("_", " ");
 export function Source({ evidence }: { evidence?: Evidence }) {
   return evidence ? (
     <details className="source">
-      <summary>Evidence · {verification(evidence.status)}</summary>
+      <summary>
+        <TrustBadge
+          tier={trustTier(evidence.status)}
+          date={evidence.retrievedAt}
+        />
+        {(evidence.status === "OUTDATED" ||
+          evidence.status === "CONFLICTING") &&
+          " (" + verification(evidence.status).toLowerCase() + ")"}
+      </summary>
       <blockquote>
         {evidence.excerpt}
         <div className="tiny muted">
-          Retrieved {new Date(evidence.retrievedAt).toLocaleDateString()} ·{" "}
+          Retrieved {shortDate(evidence.retrievedAt)} ·{" "}
           <a href={evidence.url} target="_blank" rel="noopener noreferrer">
             Official source ↗
           </a>
@@ -45,6 +58,39 @@ export function Source({ evidence }: { evidence?: Evidence }) {
     </details>
   ) : (
     <span className="source">Not verified from an official source</span>
+  );
+}
+const stateWords: Record<Truth, string> = {
+  PASS: "Within budget",
+  UNKNOWN: "Not certain",
+  FAIL: "Over budget",
+};
+function LedgerLine({ line, total }: { line: Line; total?: boolean }) {
+  return (
+    <div
+      className={
+        "ledger-line" +
+        (total ? " total" : "") +
+        (line.state ? " state-" + line.state : "")
+      }
+    >
+      <span>
+        {line.label}
+        {line.url && (
+          <a
+            className="ledger-source"
+            href={line.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Source
+            {line.retrievedAt && ", read " + shortDate(line.retrievedAt)} ↗
+          </a>
+        )}
+        {line.detail && <span className="ledger-source">{line.detail}</span>}
+      </span>
+      <span className="value">{line.value}</span>
+    </div>
   );
 }
 function Row({
@@ -84,9 +130,17 @@ export function UniversityDetail({
     [profile, setProfile] = useState<Profile | null>(null);
   const shortlist = useShortlist();
   useEffect(() => setProfile(readProfile()), []);
+  // The programme chips scroll sideways; keep the selected one in view.
+  useEffect(() => {
+    document
+      .querySelector('.pick-chip[aria-selected="true"]')
+      ?.scrollIntoView({ block: "nearest", inline: "center" });
+  }, [selected]);
   const p = programs.find((p) => p.id === selected) ?? programs[0],
     match = profile ? matchProgram(p, profile) : null,
     base = match ?? matchProgram(p, defaultProfile),
+    sums = match && profile ? arithmetic(p, profile, match) : null,
+    ideas = match && profile ? suggestions(p, profile) : [],
     degree = p.degreeLevel === "MASTER" ? "Master’s" : "Bachelor’s";
   return (
     <>
@@ -127,9 +181,9 @@ export function UniversityDetail({
       )}
       <section className="summary">
         <div className="actions">
-          <span className={"tag " + (match ? match.status : "UNKNOWN")}>
+          <StatusTag state={match ? match.status : "UNKNOWN"}>
             {match ? statusLabel[match.status] : "Profile needed"}
-          </span>
+          </StatusTag>
           <ShortlistButton
             saved={shortlist.ids.includes(p.id)}
             ready={shortlist.ready}
@@ -206,8 +260,9 @@ export function UniversityDetail({
                 <Row
                   key={i}
                   title={r.label}
-                  tag={verification(r.status)}
-                  tone={trusted(r.status) ? "PASS" : "UNKNOWN"}
+                  // Trusted rules carry a trust badge on their evidence; anything else is flagged here.
+                  tag={trusted(r.status) ? undefined : verification(r.status)}
+                  tone="UNKNOWN"
                 >
                   <p>
                     {r.minimum !== null
@@ -259,8 +314,8 @@ export function UniversityDetail({
                 <Row
                   key={index}
                   title={i.academicYear + " " + i.term + " · " + i.route}
-                  tag={verification(i.status)}
-                  tone={trusted(i.status) ? "PASS" : "UNKNOWN"}
+                  tag={trusted(i.status) ? undefined : verification(i.status)}
+                  tone="UNKNOWN"
                 >
                   <p>
                     {trusted(i.status) && i.deadline
@@ -373,32 +428,39 @@ export function UniversityDetail({
               </>
             ) : (
               <>
-                {match.scenarios.map((s, i) => (
-                  <div className="check" key={i}>
-                    <div>
-                      <strong className="tiny">{s.name}</strong>
-                      <h3 className="amount">
-                        {money(s.remaining, s.currency)}
-                        {s.converted !== null &&
-                          " ≈ " + money(s.converted, profile!.currency)}
+                <div className="ledger">
+                  {sums!.parts.map((l) => (
+                    <LedgerLine key={l.label} line={l} />
+                  ))}
+                  <LedgerLine line={sums!.total} total />
+                  {sums!.exchange && <LedgerLine line={sums!.exchange} />}
+                  <LedgerLine line={sums!.budget} />
+                  {match.scenarios.map((s, i) => (
+                    <div className="ledger-scenario" key={i}>
+                      <h3>
+                        {s.name}
+                        <StatusTag state={s.affordable}>
+                          {stateWords[s.affordable]}
+                        </StatusTag>
                       </h3>
-                      <p>Estimated remaining annual cost</p>
-                      <span className={"tag " + s.affordable}>
+                      <p className="tiny" style={{ margin: "4px 0" }}>
                         {s.award === "COMPETITIVE"
-                          ? "Potential funding · not awarded"
+                          ? "Competitive award: eligibility to apply is not an award."
                           : s.award === "GUARANTEED"
-                            ? "Guaranteed terms · verify conditions"
-                            : "Without financial aid"}
-                      </span>
-                      <p className="tiny">{s.reason}</p>
+                            ? "Guaranteed terms: confirm the conditions on the official page."
+                            : "Without any financial aid."}
+                      </p>
+                      {sums!.scenarios[i].lines.map((l) => (
+                        <LedgerLine key={l.label} line={l} />
+                      ))}
                       {s.fullRide && (
-                        <span className="tag PASS">
-                          Tuition + living + other costs covered
-                        </span>
+                        <StatusTag state="PASS">
+                          Tuition, living and other costs covered
+                        </StatusTag>
                       )}
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
                 <p className="tiny muted" style={{ marginTop: 18 }}>
                   Awards are evaluated separately. Scholarships are never
                   automatically stacked. Other currencies are converted at{" "}
@@ -411,22 +473,46 @@ export function UniversityDetail({
           {match && (
             <section className="panel">
               <h2>Why this result?</h2>
-              {[...match.academic, ...match.application].map((c, i) => (
-                <div className="check" key={i}>
-                  <div>
-                    <strong className="tiny">{c.label}</strong>
-                    <p>{c.reason}</p>
+              {[...match.academic, ...match.application].map((c, i) => {
+                const action = actionFor(c, p, profile!);
+                return (
+                  <div className="check" key={i}>
+                    <div>
+                      <strong className="tiny">{c.label}</strong>
+                      <p>{c.reason}</p>
+                      {action && <ActionLink action={action} />}
+                    </div>
+                    <span style={{ alignSelf: "start" }}>
+                      <StatusTag state={c.state}>
+                        {c.state === "PASS"
+                          ? "Met"
+                          : c.state === "FAIL"
+                            ? "Not met"
+                            : "Unknown"}
+                      </StatusTag>
+                    </span>
                   </div>
-                  <span
-                    className={"tag " + c.state}
-                    style={{ alignSelf: "start" }}
-                  >
-                    {c.state}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
               <p className="tiny muted">
                 Meeting minimum requirements does not predict admission.
+              </p>
+            </section>
+          )}
+          {match && ideas.length > 0 && (
+            <section className="panel">
+              <h2>What would change this?</h2>
+              <ul className="whatif">
+                {ideas.map((idea, i) => (
+                  <li key={i}>
+                    {idea.text}{" "}
+                    {idea.action && <ActionLink action={idea.action} />}
+                  </li>
+                ))}
+              </ul>
+              <p className="tiny muted">
+                Each line changes one thing and runs the same checks again. It
+                describes the published rules, not your chances.
               </p>
             </section>
           )}

@@ -8,6 +8,8 @@ export const PROFILE_KEY = "unimatch-profile-v2";
 export const LEGACY_PROFILE_KEY = "unimatch-profile-v1";
 export const SHORTLIST_KEY = "unimatch-shortlist-v1";
 export const DOCS_KEY = "unimatch-docs-v1";
+export const COMPARE_KEY = "unimatch-compare-v1";
+export const COMPARE_MAX = 3;
 
 export type TrackedDocuments = Record<string, "HAVE" | "IN_PROGRESS">;
 
@@ -144,4 +146,33 @@ export function useTrackedDocuments() {
     [],
   );
   return { tracked, mark };
+}
+
+/** Up to three programme IDs picked for /compare. */
+export function useCompare() {
+  const [ids, setIds] = useState<string[]>([]);
+  useEffect(() => {
+    const value = read(COMPARE_KEY);
+    setIds(
+      Array.isArray(value)
+        ? value
+            .filter((v): v is string => typeof v === "string")
+            .slice(0, COMPARE_MAX)
+        : [],
+    );
+  }, []);
+  const toggle = useCallback(
+    (id: string) =>
+      setIds((list) => {
+        const next = list.includes(id)
+          ? list.filter((i) => i !== id)
+          : list.length < COMPARE_MAX
+            ? [...list, id]
+            : list;
+        write(COMPARE_KEY, next);
+        return next;
+      }),
+    [],
+  );
+  return { ids, toggle, full: ids.length >= COMPARE_MAX };
 }

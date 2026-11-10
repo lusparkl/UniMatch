@@ -7,6 +7,7 @@ const links = [
   { href: "/results", label: "Explore" },
   { href: "/profile", label: "My profile" },
   { href: "/shortlist", label: "Shortlist" },
+  { href: "/deadlines", label: "Deadlines" },
 ];
 const tabs = [
   { href: "/", label: "Home", Icon: House },

@@ -27,6 +27,7 @@
     "format": "prettier --write .",
     "coverage": "tsx --env-file=.env scripts/coverage-report.ts",
     "catalog:export": "tsx --env-file=.env scripts/catalog-export.ts",
+    "screens": "tsx scripts/screens.ts",
     "review:auto": "tsx --env-file=.env scripts/auto-review.ts"
   },
   "dependencies": {

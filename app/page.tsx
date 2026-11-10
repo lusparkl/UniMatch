@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, LockKeyhole } from "lucide-react";
 import { Shell } from "@/components/shell";
+import { PersonaButtons } from "@/components/persona-buttons";
 import { Button } from "@/components/ui/button";
 import { getPrograms } from "@/lib/catalog";
 import { demoMode } from "@/lib/config";
@@ -67,6 +68,7 @@ export default async function Home() {
               <LockKeyhole size={14} /> No account needed. Your profile stays in
               your browser.
             </p>
+            <PersonaButtons />
           </div>
           <div className="hero-art" aria-label="How matching works">
             <div className="eyebrow">A better-informed shortlist</div>

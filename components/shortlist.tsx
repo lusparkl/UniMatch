@@ -1,10 +1,15 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowDown, ArrowUp, Link2, Printer, Trash2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { readProfile, useShortlist, useTrackedDocuments } from "./local-store";
 import { statusLabel } from "./results";
+import { ActionLink, StatusTag, TrustBadge } from "./status";
+import { actionsFor } from "@/lib/actions";
+import { arithmetic } from "@/lib/arithmetic";
+import { programTier } from "@/lib/trust";
 import { readiness } from "@/lib/readiness";
 import type { HaveStatus } from "@/lib/documents";
 import type { Profile, Program } from "@/lib/domain";
@@ -20,21 +25,32 @@ const haveText: Record<HaveStatus, string> = {
 const name = (p: Program) => p.title + " at " + p.university;
 
 /** The student's ordered shortlist, computed in the browser from the published catalog. */
-export function Shortlist({ programs }: { programs: Program[] }) {
+export function Shortlist({
+  programs,
+  sharedIds,
+}: {
+  programs: Program[];
+  /** IDs from a shared link (/shortlist?ids=a,b); shown instead of the stored list until saved. */
+  sharedIds?: string[];
+}) {
   const shortlist = useShortlist();
+  const [copied, setCopied] = useState(false);
+  const router = useRouter();
+  const shared = sharedIds?.length ? sharedIds : null;
+  const ids = shared ?? shortlist.ids;
   const { tracked } = useTrackedDocuments();
   const [profile, setProfile] = useState<Profile | null>(null);
   useEffect(() => setProfile(readProfile()), []);
   const rows = useMemo(
     () =>
-      shortlist.ids.flatMap((id) => {
+      ids.flatMap((id) => {
         const program = programs.find((p) => p.id === id);
         if (!program) return [];
         return [
           { program, ready: profile && readiness(program, profile, tracked) },
         ];
       }),
-    [shortlist.ids, programs, profile, tracked],
+    [ids, programs, profile, tracked],
   );
   // Documents still to prepare, with the number of shortlisted programmes that ask for each.
   const todo = useMemo(() => {
@@ -50,7 +66,7 @@ export function Shortlist({ programs }: { programs: Program[] }) {
       <div className="page-head">
         <div>
           <div className="eyebrow">Your plan</div>
-          <h1>My shortlist</h1>
+          <h1>{shared ? "Shared shortlist" : "My shortlist"}</h1>
           <p className="muted">
             Programmes you want most, in order. For each one: the tests and
             documents you still need before you can apply. Saved in this browser
@@ -58,13 +74,72 @@ export function Shortlist({ programs }: { programs: Program[] }) {
           </p>
         </div>
       </div>
+      {shared && (
+        <div className="notice no-print">
+          Shared shortlist of {rows.length}{" "}
+          {rows.length === 1 ? "programme" : "programmes"}.{" "}
+          <Button
+            size="sm"
+            onClick={() => {
+              for (const id of shared)
+                if (!shortlist.ids.includes(id)) shortlist.toggle(id);
+              router.push("/shortlist");
+            }}
+          >
+            Save to my shortlist
+          </Button>
+        </div>
+      )}
+      {rows.length > 0 && (
+        <div className="actions no-print" style={{ marginBottom: 16 }}>
+          <Button variant="outline" size="sm" onClick={() => window.print()}>
+            <Printer size={14} /> Print
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={async () => {
+              const url =
+                window.location.origin +
+                "/shortlist?ids=" +
+                rows.map((r) => r.program.id).join(",");
+              try {
+                await navigator.clipboard.writeText(url);
+                setCopied(true);
+              } catch {
+                window.prompt("Copy this link", url);
+              }
+            }}
+          >
+            <Link2 size={14} /> {copied ? "Link copied" : "Copy link"}
+          </Button>
+          {rows.length >= 2 && (
+            <Button asChild variant="outline" size="sm">
+              <Link
+                href={
+                  "/compare?ids=" +
+                  rows
+                    .slice(0, 3)
+                    .map((r) => r.program.id)
+                    .join(",")
+                }
+              >
+                Compare top {Math.min(3, rows.length)}
+              </Link>
+            </Button>
+          )}
+          <span className="tiny muted">
+            The link carries programme IDs only, never your profile.
+          </span>
+        </div>
+      )}
       {shortlist.ready && !profile && (
         <div className="notice">
           <Link href="/profile">Complete your profile</Link> to compare your
           test results with these programmes.
         </div>
       )}
-      {shortlist.ready && !rows.length && (
+      {shortlist.ready && !shared && !rows.length && (
         <div className="empty">
           <h3>Your shortlist is empty.</h3>
           <p className="muted">
@@ -98,12 +173,12 @@ export function Shortlist({ programs }: { programs: Program[] }) {
               <h2>{program.university}</h2>
               <p className="muted">{program.title}</p>
               {ready && (
-                <span className={"tag " + ready.match.status}>
+                <StatusTag state={ready.match.status}>
                   {statusLabel[ready.match.status]}
-                </span>
+                </StatusTag>
               )}
             </div>
-            <div className="actions" style={{ gap: 6 }}>
+            <div className="actions no-print" style={{ gap: 6 }}>
               <Button
                 variant="outline"
                 size="sm"
@@ -132,6 +207,37 @@ export function Shortlist({ programs }: { programs: Program[] }) {
               </Button>
             </div>
           </div>
+          <p style={{ margin: "10px 0 0" }}>
+            <TrustBadge
+              programme
+              tier={programTier(program)}
+              date={program.lastResearched}
+            />
+          </p>
+          {ready &&
+            profile &&
+            (() => {
+              const line = arithmetic(program, profile, ready.match)
+                .scenarios[0].lines[0];
+              const next = actionsFor(
+                [...ready.match.academic, ...ready.match.application],
+                program,
+                profile,
+              )[0];
+              return (
+                <>
+                  <p className="muted" style={{ margin: "8px 0 0" }}>
+                    Cost before aid: <strong>{line.value}</strong>
+                  </p>
+                  {next && (
+                    <p className="card-action">
+                      <span>Next step:</span>
+                      <ActionLink action={next} />
+                    </p>
+                  )}
+                </>
+              );
+            })()}
           {ready?.deadline && (
             <p className="muted">
               Next verified deadline:{" "}
@@ -150,13 +256,13 @@ export function Shortlist({ programs }: { programs: Program[] }) {
                     <strong className="tiny">{t.label}</strong>
                     <p>{t.reason}</p>
                   </div>
-                  <span className={"tag " + t.state}>
+                  <StatusTag state={t.state}>
                     {t.state === "PASS"
                       ? "Met"
                       : t.state === "FAIL"
                         ? "Below minimum"
                         : "Add a result"}
-                  </span>
+                  </StatusTag>
                 </div>
               ))}
               <h4>Documents</h4>
@@ -182,7 +288,7 @@ export function Shortlist({ programs }: { programs: Program[] }) {
               ))}
             </>
           )}
-          <div className="form-actions">
+          <div className="form-actions no-print">
             <Button asChild variant="dark" size="sm">
               <Link
                 href={
@@ -198,6 +304,12 @@ export function Shortlist({ programs }: { programs: Program[] }) {
           </div>
         </section>
       ))}
+      {rows.length > 0 && (
+        <p className="tiny muted">
+          Meeting the published minimums is a starting point, not a prediction
+          of admission. Check every fact on the official page before you apply.
+        </p>
+      )}
     </>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   GraduationCap,
@@ -7,10 +7,19 @@ import {
   SlidersHorizontal,
   UserRound,
 } from "lucide-react";
+import { ActionLink, StatusTag, TrustBadge } from "./status";
+import { ProfileDrawer } from "./profile-drawer";
+import { actionsFor } from "@/lib/actions";
+import { fullyChecked, programTier } from "@/lib/trust";
 import { Button } from "./ui/button";
 import { convert } from "@/lib/fx";
 import { money as formatMoney } from "@/lib/arithmetic";
-import { readProfile, useShortlist } from "./local-store";
+import {
+  readProfile,
+  saveProfile,
+  useCompare,
+  useShortlist,
+} from "./local-store";
 import { ShortlistButton } from "./shortlist-button";
 import {
   countries,
@@ -144,56 +153,87 @@ export function Results({
     [funding, setFunding] = useState(""),
     [eligibility, setEligibility] = useState(""),
     [sort, setSort] = useState("fit"),
-    [filtersOpen, setFiltersOpen] = useState(false);
+    [filtersOpen, setFiltersOpen] = useState(false),
+    [checkedOnly, setCheckedOnly] = useState(false),
+    [drawerOpen, setDrawerOpen] = useState(false);
   const shortlist = useShortlist();
+  const compare = useCompare();
   useEffect(() => {
     setProfile(readProfile());
     setReady(true);
   }, []);
-  const results = useMemo(
-    () =>
-      programs
-        .filter(
-          (p) =>
-            // Bachelor's only for now; the engine still supports master's programmes.
-            p.degreeLevel === "BACHELOR" &&
-            (!country || p.country === country) &&
-            (!search ||
-              (p.title + " " + p.university + " " + p.fieldOfStudy)
-                .toLowerCase()
-                .includes(search.toLowerCase())),
-        )
-        .map((p) => matchProgram(p, profile ?? defaultProfile))
-        .filter(
-          (m) =>
-            (!eligibility || m.status === eligibility) &&
-            (!funding ||
-              (funding === "scholarship" &&
-                m.program.scholarships.length > 0) ||
-              (funding === "full" &&
-                m.scenarios.some(
-                  (s) => s.fullRide && s.eligibility !== "FAIL",
-                ))),
-        )
-        .sort(
-          sort === "name"
-            ? (a, b) => a.program.university.localeCompare(b.program.university)
-            : sort === "cost"
-              ? (a, b) => budgetCost(a, profile) - budgetCost(b, profile)
-              : sort === "fresh"
-                ? (a, b) =>
-                    (b.program.lastResearched ?? "").localeCompare(
-                      a.program.lastResearched ?? "",
-                    )
-                : compareMatches,
-        ),
-    [programs, profile, country, search, funding, eligibility, sort],
-  );
+  // Drawer edits re-rank at once; storage is written 250 ms after the last change.
+  const saveTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const editProfile = useCallback((next: Profile) => {
+    setProfile(next);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => saveProfile(next), 250);
+  }, []);
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+  const intakeYear = (profile ?? defaultProfile).intake.slice(0, 4);
+  // Development only: time a full re-rank of the catalog (target under 50 ms for 300 programmes).
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    const started = performance.now();
+    programs
+      .map((p) => matchProgram(p, profile ?? defaultProfile))
+      .sort(compareMatches);
+    console.debug(
+      `Re-ranked ${programs.length} programmes in ${(performance.now() - started).toFixed(1)} ms`,
+    );
+  }, [programs, profile]);
+  const results = useMemo(() => {
+    const list = programs
+      .filter(
+        (p) =>
+          // Bachelor's only for now; the engine still supports master's programmes.
+          p.degreeLevel === "BACHELOR" &&
+          (!country || p.country === country) &&
+          (!checkedOnly || fullyChecked(p, intakeYear)) &&
+          (!search ||
+            (p.title + " " + p.university + " " + p.fieldOfStudy)
+              .toLowerCase()
+              .includes(search.toLowerCase())),
+      )
+      .map((p) => matchProgram(p, profile ?? defaultProfile))
+      .filter(
+        (m) =>
+          (!eligibility || m.status === eligibility) &&
+          (!funding ||
+            (funding === "scholarship" && m.program.scholarships.length > 0) ||
+            (funding === "full" &&
+              m.scenarios.some((s) => s.fullRide && s.eligibility !== "FAIL"))),
+      )
+      .sort(
+        sort === "name"
+          ? (a, b) => a.program.university.localeCompare(b.program.university)
+          : sort === "cost"
+            ? (a, b) => budgetCost(a, profile) - budgetCost(b, profile)
+            : sort === "fresh"
+              ? (a, b) =>
+                  (b.program.lastResearched ?? "").localeCompare(
+                    a.program.lastResearched ?? "",
+                  )
+              : compareMatches,
+      );
+    return list;
+  }, [
+    programs,
+    profile,
+    country,
+    search,
+    funding,
+    eligibility,
+    sort,
+    checkedOnly,
+    intakeYear,
+  ]);
   const resetFilters = () => {
     setCountry("");
     setSearch("");
     setFunding("");
     setEligibility("");
+    setCheckedOnly(false);
   };
   const chips = [
     country && { label: country, clear: () => setCountry("") },
@@ -209,6 +249,10 @@ export function Results({
       clear: () => setEligibility(""),
     },
     search && { label: "“" + search + "”", clear: () => setSearch("") },
+    checkedOnly && {
+      label: "Fully checked only",
+      clear: () => setCheckedOnly(false),
+    },
   ].filter((c) => typeof c === "object");
   return (
     <>
@@ -241,13 +285,33 @@ export function Results({
                   .join(" · ")
               : "You’re exploring the catalog. Complete a profile for personalised eligibility and funding scenarios."}
           </span>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/profile">
-              <UserRound size={16} />
-              {profile ? "Edit my profile" : "Create my profile"}
-            </Link>
-          </Button>
+          <div className="actions" style={{ gap: 8 }}>
+            {profile && (
+              <Button
+                variant="outline"
+                size="sm"
+                aria-expanded={drawerOpen}
+                onClick={() => setDrawerOpen(true)}
+              >
+                <SlidersHorizontal size={16} />
+                Adjust scores and budget
+              </Button>
+            )}
+            <Button asChild variant="outline" size="sm">
+              <Link href="/profile">
+                <UserRound size={16} />
+                {profile ? "Edit my profile" : "Create my profile"}
+              </Link>
+            </Button>
+          </div>
         </div>
+      )}
+      {drawerOpen && profile && (
+        <ProfileDrawer
+          profile={profile}
+          onChange={editProfile}
+          onClose={closeDrawer}
+        />
       )}
       <div className="layout">
         <aside
@@ -306,6 +370,18 @@ export function Results({
               ))}
             </select>
           </label>
+          <label className="filter-check">
+            <input
+              type="checkbox"
+              checked={checkedOnly}
+              onChange={(e) => setCheckedOnly(e.target.checked)}
+            />
+            Fully checked only
+          </label>
+          <p className="tiny muted" style={{ margin: 0 }}>
+            Complete requirements reviewed and a complete annual cost verified
+            for {intakeYear}.
+          </p>
           <button className="link-btn" onClick={resetFilters}>
             Reset filters
           </button>
@@ -352,6 +428,18 @@ export function Results({
               ))}
             </div>
           )}
+          {compare.ids.length > 0 && (
+            <div className="notice compare-bar">
+              {compare.ids.length} of 3 picked to compare.{" "}
+              {compare.ids.length >= 2 ? (
+                <Link href={"/compare?ids=" + compare.ids.join(",")}>
+                  Compare now
+                </Link>
+              ) : (
+                "Pick one more."
+              )}
+            </div>
+          )}
           {!results.length && (
             <div className="empty">
               <GraduationCap size={32} style={{ margin: "0 auto 15px" }} />
@@ -378,9 +466,9 @@ export function Results({
                     {m.program.city}, {m.program.country}
                   </p>
                 </div>
-                <span className={"tag " + (profile ? m.status : "UNKNOWN")}>
+                <StatusTag state={profile ? m.status : "UNKNOWN"}>
                   {profile ? statusLabel[m.status] : "Profile needed"}
-                </span>
+                </StatusTag>
               </div>
               <h2 className="program-title">{m.program.title}</h2>
               <div className="actions" style={{ gap: 7, marginBottom: 17 }}>
@@ -435,17 +523,46 @@ export function Results({
                   </div>
                 </div>
               </div>
+              {profile &&
+                (() => {
+                  const next = actionsFor(
+                    [...m.academic, ...m.application],
+                    m.program,
+                    profile,
+                  )[0];
+                  return next ? (
+                    <p className="card-action">
+                      <span>Next step:</span>
+                      <ActionLink action={next} />
+                    </p>
+                  ) : null;
+                })()}
               <div className="card-bottom">
-                <span>
-                  {m.program.lastResearched
-                    ? "Researched " +
-                      new Date(m.program.lastResearched).toLocaleDateString(
-                        "en",
-                        { month: "short", day: "numeric", year: "numeric" },
-                      )
-                    : "Awaiting research"}
-                </span>
+                <TrustBadge
+                  programme
+                  tier={programTier(m.program)}
+                  date={m.program.lastResearched}
+                />
                 <div className="actions" style={{ gap: 8 }}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    aria-pressed={compare.ids.includes(m.program.id)}
+                    disabled={
+                      compare.full && !compare.ids.includes(m.program.id)
+                    }
+                    aria-label={
+                      "Compare " +
+                      m.program.title +
+                      " at " +
+                      m.program.university
+                    }
+                    onClick={() => compare.toggle(m.program.id)}
+                  >
+                    {compare.ids.includes(m.program.id)
+                      ? "Comparing"
+                      : "Compare"}
+                  </Button>
                   <ShortlistButton
                     saved={shortlist.ids.includes(m.program.id)}
                     ready={shortlist.ready}

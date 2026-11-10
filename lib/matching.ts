@@ -665,6 +665,9 @@ const fieldRank = (tier: FieldTier) =>
 export const compareMatches = (a: Match, b: Match) =>
   Number(a.status === "FAIL") - Number(b.status === "FAIL") ||
   fieldRank(a.fieldTier) - fieldRank(b.fieldTier) ||
+  // Within a relevance tier, programmes with a reviewed complete requirement set come first.
+  Number(!a.program.requirementsComplete) -
+    Number(!b.program.requirementsComplete) ||
   { PASS: 0, UNKNOWN: 1, FAIL: 2 }[a.financial] -
     { PASS: 0, UNKNOWN: 1, FAIL: 2 }[b.financial] ||
   b.completeness - a.completeness ||

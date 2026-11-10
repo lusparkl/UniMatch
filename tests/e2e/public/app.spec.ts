@@ -2,7 +2,14 @@ import { test, expect, type Page } from "@playwright/test";
 
 // Runs with PUBLIC_MODE=true and the fictional fixtures: 5 bachelor's programmes,
 // 3 in Hong Kong and 2 in South Korea.
-const publicPages = ["/", "/profile", "/results", "/shortlist"];
+const publicPages = [
+  "/",
+  "/profile",
+  "/results",
+  "/shortlist",
+  "/deadlines",
+  "/compare?ids=demo-0-0,demo-2-0",
+];
 
 function collectErrors(page: Page) {
   const errors: string[] = [];

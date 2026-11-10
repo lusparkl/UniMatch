@@ -65,6 +65,13 @@
   --gutter: 40px;
   --section-y: 88px;
   --header-h: 72px;
+  /* Result states: one set, used by every tag, ledger line and badge. */
+  --pass-bg: #e1f0e7;
+  --pass-fg: #1f5a38;
+  --unknown-bg: var(--amber-50);
+  --unknown-fg: #6b4509;
+  --fail-bg: var(--red-50);
+  --fail-fg: #9b2a21;
 }
 
 * {
@@ -240,16 +247,16 @@ details > summary {
   font-weight: 600;
 }
 .tag.PASS {
-  background: #e1f0e7;
-  color: #1f5a38;
+  background: var(--pass-bg);
+  color: var(--pass-fg);
 }
 .tag.UNKNOWN {
-  background: var(--amber-50);
-  color: #6b4509;
+  background: var(--unknown-bg);
+  color: var(--unknown-fg);
 }
 .tag.FAIL {
-  background: var(--red-50);
-  color: #9b2a21;
+  background: var(--fail-bg);
+  color: var(--fail-fg);
 }
 .uni-icon {
   flex: none;
@@ -1148,6 +1155,244 @@ footer .brand img {
   }
 }
 
+/* --- Part 4: trust, actions, sample students, drawer, ledger, skeletons --- */
+.trust {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--fg-2);
+}
+.trust-1 svg {
+  color: var(--pass-fg);
+}
+.trust-2 svg {
+  color: var(--blue-500);
+}
+.trust-3 svg {
+  color: var(--unknown-fg);
+}
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--brand);
+}
+.card-action {
+  margin-top: 12px;
+  font-size: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: baseline;
+}
+.card-action > span {
+  color: var(--fg-2);
+}
+.personas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  margin: 28px 0 0;
+}
+.personas-label {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-1);
+}
+.persona {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+.persona strong {
+  color: var(--fg-1);
+  font-size: 15px;
+}
+.persona span {
+  font-size: 13px;
+  color: var(--fg-2);
+}
+.persona:hover {
+  border-color: var(--brand);
+}
+.filter-check {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 8px;
+}
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 27, 26, 0.35);
+  z-index: 40;
+}
+.drawer {
+  position: fixed;
+  z-index: 41;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(400px, 100%);
+  background: #fff;
+  border-left: 1px solid var(--border-1);
+  box-shadow: var(--shadow-lg);
+  padding: 22px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.drawer header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.drawer .form-grid {
+  grid-template-columns: 1fr 1fr;
+}
+.ledger {
+  font-variant-numeric: tabular-nums;
+}
+.ledger-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 0;
+  border-top: 1px dotted var(--border-2);
+  font-size: 14px;
+}
+.ledger-line > span:first-child {
+  flex: 1 1 35%;
+  min-width: 0;
+}
+.ledger-line .value {
+  flex: 0 1 65%;
+  color: var(--fg-1);
+  font-weight: 600;
+  text-align: right;
+}
+.ledger-line.total {
+  border-top: 2px solid var(--fg-1);
+  font-size: 15px;
+}
+.ledger-line.state-PASS .value {
+  color: var(--pass-fg);
+}
+.ledger-line.state-FAIL .value {
+  color: var(--fail-fg);
+}
+.ledger-line.state-UNKNOWN .value {
+  color: var(--unknown-fg);
+}
+.ledger-source {
+  display: block;
+  font-size: 12px;
+  color: var(--fg-3);
+  font-weight: 400;
+}
+.ledger-scenario {
+  margin-top: 18px;
+}
+.ledger-scenario h3 {
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.whatif li {
+  margin: 0 0 10px;
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--neutral-100) 25%,
+    var(--neutral-50) 50%,
+    var(--neutral-100) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: var(--radius-xs);
+}
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+.skeleton-card {
+  height: 300px;
+  margin-bottom: 20px;
+  border-radius: var(--radius-sm);
+}
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+.compare-scroll {
+  overflow-x: auto;
+}
+.compare {
+  border-collapse: collapse;
+  min-width: 640px;
+  width: 100%;
+  font-size: 14px;
+}
+.compare th,
+.compare td {
+  text-align: left;
+  vertical-align: top;
+  padding: 10px 12px;
+  border-top: 1px solid var(--border-1);
+}
+.compare thead th {
+  border-top: 0;
+  color: var(--fg-1);
+}
+.compare tbody th {
+  color: var(--fg-2);
+  font-weight: 600;
+  width: 180px;
+}
+/* Row names stay in view while the columns scroll sideways. */
+.compare th:first-child {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  z-index: 1;
+}
+.compare td {
+  min-width: 200px;
+}
+.compare-bar {
+  position: sticky;
+  top: calc(var(--header-h) + 8px);
+  z-index: 5;
+}
+.month-group h2 {
+  font-size: 22px;
+  margin: 28px 0 10px;
+}
+
 @media (max-width: 1023px) {
   :root {
     --gutter: 28px;
@@ -1252,5 +1497,49 @@ footer .brand img {
   }
   .tabbar a:hover {
     text-decoration: none;
+  }
+}
+@media (max-width: 699px) {
+  .drawer {
+    top: auto;
+    left: 0;
+    width: 100%;
+    max-height: 85vh;
+    border-left: 0;
+    border-top: 1px solid var(--border-1);
+    border-radius: 12px 12px 0 0;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom));
+  }
+  .ledger-line {
+    flex-wrap: wrap;
+  }
+  .compare tbody th {
+    width: 96px;
+    font-size: 13px;
+  }
+  .compare {
+    min-width: 0;
+  }
+}
+@media print {
+  .site-header,
+  footer,
+  .tabbar,
+  .demo-banner,
+  .no-print,
+  button {
+    display: none !important;
+  }
+  body {
+    padding: 0;
+  }
+  .panel {
+    break-inside: avoid;
+    border-color: #999;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 11px;
+    word-break: break-all;
   }
 }
