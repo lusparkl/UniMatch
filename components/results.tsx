@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { convert } from "@/lib/fx";
+import { money as formatMoney } from "@/lib/arithmetic";
 import { readProfile, useShortlist } from "./local-store";
 import { ShortlistButton } from "./shortlist-button";
 import {
@@ -33,11 +34,7 @@ export const statusLabel: Record<Truth, string> = {
 export const money = (amount: number | null, currency: string | null) =>
   amount === null || !currency
     ? "Information unavailable"
-    : new Intl.NumberFormat("en", {
-        style: "currency",
-        currency,
-        maximumFractionDigits: 0,
-      }).format(amount);
+    : formatMoney(amount, currency);
 /** A date as the institution states it: in its own time zone, else as stored (UTC). */
 export const formatDate = (
   iso: string,

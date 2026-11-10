@@ -1,7 +1,7 @@
 import type { Profile, Program, Requirement, Verification } from "./domain";
 import { convert, fxSource } from "./fx";
 export type Truth = "PASS" | "FAIL" | "UNKNOWN";
-const FX_MARGIN = 0.05;
+export const FX_MARGIN = 0.05;
 export type Check = {
   label: string;
   state: Truth;
@@ -324,7 +324,16 @@ export function annualCost(program: Program, intakeYear: string) {
     tuition !== null && living !== null && other !== null
       ? tuition + living + other
       : null;
-  return { otherCycle, currency, parts, disagree, tuition, total };
+  return {
+    otherCycle,
+    currency,
+    parts,
+    disagree,
+    tuition,
+    living,
+    other,
+    total,
+  };
 }
 export function matchProgram(
   program: Program,

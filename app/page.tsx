@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getPrograms } from "@/lib/catalog";
 import { demoMode } from "@/lib/config";
 import { countries, defaultProfile } from "@/lib/domain";
-import { annualCost } from "@/lib/matching";
+import { fullyChecked } from "@/lib/trust";
 export const dynamic = "force-dynamic";
 const dims = [
   ["Academic requirements", "Evidence-led"],
@@ -29,10 +29,7 @@ const features = [
 export default async function Home() {
   const programs = await getPrograms();
   const intakeYear = defaultProfile.intake.slice(0, 4);
-  // Fully checked: reviewed complete requirements and a complete trusted annual cost for the default intake.
-  const checked = programs.filter(
-    (p) => p.requirementsComplete && annualCost(p, intakeYear).total !== null,
-  ).length;
+  const checked = programs.filter((p) => fullyChecked(p, intakeYear)).length;
   const latest = programs
     .map((p) => p.lastResearched)
     .filter((d) => d !== null)

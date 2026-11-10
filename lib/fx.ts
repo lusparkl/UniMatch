@@ -9,3 +9,5 @@ export function convert(amount: number, from: string, to: string) {
     b = rates[to];
   return a && b ? (amount * a) / b : null;
 }
+/** Units of `to` per one unit of `from` at the reference rate, or null without a rate. */
+export const rate = (from: string, to: string) => convert(1, from, to);
