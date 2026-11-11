@@ -73,4 +73,4 @@ Listed 2026-11-11. No database change has been made.
 - Preserve: every HKUST tuition row and every `HKD 65,000` annual personal-expenses row, including the two combined `ADMIN_VERIFIED` annual cost rows.
 - Question: Do you confirm deletion of those 42 incorrect accommodation rows while preserving all other HKUST costs?
 
-Status: **pending owner confirmation**.
+Status: **confirmed 2026-11-11 by lusparkl**. `scripts/hkust-accommodation.ts` deleted the 42 rows. Each deletion has an `OWNER_CONFIRMED_DELETE_MISPARSED_COST` review record naming lusparkl.

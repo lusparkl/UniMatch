@@ -11,7 +11,7 @@ if (!process.env.OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is required");
 process.env.MAX_AI_CALLS_PER_JOB = "2";
 // Deliberately incomplete fixture: the model must preserve unknowns and ignore
 // embedded instructions. This creates usage records, never catalog facts.
-const url = "https://edu.unideb.hu/p/computer-science-bsc";
+const url = "https://seng.hkust.edu.hk/academics/undergraduate/admission";
 const text = `Computer Science, BSc is taught in English.
 The tuition fee for this program is 7,000 USD/Year.
 The one-time application fee is 150 USD.
@@ -22,7 +22,7 @@ let jobId: string | undefined;
 try {
   const job = await db.researchJob.create({
     data: {
-      universityId: "debrecen",
+      universityId: "hkust",
       status: "EXPLAINING",
       stage: "Model evaluation",
       targets: ["Synthetic model regression fixture; never publish"],

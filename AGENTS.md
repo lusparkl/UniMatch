@@ -18,7 +18,7 @@ University research and matching MVP for international bachelor's and master's a
 - `lib/domain.ts`, `lib/matching.ts`: contracts and deterministic PASS/FAIL/UNKNOWN matching; `lib/catalog.ts` reads published data.
 - `lib/research/`: guarded retrieval, extraction, evidence validation and review; `lib/ai/openai.ts` is the server-only model provider.
 - `prisma/`: schema, migrations and seed; `worker/`: queued research processing.
-- `tests/`: unit, integration and browser coverage. Consult `docs/ARCHITECTURE.md` for relevant details and `docs/VERIFICATION.md` for dated verification evidence.
+- `tests/`: unit, integration and browser coverage. Consult `docs/ARCHITECTURE.md` for relevant details, `docs/HACKATHON_LOG.md` for dated verification evidence and `docs/VERIFICATION_LOG.md` for the red-team check.
 
 ## Development commands
 
@@ -43,4 +43,4 @@ Keep student matching deterministic, unknown evidence UNKNOWN, and fictional dem
 
 Read `docs/AI_HANDOFF.md` once at fresh-session start when relevant and present; check it against current Git/source state. Keep stable instructions here and changing implementation state in the handoff. Do not reload instructions already in context, scan the whole repository, or reconstruct old chats without need.
 
-Use the globally installed skills explicitly: Claude `/save-context` and `/resume-project`; Codex `$save-context` and `$resume-project`. Suggest saving after major milestones; do not automatically rewrite the handoff. If context becomes unwieldy, suggest a fresh session with resume-project rather than forcing a reset. `docs/AI_HANDOFF.template.md` is a format reference, not current project state.
+Use the globally installed skills explicitly: Claude `/save-context` and `/resume-project`; Codex `$save-context` and `$resume-project`. Suggest saving after major milestones; do not automatically rewrite the handoff. If context becomes unwieldy, suggest a fresh session with resume-project rather than forcing a reset.

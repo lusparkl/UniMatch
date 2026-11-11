@@ -22,15 +22,4 @@ export const curated = [
     url: "https://seng.hkust.edu.hk/academics/undergraduate/admission",
     funding: "https://cse.hkust.edu.hk/ug/scholarships/",
   },
-  {
-    id: "debrecen",
-    name: "University of Debrecen",
-    country: "Hungary",
-    city: "Debrecen",
-    officialWebsite: "https://unideb.hu",
-    title: "Computer Science, BSc",
-    degreeLevel: "BACHELOR",
-    url: "https://edu.unideb.hu/p/computer-science-bsc",
-    funding: "https://stipendiumhungaricum.hu/",
-  },
 ] as const;

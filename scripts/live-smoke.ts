@@ -9,7 +9,7 @@ process.env.MAX_CRAWL_PAGES = "1";
 process.env.MAX_AI_CALLS_PER_JOB = "2";
 try {
   const university = await db.university.findUniqueOrThrow({
-    where: { id: process.env.LIVE_UNIVERSITY_ID ?? "debrecen" },
+    where: { id: process.env.LIVE_UNIVERSITY_ID ?? "hkust" },
   });
   const job = await db.researchJob.create({
     data: {

@@ -419,3 +419,71 @@ Built in a separate worktree (`../UniMatch-p45`), because the Part 3 session wor
 - `scripts/evidence-report.ts`: 0 quotations not verbatim.
 - `npm run catalog:export`: 287 programmes.
 - Not run: snapshot build, `npm run smoke`, `npm run test:e2e`.
+
+## 2026-11-11 13:15: HKUST accommodation rows deleted (owner-confirmed)
+
+**Owner decision:** lusparkl confirmed item 5 in `docs/OWNER_CONFIRM.md`.
+
+**Change:** `scripts/hkust-accommodation.ts` was run with `OWNER_CONFIRMED=1` and `OWNER_NAME=lusparkl`.
+
+- It deleted exactly 42 `ADMIN_VERIFIED` accommodation-only rows: HKD 21,000, period `SEMESTER`, each citing "~HKD 21,000 – HKD 51,000 ... per residential year".
+- Each deletion has an `OWNER_CONFIRMED_DELETE_MISPARSED_COST` review record.
+- Preserved:
+  - 42 SOURCE_BACKED tuition rows (HKD 260,000);
+  - 42 ADMIN_VERIFIED personal-expense rows (HKD 65,000);
+  - 2 combined ADMIN_VERIFIED annual rows.
+- Backup: `unimatch-before-hkust-accommodation.dump` in the session scratchpad.
+
+**Effect:** matching only combines `ANNUAL` rows, so these `SEMESTER` rows never counted. Match results do not change; the misleading figure no longer appears.
+
+## 2026-11-11 15:50: Red-team spot check and full check run
+
+**Red team (plan 3.3, §5):** `scripts/red-team.ts` (new, read-only, seed 20261111) sampled 15 programmes: 8 Hong Kong, of which 3 are auto-approved HKUST programmes with PASS, and 7 Korea. It checked 141 trusted facts against 28 live pages.
+
+- **Result:** 0 wrong values.
+  - 8 HKU quotations come from the selector API. They were checked against the live API, and all match.
+  - Details and observations are in `docs/VERIFICATION_LOG.md`.
+- **No overall PASS:** no persona gets an overall PASS, so "shows PASS" was read as academic or financial PASS.
+- **Changes:** none; no programme lost `requirementsComplete`.
+
+**Full checks (on the data after the HKUST deletion):**
+
+- typecheck and lint: clean.
+- `npm test`: 213/213.
+- `npm run test:integration`: 9/9. The existing pg deprecation warning remains.
+- `npm run test:e2e`: 14/14 (11 public, 3 private).
+- `scripts/evidence-report.ts`: 0 quotations not verbatim. 1 Debrecen candidate is still pending.
+- Snapshot build: ok. Turbopack still warns that `app/api/health/route.ts` traces the whole project.
+- `next start -p 3112`: `/api/health` reports 286 programmes and 12 institutions.
+- `npm run smoke`: 4/4 personas passed. The server was stopped afterwards.
+
+**Found:** `scripts/coverage-report.ts` has its own `season()`, which treats only "autumn" as Fall. It therefore reports 30 PolyU programmes without a 2027 Fall intake. Matching's `season()` also accepts "sept" and "september", and under it PolyU has 0 such programmes. This is a reporting bug only. HKU's 59 "final" intakes are genuinely not Fall.
+
+## 2026-11-11 16:20: Repository cleanup (owner request)
+
+**Deleted docs:**
+
+- `docs/coverage-baseline.md` and `docs/coverage-after.md`. `npm run coverage` regenerates them.
+- `docs/VERIFICATION.md` (the 27 Oct record), replaced by this log and `docs/VERIFICATION_LOG.md`.
+- `docs/COST_LOG.md`. `scripts/cost-benchmark.ts` recreates it on its next run.
+- `docs/AI_HANDOFF.template.md`.
+
+README and AGENTS.md links were updated.
+
+**Debrecen removed:**
+
+- **Files:** `prisma/curated-evidence.json`, `prisma/seed-evidence.ts` and `scripts/capture-curated-snapshot.ts` are deleted, and the Debrecen entry in `prisma/curated.ts` is gone.
+- **Opt-in smoke tests:** `scripts/live-smoke.ts` and `scripts/model-smoke.ts` now default to HKUST.
+- **Database:** one transaction deleted the university, its programme, 2 approved sources, 2 page versions, 3 evidence rows, 3 research jobs, 4 `ModelUsage` rows and 3 candidates. No `ReviewRecord` referenced them.
+- **Backup:** `unimatch-before-debrecen-removal.dump` in the session scratchpad.
+- **Result:** 12 institutions and 286 published programmes. The snapshot was re-exported with 286 programmes, and no candidates are pending.
+
+**Checks:**
+
+- Prettier: clean on the changed files.
+- typecheck and lint: clean.
+- `npm test`: 213/213.
+- `npm run test:integration`: 9/9.
+- `npm run test:e2e`: 14/14.
+- `scripts/evidence-report.ts`: 0 quotations not verbatim.
+- `npm run db:seed`: runs, and the counts are unchanged.

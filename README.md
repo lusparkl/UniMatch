@@ -46,7 +46,7 @@ PostgreSQL and Redis bind to loopback ports **5434** and **6381**, avoiding typi
 ## Run one real research job
 
 1. Sign in at **/admin** with your configured credentials.
-2. Select **University of Debrecen**; its official Computer Science program page is pre-approved.
+2. Select a registered university such as **HKUST**; its official programme pages are pre-approved.
 3. Use a specific target such as “Computer Science BSc admission requirements and tuition”.
 4. Click **Research / refresh**. Keep the worker running.
 5. Watch actual stages, logs, pages, errors and returned token usage. The dashboard polls every four seconds.
@@ -60,19 +60,7 @@ A missing key disables submission and scheduling. A failed source or model reque
 
 ## Initial data
 
-The idempotent seed creates ten real institutions, two in each destination:
-
-| Destination   | Institutions                 |
-| ------------- | ---------------------------- |
-| United States | MIT, Stanford                |
-| Hong Kong     | HKU, HKUST                   |
-| Hungary       | ELTE, University of Debrecen |
-| Germany       | TUM, Saarland University     |
-| Singapore     | NUS, NTU                     |
-
-Each has a sourced program-discovery link and approved program/funding entry URLs. The catalog is intentionally sparse: discovering a degree does not establish admission eligibility.
-
-A small dated Debrecen excerpt snapshot includes published tuition and two conditions that require manual assessment. It is **SOURCE_BACKED**, not **ADMIN_VERIFIED**. Living costs, other mandatory costs and unsupported fields stay null, so no complete annual budget is invented. Seed scripts do not overwrite existing reviewed facts.
+The idempotent seed (`npm run db:seed`) creates the Hong Kong and South Korean institutions, registered programmes and approved source URLs from `prisma/curated.ts` and `prisma/registry.ts`. Yonsei UIC, GIST and SKKU are added by `scripts/import-browser.ts`. Discovering a degree does not establish admission eligibility: facts come only from reviewed research, and seed scripts do not overwrite existing reviewed facts.
 
 HKU's supplied research URL is an explicitly historical 2026 page. It is useful for demonstrating source retrieval, not confirming a future intake. Replace it with the applicable intake source during review.
 
@@ -146,7 +134,7 @@ Optional live tests:
 LIVE_CRAWL_TEST=1 npm run test:crawl
 
 # Restrict the crawl smoke test:
-CRAWL_UNIVERSITY_IDS=debrecen LIVE_CRAWL_TEST=1 npm run test:crawl
+CRAWL_UNIVERSITY_IDS=hkust LIVE_CRAWL_TEST=1 npm run test:crawl
 
 # Real OpenAI extraction; requires OPENAI_API_KEY and consumes credits:
 LIVE_OPENAI_TEST=1 npm run test:live
@@ -154,9 +142,9 @@ LIVE_OPENAI_TEST=1 npm run test:live
 LIVE_OPENAI_TEST=1 npm run test:model
 ```
 
-The OpenAI smoke creates an actual research job for Debrecen, limits it to one page and two model attempts, and requires a metered extraction candidate to succeed. It does not approve the result.
+The OpenAI smoke creates an actual research job for `LIVE_UNIVERSITY_ID` (default HKUST), limits it to one page and two model attempts, and requires a metered extraction candidate to succeed. It does not approve the result.
 
-During implementation, the guarded local crawler successfully retrieved program pages for all ten institutions; HTML and PDF fixture extraction, browser fallback, PostgreSQL publication, BullMQ retry and student/admin browser flows were exercised. Request format, usage parsing, schema rejection, retries and budgets are covered with fixture responses. The live verification status is recorded separately. See [verification notes](docs/VERIFICATION.md).
+During implementation, the guarded local crawler successfully retrieved program pages for all ten institutions; HTML and PDF fixture extraction, browser fallback, PostgreSQL publication, BullMQ retry and student/admin browser flows were exercised. Request format, usage parsing, schema rejection, retries and budgets are covered with fixture responses. Dated verification results are recorded in `docs/HACKATHON_LOG.md` and `docs/VERIFICATION_LOG.md`.
 
 ## Repository map
 

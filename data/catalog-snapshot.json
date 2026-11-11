@@ -1,6 +1,6 @@
 {
- "commit": "4e6e79cf933a89f92843b95f7a84fe069acc2946",
- "exportedAt": "2026-11-11T07:22:08.197Z",
+ "commit": "1660270a01a9e408746f4f06f11424ee65e275bf",
+ "exportedAt": "2026-11-11T14:17:32.452Z",
  "programmes": [
   {
    "costs": [
@@ -908,35 +908,6 @@
      "period": "ANNUAL",
      "programId": "cmvsjmzwn000eahv19r7ksgba",
      "sourceEvidenceId": "cmvwpcrlf03kv16v15wllchce",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcrlg03kx16v1814icltj",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:06.196Z"
-     },
-     "id": "cmvwpcrlg03ky16v1j2winm3w",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvsjmzwn000eahv19r7ksgba",
-     "sourceEvidenceId": "cmvwpcrlg03kx16v1814icltj",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -2201,35 +2172,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcrnw03mi16v1wewxvhcw",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:06.284Z"
-     },
-     "id": "cmvwpcrnx03mj16v1vg63yhk6",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvtb3n9a00015nv1fpz55v16",
-     "sourceEvidenceId": "cmvwpcrnw03mi16v1wewxvhcw",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -2890,35 +2832,6 @@
      "period": "ANNUAL",
      "programId": "cmvtb3n9f00035nv1xub7j9hz",
      "sourceEvidenceId": "cmvwpcrir03je16v11q7vwle7",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcris03jg16v1lzf8xjjh",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:06.100Z"
-     },
-     "id": "cmvwpcrit03jh16v1yxlpf0j5",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvtb3n9f00035nv1xub7j9hz",
-     "sourceEvidenceId": "cmvwpcris03jg16v1lzf8xjjh",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -65502,35 +65415,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcrgi03hz16v1uadi4tkk",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:06.018Z"
-     },
-     "id": "cmvwpcrgj03i016v1qy955pcv",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53sd001zmdv1qwq2kotl",
-     "sourceEvidenceId": "cmvwpcrgi03hz16v1uadi4tkk",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -66151,35 +66035,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53sg0020mdv1to222ccg",
      "sourceEvidenceId": "cmvwpcre903ga16v1bkjjfisq",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcrea03gc16v14p66ee0y",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.938Z"
-     },
-     "id": "cmvwpcreb03gd16v1n5ejher9",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53sg0020mdv1to222ccg",
-     "sourceEvidenceId": "cmvwpcrea03gc16v14p66ee0y",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -66854,35 +66709,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcrcf03f316v1wq4lmgs9",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.871Z"
-     },
-     "id": "cmvwpcrcf03f416v10vga5vmx",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53sj0021mdv13wppspq7",
-     "sourceEvidenceId": "cmvwpcrcf03f316v1wq4lmgs9",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -67543,35 +67369,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53sl0022mdv13k2nv8s0",
      "sourceEvidenceId": "cmvwpcra803dk16v1v2cct592",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcra903dm16v1ntye2qg1",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.793Z"
-     },
-     "id": "cmvwpcraa03dn16v15fzzkr4a",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53sl0022mdv13k2nv8s0",
-     "sourceEvidenceId": "cmvwpcra903dm16v1ntye2qg1",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -68246,35 +68043,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcr7q03c716v1vk7c0oin",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.702Z"
-     },
-     "id": "cmvwpcr7q03c816v1aslhjsu7",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53so0023mdv1qb70bk4t",
-     "sourceEvidenceId": "cmvwpcr7q03c716v1vk7c0oin",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -68935,35 +68703,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53sq0024mdv1a1cbrwuc",
      "sourceEvidenceId": "cmvwpcr4s03ai16v1ehmfsvyu",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcr4t03ak16v1gm6sz3gu",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.597Z"
-     },
-     "id": "cmvwpcr4u03al16v1jtt6oiy7",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53sq0024mdv1a1cbrwuc",
-     "sourceEvidenceId": "cmvwpcr4t03ak16v1gm6sz3gu",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -69638,35 +69377,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcr2q039316v1mf0i2prt",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.521Z"
-     },
-     "id": "cmvwpcr2q039416v1iatwk88c",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53st0025mdv1fbqorq7p",
-     "sourceEvidenceId": "cmvwpcr2q039316v1mf0i2prt",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -70327,35 +70037,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53sv0026mdv1z8sa72pj",
      "sourceEvidenceId": "cmvwpcr0j037i16v1tsuce2xy",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcr0k037k16v15c4lro56",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.444Z"
-     },
-     "id": "cmvwpcr0l037l16v1rnwjip9s",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53sv0026mdv1z8sa72pj",
-     "sourceEvidenceId": "cmvwpcr0k037k16v15c4lro56",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -71030,35 +70711,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqy8036516v1hwaqzwc4",
-      "relevantAcademicYear": "2026",
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.360Z"
-     },
-     "id": "cmvwpcqy9036616v1narzjz4m",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53sy0027mdv1v8xt0ks0",
-     "sourceEvidenceId": "cmvwpcqy8036516v1hwaqzwc4",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -71726,35 +71378,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqvq034o16v12tl74k8y",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.270Z"
-     },
-     "id": "cmvwpcqvr034p16v1ktpbd45f",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53t00028mdv128wot8zz",
-     "sourceEvidenceId": "cmvwpcqvq034o16v12tl74k8y",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -72375,35 +71998,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53t30029mdv1tb51sszb",
      "sourceEvidenceId": "cmvwpcqtk033716v1h72okl83",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqtl033916v1ywn2dwzl",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.193Z"
-     },
-     "id": "cmvwpcqtl033a16v1rezhg6s5",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53t30029mdv1tb51sszb",
-     "sourceEvidenceId": "cmvwpcqtl033916v1ywn2dwzl",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -73078,35 +72672,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqrf031o16v1l4rc1c33",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.115Z"
-     },
-     "id": "cmvwpcqrg031p16v1hzj2xi9j",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53t6002amdv10gagn2s8",
-     "sourceEvidenceId": "cmvwpcqrf031o16v1l4rc1c33",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -73767,35 +73332,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53t8002bmdv1r9vrq8dt",
      "sourceEvidenceId": "cmvwpcp2f01zx16v1162pt8ij",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcp2h01zz16v142cys2i7",
-      "relevantAcademicYear": "2027",
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:02.921Z"
-     },
-     "id": "cmvwpcp2h020016v1ay7lt8dj",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53t8002bmdv1r9vrq8dt",
-     "sourceEvidenceId": "cmvwpcp2h01zz16v142cys2i7",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -74470,35 +74006,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcp4o021c16v1tuzcpet5",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.000Z"
-     },
-     "id": "cmvwpcp4p021d16v1gq41fla1",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53tb002cmdv1llh7urfi",
-     "sourceEvidenceId": "cmvwpcp4o021c16v1tuzcpet5",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -75159,35 +74666,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53td002dmdv14zjesf60",
      "sourceEvidenceId": "cmvwpcqoo030516v187cnnfsh",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqop030716v10c3ll0e9",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:05.017Z"
-     },
-     "id": "cmvwpcqoq030816v17v5mu2wf",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53td002dmdv14zjesf60",
-     "sourceEvidenceId": "cmvwpcqop030716v10c3ll0e9",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -75862,35 +75340,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqme02yo16v12ytpiooa",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.934Z"
-     },
-     "id": "cmvwpcqmf02yp16v1dqc6wtd1",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53tg002emdv1n2eewqeq",
-     "sourceEvidenceId": "cmvwpcqme02yo16v12ytpiooa",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -76551,35 +76000,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53tj002fmdv1wfc0fbrg",
      "sourceEvidenceId": "cmvwpcqk002x316v1ubkuhhdn",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqk102x516v125q3sr6k",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.849Z"
-     },
-     "id": "cmvwpcqk202x616v1p9cmal5f",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53tj002fmdv1wfc0fbrg",
-     "sourceEvidenceId": "cmvwpcqk102x516v125q3sr6k",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -77254,35 +76674,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqhk02vq16v173znupi0",
-      "relevantAcademicYear": "2027",
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.760Z"
-     },
-     "id": "cmvwpcqhl02vr16v1liytskol",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53tl002gmdv193vmcrz6",
-     "sourceEvidenceId": "cmvwpcqhk02vq16v173znupi0",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -77943,35 +77334,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53to002hmdv1folubl6y",
      "sourceEvidenceId": "cmvwpcqf902u316v1fmir5um1",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqfa02u516v1bjewj2xz",
-      "relevantAcademicYear": "2027",
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.678Z"
-     },
-     "id": "cmvwpcqfb02u616v1tbdu4ad9",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53to002hmdv1folubl6y",
-     "sourceEvidenceId": "cmvwpcqfa02u516v1bjewj2xz",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -78646,35 +78008,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqd902sq16v1ii34797b",
-      "relevantAcademicYear": "2026",
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.605Z"
-     },
-     "id": "cmvwpcqda02sr16v1i7884b7n",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53tr002imdv1c5ni41z4",
-     "sourceEvidenceId": "cmvwpcqd902sq16v1ii34797b",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -79342,35 +78675,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcqas02rf16v1hlthaswv",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.516Z"
-     },
-     "id": "cmvwpcqat02rg16v15pynd3n8",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53tt002jmdv1848ssziw",
-     "sourceEvidenceId": "cmvwpcqas02rf16v1hlthaswv",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -79991,35 +79295,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53tw002kmdv1u846ajax",
      "sourceEvidenceId": "cmvwpcq8o02q016v1kw16rzyd",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcq8p02q216v1iimjpfwi",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.441Z"
-     },
-     "id": "cmvwpcq8q02q316v1s6r2zft8",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53tw002kmdv1u846ajax",
-     "sourceEvidenceId": "cmvwpcq8p02q216v1iimjpfwi",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -80654,35 +79929,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcq6702on16v1v6vbe5s7",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.351Z"
-     },
-     "id": "cmvwpcq6702oo16v1kkb7eee0",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53ty002lmdv1k4xpranh",
-     "sourceEvidenceId": "cmvwpcq6702on16v1v6vbe5s7",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -81310,35 +80556,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcq4c02ne16v11iu5fquh",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.284Z"
-     },
-     "id": "cmvwpcq4d02nf16v1yu2dxnjv",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53u1002mmdv124fdr3of",
-     "sourceEvidenceId": "cmvwpcq4c02ne16v11iu5fquh",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -81919,35 +81136,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53u4002nmdv1xxwzblep",
      "sourceEvidenceId": "cmvwpcq2902m116v1rmnrghqa",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcq2a02m316v14x0paxfz",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.210Z"
-     },
-     "id": "cmvwpcq2b02m416v17wiw1pe6",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53u4002nmdv1xxwzblep",
-     "sourceEvidenceId": "cmvwpcq2a02m316v14x0paxfz",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -82542,35 +81730,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcq0902kq16v1ud40mp7g",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.137Z"
-     },
-     "id": "cmvwpcq0a02kr16v17714rph9",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53u6002omdv1f0xg9h4c",
-     "sourceEvidenceId": "cmvwpcq0902kq16v1ud40mp7g",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -83158,35 +82317,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpy802jd16v17fchr039",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:04.064Z"
-     },
-     "id": "cmvwpcpy902je16v1uswovson",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53u9002pmdv1823ltni1",
-     "sourceEvidenceId": "cmvwpcpy802jd16v17fchr039",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -83767,35 +82897,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53ub002qmdv1nk3u8mr1",
      "sourceEvidenceId": "cmvwpcpvp02i016v1lplfj6dy",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpvq02i216v1zgf5zl73",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.974Z"
-     },
-     "id": "cmvwpcpvr02i316v1it2nnpop",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53ub002qmdv1nk3u8mr1",
-     "sourceEvidenceId": "cmvwpcpvq02i216v1zgf5zl73",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -84940,35 +84041,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcprq02fe16v13zugx11y",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.830Z"
-     },
-     "id": "cmvwpcprr02ff16v12bdhltpm",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53ug002smdv19y3wllz7",
-     "sourceEvidenceId": "cmvwpcprq02fe16v13zugx11y",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -85636,35 +84708,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcppr02e516v1yiytn3m9",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.759Z"
-     },
-     "id": "cmvwpcpps02e616v1r358b5gf",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53uj002tmdv1kig028st",
-     "sourceEvidenceId": "cmvwpcppr02e516v1yiytn3m9",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -86252,35 +85295,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpno02co16v1w7l9hnp8",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.684Z"
-     },
-     "id": "cmvwpcpnp02cp16v1fpoaj3iv",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53um002umdv1sxc2p816",
-     "sourceEvidenceId": "cmvwpcpno02co16v1w7l9hnp8",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -86861,35 +85875,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53up002vmdv11xunkmkn",
      "sourceEvidenceId": "cmvwpcozk01ye16v1i0mby72m",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcozm01yg16v1k2ks0dyr",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:02.818Z"
-     },
-     "id": "cmvwpcozn01yh16v11gr2850q",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53up002vmdv11xunkmkn",
-     "sourceEvidenceId": "cmvwpcozm01yg16v1k2ks0dyr",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -87564,35 +86549,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpl802b916v12hymf0m6",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.596Z"
-     },
-     "id": "cmvwpcpl802ba16v1fqnhhxom",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53ur002wmdv16870745g",
-     "sourceEvidenceId": "cmvwpcpl802b916v12hymf0m6",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -88173,35 +87129,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53uu002xmdv1jj3qm4n1",
      "sourceEvidenceId": "cmvwpcpiz029q16v11y5nxmo6",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpj1029s16v1nzzljqkj",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.517Z"
-     },
-     "id": "cmvwpcpj1029t16v1fu2h8xbq",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53uu002xmdv1jj3qm4n1",
-     "sourceEvidenceId": "cmvwpcpj1029s16v1nzzljqkj",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -88876,35 +87803,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpgs028b16v112ou6pgh",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.436Z"
-     },
-     "id": "cmvwpcpgt028c16v1bjmgo014",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53uw002ymdv1cxf30luw",
-     "sourceEvidenceId": "cmvwpcpgs028b16v112ou6pgh",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -89532,35 +88430,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpe7026s16v1651cfm6u",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.343Z"
-     },
-     "id": "cmvwpcpe8026t16v1gxubq6nv",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53uz002zmdv19vbyn7fu",
-     "sourceEvidenceId": "cmvwpcpe7026s16v1651cfm6u",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -90181,35 +89050,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53v20030mdv1uhcbd82v",
      "sourceEvidenceId": "cmvwpcpbq025f16v1zu3w9pgr",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcpbr025h16v1ibf9htl1",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.255Z"
-     },
-     "id": "cmvwpcpbs025i16v18ixakyt6",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53v20030mdv1uhcbd82v",
-     "sourceEvidenceId": "cmvwpcpbr025h16v1ibf9htl1",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -90884,35 +89724,6 @@
     {
      "additionalCosts": null,
      "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcp99024616v18ozmz0ru",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.165Z"
-     },
-     "id": "cmvwpcp9a024716v1jw3rhe20",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53v40031mdv16zb60h67",
-     "sourceEvidenceId": "cmvwpcp99024616v18ozmz0ru",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
      "estimateType": "PUBLISHED_FEE",
      "evidence": {
       "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
@@ -91573,35 +90384,6 @@
      "period": "ANNUAL",
      "programId": "cmvwn53v70032mdv1dwwp08pg",
      "sourceEvidenceId": "cmvwpcp73022t16v1mxd69vsg",
-     "tuitionAmount": null,
-     "universityId": "hkust",
-     "verificationStatus": "ADMIN_VERIFIED"
-    },
-    {
-     "additionalCosts": null,
-     "currency": "HKD",
-     "estimateType": "ESTIMATE",
-     "evidence": {
-      "contentHash": "f396af704aa35a77649756cfd167b40aa92b8bf4515d52074730b625389d9d1e",
-      "document": {
-       "lastCheckedAt": "2026-11-10T20:06:09.487Z"
-      },
-      "documentId": "cmvtb42uw000875v14jz15wmq",
-      "excerpt": "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year",
-      "id": "cmvwpcp74022v16v134hnaegv",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-29T08:54:07.736Z",
-      "startOffset": null,
-      "title": "Fees and Scholarships | HKUST Undergraduate AdmissionsMapEarth",
-      "url": "https://join.hkust.edu.hk/fees-and-scholarships",
-      "verificationStatus": "ADMIN_VERIFIED",
-      "verifiedAt": "2026-10-31T17:56:03.088Z"
-     },
-     "id": "cmvwpcp75022w16v1z0s4a9fu",
-     "livingCostAmount": 21000,
-     "period": "SEMESTER",
-     "programId": "cmvwn53v70032mdv1dwwp08pg",
-     "sourceEvidenceId": "cmvwpcp74022v16v134hnaegv",
      "tuitionAmount": null,
      "universityId": "hkust",
      "verificationStatus": "ADMIN_VERIFIED"
@@ -202001,151 +200783,6 @@
     "updatedAt": "2026-11-10T20:41:56.070Z"
    },
    "universityId": "skku"
-  },
-  {
-   "costs": [
-    {
-     "additionalCosts": null,
-     "currency": "USD",
-     "estimateType": "PUBLISHED_TUITION_ONLY",
-     "evidence": {
-      "contentHash": "638697c97b11594baea109a680a26e862920a9a00ce349b0cf3886a4db4d1484",
-      "document": {
-       "lastCheckedAt": "2026-10-27T21:00:11.370Z"
-      },
-      "documentId": "curated-debrecen-source",
-      "excerpt": "The tuition fee for this program is 7,000 USD/Year",
-      "id": "curated-debrecen-evidence-0",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-27T21:00:11.370Z",
-      "startOffset": 0,
-      "title": "Computer Science, BSc | University of Debrecen",
-      "url": "https://edu.unideb.hu/p/computer-science-bsc",
-      "verificationStatus": "SOURCE_BACKED",
-      "verifiedAt": null
-     },
-     "id": "cmvr6iel00000r0v1t8m284h5",
-     "livingCostAmount": null,
-     "period": "ANNUAL",
-     "programId": "debrecen-cs",
-     "sourceEvidenceId": "curated-debrecen-evidence-0",
-     "tuitionAmount": 7000,
-     "universityId": "debrecen",
-     "verificationStatus": "SOURCE_BACKED"
-    }
-   ],
-   "degreeLevel": "BACHELOR",
-   "documents": [],
-   "duration": null,
-   "fieldOfStudy": "Computer Science",
-   "id": "debrecen-cs",
-   "intakes": [],
-   "officialUrl": "https://edu.unideb.hu/p/computer-science-bsc",
-   "published": true,
-   "requirements": [
-    {
-     "applicableNationalities": [],
-     "applicableQualifications": [],
-     "conditions": {
-      "allowed": [],
-      "appliesToNationalities": [],
-      "appliesToQualifications": [],
-      "label": "B2 English proficiency — certificate equivalency needs review",
-      "mandatory": true,
-      "minimum": null,
-      "scale": null,
-      "type": "OTHER"
-     },
-     "evidence": {
-      "contentHash": "638697c97b11594baea109a680a26e862920a9a00ce349b0cf3886a4db4d1484",
-      "document": {
-       "lastCheckedAt": "2026-10-27T21:00:11.370Z"
-      },
-      "documentId": "curated-debrecen-source",
-      "excerpt": "B2 level English proficiency",
-      "id": "curated-debrecen-evidence-1",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-27T21:00:11.370Z",
-      "startOffset": 51,
-      "title": "Computer Science, BSc | University of Debrecen",
-      "url": "https://edu.unideb.hu/p/computer-science-bsc",
-      "verificationStatus": "SOURCE_BACKED",
-      "verifiedAt": null
-     },
-     "id": "cmvr6iel80001r0v1zge3e1cl",
-     "intakeId": null,
-     "programId": "debrecen-cs",
-     "requirementType": "OTHER",
-     "sourceEvidenceId": "curated-debrecen-evidence-1",
-     "thresholds": {},
-     "verificationStatus": "SOURCE_BACKED"
-    },
-    {
-     "applicableNationalities": [],
-     "applicableQualifications": [],
-     "conditions": {
-      "allowed": [],
-      "appliesToNationalities": [],
-      "appliesToQualifications": [],
-      "label": "Written and oral Mathematics entrance exam",
-      "mandatory": true,
-      "minimum": null,
-      "scale": null,
-      "type": "OTHER"
-     },
-     "evidence": {
-      "contentHash": "638697c97b11594baea109a680a26e862920a9a00ce349b0cf3886a4db4d1484",
-      "document": {
-       "lastCheckedAt": "2026-10-27T21:00:11.370Z"
-      },
-      "documentId": "curated-debrecen-source",
-      "excerpt": "a written and oral entrance exam in Mathematics",
-      "id": "curated-debrecen-evidence-2",
-      "relevantAcademicYear": null,
-      "retrievedAt": "2026-10-27T21:00:11.370Z",
-      "startOffset": 80,
-      "title": "Computer Science, BSc | University of Debrecen",
-      "url": "https://edu.unideb.hu/p/computer-science-bsc",
-      "verificationStatus": "SOURCE_BACKED",
-      "verifiedAt": null
-     },
-     "id": "cmvr6ielb0002r0v101k63c39",
-     "intakeId": null,
-     "programId": "debrecen-cs",
-     "requirementType": "OTHER",
-     "sourceEvidenceId": "curated-debrecen-evidence-2",
-     "thresholds": {},
-     "verificationStatus": "SOURCE_BACKED"
-    }
-   ],
-   "requirementsComplete": false,
-   "scholarships": [],
-   "teachingLanguage": null,
-   "title": "Computer Science, BSc",
-   "university": {
-    "city": "Debrecen",
-    "country": "Hungary",
-    "createdAt": "2026-10-27T20:59:07.620Z",
-    "documents": [
-     {
-      "retrievedAt": "2026-10-27T21:00:11.370Z",
-      "text": "The tuition fee for this program is 7,000 USD/Year\nB2 level English proficiency\na written and oral entrance exam in Mathematics",
-      "url": "https://edu.unideb.hu/p/computer-science-bsc"
-     },
-     {
-      "retrievedAt": "2026-10-27T21:00:11.370Z",
-      "text": "Skip to main content Videos SAS login Contact Us Unideb.hu University Phonebook Apply online For ApplicantsVirtual UD Guide 2026Tutoring SeminarStudy ProgramsApplication and admissionScholarships and LoansTuition Fee, Ap",
-      "url": "https://edu.unideb.hu/p/computer-science-bsc"
-     }
-    ],
-    "id": "debrecen",
-    "name": "University of Debrecen",
-    "officialWebsite": "https://unideb.hu",
-    "researchStatus": "REVIEW_NEEDED",
-    "scholarships": [],
-    "updatedAt": "2026-10-27T21:36:48.154Z"
-   },
-   "universityId": "debrecen"
   }
  ]
 }
