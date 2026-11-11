@@ -127,6 +127,12 @@ export function arithmetic(
         value: inBudget(s.remaining, s.converted),
         state: s.affordable,
       });
+    else if (s.ceiling !== null && currency)
+      lines.push({
+        label: "At most, after this award (stipend not counted)",
+        value: inBudget(s.ceiling, s.ceilingConverted),
+        state: s.affordable,
+      });
     else if (s.partial && s.lowerBound !== null && currency) {
       const value = s.lowerBoundConverted ?? s.lowerBound;
       const fails = s.affordable === "FAIL" && value > cutoff;

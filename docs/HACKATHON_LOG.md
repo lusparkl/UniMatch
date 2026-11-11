@@ -329,3 +329,27 @@ Built in a separate worktree (`../UniMatch-p45`), because the Part 3 session wor
 - requirementsComplete: still 0, because no institution publishes an accepted-qualification list.
 - Complete cost: 6 (KAIST).
 - `scripts/evidence-report.ts`: 0 non-verbatim quotations.
+
+## 2026-11-11: owner confirmation, scholarship rule fixes
+
+**Owner confirmation** (lusparkl, `docs/OWNER_CONFIRM.md`): the KAIST Scholarship, POSTECH Living Allowance and GIST tuition waiver are `ADMIN_VERIFIED` (18 rows). The POSTECH Tuition Scholarship stays `SOURCE_BACKED`, because the second semester of year one depends on GPA.
+
+**Why more was needed:** the confirmation switched on the Korean half of the "A-level, tight budget" persona check, and that check failed in integration and smoke tests. A confirmed award still never counted as guaranteed: it had no mandatory rules and no deadline, so its eligibility was UNKNOWN. KAIST also stores no annual stipend, so the amount left to pay was unknown.
+
+**Engine changes (approved by the owner):**
+
+- New rule type `ON_ADMISSION`: the source awards it to every student admitted through the route. It evaluates PASS, because every match already assumes admission. Only reviewer scripts set it; model extraction cannot.
+- Unquantified stipend: with a complete total, a scholarship scenario leaving the stipend out gives a ceiling. If the ceiling fits the budget, the scenario passes; above the budget it stays UNKNOWN. The arithmetic panel shows the ceiling, and the what-if budget suggestions use it.
+
+**Data** (`scripts/scholarship-rules.ts`, 108 changes, the database backed up first):
+
+- KAIST (6 rows):
+  - ON_ADMISSION rule quoting "Upon being selected for admission, you will automatically be entitled to the KAIST Scholarship."
+  - Deadline 14 Jan 2027, 18:00 KST. The award page says "Application Period Same as Admission Application", and the KAIST timeline gives that date for the Regular route.
+- GIST (6 rows): ON_ADMISSION rule, but no deadline, because nothing links the waiver to the application period. Its eligibility stays UNKNOWN.
+- 96 rows had residency categories (`local`, `non-local`, `international`) as nationality restrictions: CUHK 88, PolyU 4, HKU 3, HKUST ECE 1. These failed every student. The categories moved to an OTHER rule, so these rows are now UNKNOWN.
+- 10 university-level scholarships had no candidate to record a review on.
+
+**Effect:** the persona's top results changed, because CUHK admission scholarships no longer fail.
+
+**Checks:** typecheck and lint are clean. `npm test` passes 212/212, integration 9/9 and e2e 14/14. The snapshot build succeeds, and `npm run smoke` against a local `next start` passes for all 4 personas.

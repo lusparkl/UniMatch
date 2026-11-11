@@ -125,6 +125,27 @@ describe("three-valued matching", () => {
     expect(match(p).scenarios).toHaveLength(3);
     expect(match(p).scenarios[1].remaining).toBe(13000);
   });
+  it("treats an award made on admission as an eligibility pass", () => {
+    const p = program();
+    p.scholarships[0].rules = [r({ type: "ON_ADMISSION", allowed: [] })];
+    expect(match(p).scenarios[1].eligibility).toBe("PASS");
+    expect(match(p).scenarios[1].award).toBe("GUARANTEED");
+    p.scholarships[0].rules[0].status = "SOURCE_BACKED";
+    p.scholarships[0].status = "SOURCE_BACKED";
+    expect(match(p).scenarios[1].award).toBe("COMPETITIVE");
+  });
+  it("bounds an unquantified stipend from above only", () => {
+    const p = program();
+    p.scholarships[0].stipendAmount = null; // demo total 31,000 USD, tuition 18,000 covered
+    const within = match(p).scenarios[1];
+    expect(within.remaining).toBeNull();
+    expect(within.ceiling).toBe(13000);
+    expect(within.affordable).toBe("PASS");
+    expect(match(p).financial).toBe("PASS");
+    const above = match(p, { ...profile, budget: 10000 }).scenarios[1];
+    expect(above.affordable).toBe("UNKNOWN");
+    expect(match(p, { ...profile, budget: 10000 }).financial).toBe("UNKNOWN");
+  });
   it("requires all scholarship rules", () => {
     const p = program();
     p.scholarships[0].rules.push(

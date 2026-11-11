@@ -52,4 +52,11 @@ OWNER_CONFIRMED=1 OWNER_NAME="<your name>" npx tsx --env-file=.env scripts/owner
 
 To confirm only some items, add `ONLY="<exact name>|<exact name>"`. Without `OWNER_CONFIRMED=1`, the script only lists the rows.
 
-Status: **not confirmed**. Until the owner confirms, all four stay unverified, and the demo moment "a guaranteed scholarship makes a programme affordable" is not available.
+Status: **answered 2026-11-11 by lusparkl**, applied with `ONLY=` for the confirmed items (database backed up first).
+
+- Item 1, KAIST Scholarship: confirmed. 6 rows are `ADMIN_VERIFIED`.
+- Item 2, POSTECH Tuition Scholarship: not confirmed, because the second semester of year one depends on GPA. 6 rows stay `SOURCE_BACKED`.
+- Item 3, POSTECH Living Allowance: confirmed. 6 rows are `ADMIN_VERIFIED`; no amount enters the matching arithmetic.
+- Item 4, GIST tuition waiver: confirmed. 6 rows are `ADMIN_VERIFIED`.
+
+Each promotion has an `OWNER_CONFIRMED_GUARANTEED` review record naming lusparkl.

@@ -130,6 +130,7 @@ export function suggestions(
       return [
         s.converted ?? (same ? s.remaining : null),
         s.lowerBoundConverted ?? (same ? s.lowerBound : null),
+        s.ceilingConverted ?? (same ? s.ceiling : null),
       ].filter((v): v is number => v !== null);
     });
     // Exactly at the amount, past the exchange-rate margin, or just under the lower-bound cut-off.

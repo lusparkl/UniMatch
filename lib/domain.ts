@@ -65,6 +65,7 @@ export const ruleSchema = z.object({
     "NATIONALITY",
     "EDUCATION_COUNTRY",
     "BACHELOR_FIELD",
+    "ON_ADMISSION",
     "OTHER",
   ]),
   label: z.string().min(1).max(500),

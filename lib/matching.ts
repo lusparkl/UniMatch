@@ -26,6 +26,13 @@ export type Scenario = {
   lowerBound: number | null;
   /** `lowerBound` in the budget currency. */
   lowerBoundConverted: number | null;
+  /**
+   * With a complete total but an unquantified stipend, the most the student could pay: the total less
+   * this scholarship's tuition coverage. Null otherwise.
+   */
+  ceiling: number | null;
+  /** `ceiling` in the budget currency. */
+  ceilingConverted: number | null;
   /** True when the total cost is incomplete, so `remaining` is null and only the lower bound is known. */
   partial: boolean;
   affordable: Truth;
@@ -194,6 +201,10 @@ export function evaluateRule(rule: Requirement, p: Profile): Check | null {
         (rule.scale ? " (" + rule.scale + ")" : ""),
     );
   }
+  // A source that awards something to every student admitted through the route: every match already
+  // assumes admission, so the condition holds. Stored only with the source's verbatim quotation.
+  if (rule.type === "ON_ADMISSION")
+    return result("PASS", "Awarded automatically on admission.");
   const values: Record<string, string> = {
     QUALIFICATION: p.qualification,
     NATIONALITY: p.nationality,
@@ -516,6 +527,8 @@ export function matchProgram(
       converted: converted ? inBudget(total) : null,
       lowerBound: floorTuition,
       lowerBoundConverted: converted ? inBudget(floorTuition) : null,
+      ceiling: null,
+      ceilingConverted: null,
       partial,
       affordable:
         total !== null ? affordability(total) : noAidFails ? "FAIL" : "UNKNOWN",
@@ -569,6 +582,15 @@ export function matchProgram(
       partial && s.tuitionCoverage !== null && stipend !== null
         ? Math.max(0, floorTuition! * (1 - s.tuitionCoverage) - stipend)
         : null;
+    // A stipend is never negative, so leaving out an unquantified one gives the most the student could pay.
+    // That ceiling can show the award is affordable; above the budget it shows nothing.
+    const ceiling =
+      remaining === null &&
+      stipend === null &&
+      total !== null &&
+      s.tuitionCoverage !== null
+        ? Math.max(0, total - tuition! * s.tuitionCoverage)
+        : null;
     const boundFails = floorFails(lowerBound);
     const guaranteed =
       s.fundingCategory === "GUARANTEED" &&
@@ -583,13 +605,19 @@ export function matchProgram(
       converted: converted ? inBudget(remaining) : null,
       lowerBound,
       lowerBoundConverted: converted ? inBudget(lowerBound) : null,
+      ceiling,
+      ceilingConverted: converted ? inBudget(ceiling) : null,
       partial,
       affordable:
         eligibility === "FAIL" || boundFails
           ? "FAIL"
           : eligibility === "UNKNOWN"
             ? "UNKNOWN"
-            : affordability(remaining),
+            : ceiling !== null
+              ? affordability(ceiling) === "PASS"
+                ? "PASS"
+                : "UNKNOWN"
+              : affordability(remaining),
       fullRide: remaining === 0 && total !== null && total > 0,
       reason:
         (guaranteed
@@ -602,7 +630,12 @@ export function matchProgram(
               "Even with this award, tuition alone leaves ",
               lowerBound!,
             )
-          : conversionNote(remaining)),
+          : ceiling !== null
+            ? " No annual stipend amount is stored, so it is not counted: at most " +
+              show(ceiling, currency!) +
+              " remains." +
+              conversionNote(ceiling)
+            : conversionNote(remaining)),
     });
   }
   const suitable = scenarios.filter(
