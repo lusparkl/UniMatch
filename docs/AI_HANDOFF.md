@@ -1,46 +1,76 @@
 # AI Handoff
 
-Updated: 2026-10-30T07:27:00Z
-Base commit: e784f8368cec30f50f5de062518da47ef822a85a
-Branch: main (not pushed)
-Working tree: clean apart from this handoff. Uncommitted content is a snapshot; the commit hash alone does not prove it is current.
+Updated: 2026-11-11T06:10:20Z
+Base commit: f79cc2059e312b0eb720df486318f09360f93937
+Branch: main (in sync with origin/main)
+Working tree: `data/` is untracked; it holds `catalog-snapshot.json`, exported 2026-11-11 after the scholarship fixes. Uncommitted content is a snapshot; the commit hash alone does not prove it is current. The curated and reviewed data lives in the PostgreSQL database, which git does not track.
 
 ## Purpose and architecture
-UniMatch: evidence-led university research and matching MVP for international bachelor's/master's applicants (Next.js 16 App Router, React 19, Tailwind 4, Prisma 7/PostgreSQL, Redis/BullMQ). Stable architecture is in `AGENTS.md` and `docs/ARCHITECTURE.md`.
-- UI: `app/`, `components/`; one global stylesheet `app/globals.css` (class-name rules).
-- Matching: `lib/matching.ts`, `lib/domain.ts` (deterministic PASS/FAIL/UNKNOWN); `lib/readiness.ts` and `lib/documents.ts` build per-program readiness (tests + document checklist).
-- Research: `lib/research/` (crawler, extraction, review, security, `programs.ts`, `relevance.ts`); `prisma/registry.ts` lists registered programs; `worker/` runs queued jobs.
-- Accounts: `lib/account.ts`, routes `app/api/auth/[action]`, `app/api/account/[...path]`; pages `app/account`, `app/priorities`. Prisma models `User`, `UserSession`, `UserDocument`, `Priority`.
+UniMatch: evidence-led matching of first-year bachelor's programmes in Hong Kong and South Korea for international applicants. Stack: Next.js 16, React 19, Prisma 7/PostgreSQL, Redis/BullMQ. Stable architecture is in `AGENTS.md` and `docs/ARCHITECTURE.md`. The hackathon plan is in `docs/hackathon/01–05`. The running record, `docs/HACKATHON_LOG.md`, is the authoritative detail.
+
+- **Matching:** `lib/matching.ts` (deterministic PASS/FAIL/UNKNOWN; `annualCost()` combines cost rows by part). Also `lib/trust.ts`, `lib/actions.ts`, `lib/whatif.ts`, `lib/arithmetic.ts`, and FX in `lib/fx-rates.json`.
+- **Personas:** `lib/personas.ts` defines the persona stories. The integration test `tests/integration/personas.spec.ts` and `npm run smoke` both check them.
+- **Catalog:** `lib/catalog.ts` reads from the DB, or from a snapshot (`CATALOG_SOURCE=snapshot`, `npm run catalog:export`).
+- **Research:** `lib/research/` (guarded crawler, extraction, review). The registry is `prisma/registry.ts` with the `registry-programs*.json` files.
+- **Reviewer scripts** (dry run by default; `APPLY=1` writes; no model calls):
+  - shared helpers: `scripts/curation.ts`;
+  - per-university curation: the `curate-*.ts` scripts, `add-tuition-hk.ts`, `polyu-costs.ts` and `import-browser.ts`;
+  - maintenance: `recheck-sources.ts`, `evidence-report.ts`, `owner-confirm.ts`, `scholarship-rules.ts` (new) and `review:auto`.
 
 ## Implemented state
-All committed in `e784f83`:
-- Crimson/DM Sans redesign: home, sticky nav (`components/nav.tsx`), shell, button variants, real logo (`public/assets/logo-mark.png`, `app/icon.png`).
-- User accounts, priority programs, document readiness panel.
-- Program-level extraction: one model call per registered program over the best-matching stored official pages (`PROMPT_VERSION` `program-v12`), with free deterministic page-ranking and noise gates.
-- `scripts/cost-benchmark.ts` (`npm run test:cost`) logs model cost to `docs/COST_LOG.md`.
-Not built from the design: tabbed detail view, funding-scenario layout, mobile filter toggle on results. Admin page is CSS-restyled only.
+- **Parts 1, 2, 4 and 5A:** done.
+- **Part 3 data:** 286 published programmes (12 institutions per `/api/health`).
+  - HK: 119 requirementsComplete; 73 complete annual costs (CUHK).
+  - Korea: 0 requirementsComplete; complete cost for KAIST only.
+- **Owner confirmation, 2026-11-11 by lusparkl** (`docs/OWNER_CONFIRM.md`):
+  - `ADMIN_VERIFIED` (18 rows): KAIST Scholarship, POSTECH Living Allowance, GIST tuition waiver.
+  - Still `SOURCE_BACKED`: POSTECH Tuition Scholarship, because year-one semester 2 depends on GPA.
+- **Engine changes, commit `f79cc20`:**
+  - New rule type `ON_ADMISSION` for awards made to every admitted student. It evaluates PASS. Model extraction has its own schema and cannot emit it.
+  - Scenario fields `ceiling` and `ceilingConverted`. With a complete total but no stored stipend amount, the ceiling is the total minus tuition coverage. A scenario passes if its ceiling is within budget; otherwise it stays UNKNOWN.
+- **Data changes (`scripts/scholarship-rules.ts`, applied):**
+  - KAIST: ON_ADMISSION rule plus a deadline of 2027-01-14 09:00Z.
+  - GIST: ON_ADMISSION rule, no deadline.
+  - 96 HK rows with residency categories (`local`, `non-local`, `international`) as nationality restrictions now carry an OTHER rule (UNKNOWN). They used to FAIL every student.
+- **Persona results:** the KAIST guaranteed scenario now satisfies the "A-level, tight budget" story. Persona top results changed after the CUHK fix.
 
 ## Decisions and environment
-- Node 22.13+, npm. Verified commands: `npm run typecheck`, `npm run lint`, `npm test`. Service-backed: `npm run test:integration`, `npm run test:e2e` (PostgreSQL, Redis, migrations, seed, Chromium; port 3001).
-- Env variable names (see `.env.example`): `DATABASE_URL`, `REDIS_URL`, `OPENAI_API_KEY`, `OPENAI_MODEL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD_HASH`, `DEMO_MODE`, plus crawl/AI budget limits (`MAX_CRAWL_PAGES`, `MAX_AI_CALLS_PER_JOB`, `DAILY_AI_TOKEN_LIMIT`, …).
-- Unlayered global element rules must not override Tailwind utilities: links use `a:where(:not(.btn))`; `button` has no background/border reset.
-- Live crawl/model runs are opt-in and need authorization. Model in use for extraction: gpt-5.4-mini; cost per job was roughly $0.02–0.07 on 2026-10-29 (`docs/COST_LOG.md`).
+- **Owner decisions:** see the log and `docs/OWNER_CONFIRM.md`. Live crawling is authorised. The model budget is up to 1M tokens (unused). Browser copies with purpose `owner-browser-copy` are never re-fetched automatically.
+- **Verification statuses:** Claude Code sets only SOURCE_BACKED. ADMIN_VERIFIED comes from the owner, or from changes the owner explicitly approves; these are recorded in review records.
+- **Runtime:**
+  - Node 22.13+ and npm.
+  - `docker compose up -d` starts PostgreSQL on 5434 (`unimatch`) and Redis on 6381.
+  - Dev server: `npm run dev -- -p 3111`.
+  - Local smoke: `CATALOG_SOURCE=snapshot PUBLIC_MODE=true DEMO_MODE=false npm run build`, then `next start -p 3112` with `FRESHNESS_DEADLINE_DAYS=30`, then `npm run smoke -- http://localhost:3112`.
+  - Port 3000 is used by another project (CrIE).
+- **FX:** NBU rates dated 2026-11-11, including KRW.
+- **Env:** variable names are in `.env.example`. Never run `pkill -f "next dev"`.
+- **DB backups** (temporary, session scratchpad): `/tmp/claude-1000/-mnt-data-Projects-UniMatch/ccb495de-af5b-433c-8766-85d985a6f0e0/scratchpad/unimatch-before-{owner-confirm,scholarship-rules}.dump`.
 
 ## Validation
-2026-10-30: `npm run typecheck` clean; `npm run lint` clean; `npm test` 108/108 pass (7 files).
-Not run: `npm run test:integration`, `npm run test:e2e`, `npm run build`, prettier check, visual checks of admin, accounts/priorities pages, and phone-width layouts.
+2026-11-11, at `f79cc20` plus the applied DB changes:
+- `npm run typecheck` and `npm run lint`: clean.
+- Prettier: clean on the changed files.
+- `npm test`: 212/212.
+- `npm run test:integration`: 9/9.
+- `npm run test:e2e`: 14/14 (11 public, 3 private).
+- Snapshot-mode `npm run build`: ok.
+- `npm run smoke` against a local `next start`: 4/4 personas.
+
+Not run this session: `scripts/evidence-report.ts`. It does not check scholarships, and the new rule quotations were verified as verbatim when they were written.
 
 ## Known issues and uncertainties
-- From the cost log (2026-10-29 runs on HKUST, PolyU, HKU): some excerpts fail verbatim validation, and some candidate "programs" were admission categories or departments. Later prompt/relevance changes (`program-v12`, `programTitleIssues`) may have addressed this; unverified against a live run. Nothing approved or published.
-- Some PolyU runs reported 7 crawl errors.
-- Dev server on port 3111 may still be running: `pkill -f "next dev"`.
-- Unverified assumption: e2e selectors in `tests/e2e/app.spec.ts` still match after the redesign; `tests/e2e/account.spec.ts` was added but not run in this session.
-- Migrations `202610290001` to `202610300002` were not applied/checked this session.
+- **HKU:**
+  - Requirement quotations cite page versions that age out around 2026-12-10, unless `curate-hku-hkbu.ts` is rerun.
+  - 59 "final" intakes are not Fall.
+  - 11 Business School programmes have no tuition.
+- PolyU (45) and HKBU (23) are not complete.
+- An HKUST accommodation row is misparsed (HK$21,000 "per semester").
+- **Korean tuition:** stored per semester (UIC, GIST, KU) or not at all (UNIST, SKKU, POSTECH). GIST therefore cannot pass financially. POSTECH and UIC Fall 2027 dates are unpublished.
+- **Review records:** 10 university-level scholarships changed by `scholarship-rules.ts` have no review record, because there was no candidate to attach one to.
+- **Snapshot:** `data/` is exported but not committed.
 
 ## Next actions
-1. Bring up PostgreSQL and Redis, run migrations and seed, then `npm run test:integration` and `npm run test:e2e` (acceptance: all pass).
-2. Run `npm run build`.
-3. Visually check admin, account, priorities, and results/profile/detail at 390px; fix `app/globals.css`.
-4. With authorization, re-run one live program extraction and compare against the cost-log quality problems.
-5. Optionally build the tabbed detail view and mobile filter toggle (`components/university-detail.tsx`, `components/results.tsx`).
-6. Commit this handoff; push when ready.
+1. Part 5: deploy once the owner provides a server. Freeze the data, re-run `npm run catalog:export`, commit `data/`, tag `demo-freeze`, and run `npm run smoke -- <live url>` (`docs/hackathon/05-deploy-freeze-demo.md`).
+2. Optional: rerun `curate-hku-hkbu.ts` before 2026-12-10, and fix the HKUST accommodation row.
+3. Optional: GIST deadline. It needs a source quote linking the waiver to the application period (1 Dec 2026 to 29 Jan 2027).
