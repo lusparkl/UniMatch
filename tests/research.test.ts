@@ -1,7 +1,12 @@
 import { describe, it, expect, vi } from "vitest";
 import PDFDocument from "pdfkit";
 import robotsParser from "robots-parser";
-import { extractHtml, extractPdf, contentHash } from "../lib/research/crawler";
+import {
+  extractHtml,
+  extractPdf,
+  contentHash,
+  isPdfDownload,
+} from "../lib/research/crawler";
 import {
   allowedUrl,
   canonicalUrl,
@@ -38,6 +43,12 @@ describe("source safeguards", () => {
     doc.text("Official admission requirement: IELTS 6.5");
     doc.end();
     expect(await extractPdf(await done)).toContain("IELTS 6.5");
+  });
+  it("recognizes PDFs served as generic binary downloads", () => {
+    expect(
+      isPdfDownload("application/octet-stream", Buffer.from("%PDF-1.7")),
+    ).toBe(true);
+    expect(isPdfDownload("text/html", Buffer.from("<html>"))).toBe(false);
   });
   it.each([
     "http://127.0.0.1",

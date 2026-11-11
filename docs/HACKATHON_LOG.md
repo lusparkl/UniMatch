@@ -353,3 +353,69 @@ Built in a separate worktree (`../UniMatch-p45`), because the Part 3 session wor
 **Effect:** the persona's top results changed, because CUHK admission scholarships no longer fail.
 
 **Checks:** typecheck and lint are clean. `npm test` passes 212/212, integration 9/9 and e2e 14/14. The snapshot build succeeds, and `npm run smoke` against a local `next start` passes for all 4 personas.
+
+## 2026-11-11 09:00: Part 3 gap curation and Korean retry audit
+
+**Scope and safety:** the owner authorised live retrieval from official university sites through the guarded crawler. No model calls were made; `ModelUsage` has 0 rows since 2026-11-11 00:00 UTC. Every database write used `APPLY=1` only after a dry run and a fresh `pg_dump -Fc` backup. Backups are outside the repository under `/tmp/unimatch-curate-gaps.sjztyW/`. No `ADMIN_VERIFIED` fact was changed: a restored pre-write database and the current database have identical counts and row fingerprints for `AdmissionRequirement`, `ApplicationIntake`, `CostEstimate`, `RequiredDocument`, `Scholarship`, and `SourceEvidence` rows backed by `ADMIN_VERIFIED` evidence.
+
+**Published SOURCE_BACKED facts:**
+
+- HKU: added 5 annual 2027 tuition rows of HKD 250,000 for programmes whose official programme pages name HKU Business School. Source: https://www.admissions.hku.hk/fees-and-scholarships/fees. The September 2027 statement was re-fetched from https://admissions.hku.hk/sites/default/files/2026-09/HKU_General_Information_NJ_2027.pdf, but the existing `final` deadline is on another page. No intake fact was assembled across sources.
+- HKBU: added 69 Fall 2027 intake rows for 23 programmes: early, main and extended rounds from https://iss.hkbu.edu.hk/amsappl_nj/eventcalendar.jsf. Opening dates remain null because the page gives no opening time; all 69 deadlines include the published 23:59 time. An initial correction apply exposed an existing stored-page deduplication bug and wrote no facts. After the fix, all 69 rows were replaced with the corrected null opening times.
+- PolyU: added 8 Fall 2027 intake rows with the 17 November 2026 deadline. Evidence came from the official international programme listings and their `?page=1` / `?page=2` pages. Current cost sources still conflict: https://www.polyu.edu.hk/study/2027/international-other-qualifications-other-fees-and-expenses states HKD 290,272 but its itemised amounts total HKD 330,272; https://www.polyu.edu.hk/study/ug/admissions/jee/frequently-asked-questions states HKD 330,272. Existing living-cost rows stay `CONFLICTING`.
+- POSTECH: added 6 annual 2026 cost rows from https://adm-iu.postech.ac.kr/user/comm/menu/4a69b7aee6a156d3c2ddb7413544ab2c/content/index.do. Each row stores KRW 5,580,000 tuition, KRW 7,235,000 living (housing, phone and food), and KRW 951,840 NHI.
+- `scripts/curate-hku-hkbu.ts` was rerun for its 80 eligible programmes. Its newest candidate could be an institution-wide candidate with `program: null`; selection now finds the newest reviewed candidate that explicitly names the programme. One candidate from the failed run was rejected before the successful rerun.
+
+**Facts deliberately left unknown:**
+
+- UNIST: the official Fall 2025 enrolment PDF at https://admg-intl.unist.ac.kr/wp-content/uploads/2025/08/6.-Fall-2025-Notice-of-Enrollment_1.pdf timed out on both guarded attempts and produced no stored page version. Search-engine text was not accepted as evidence, so no cost was written.
+- SKKU: the current official tuition table still names no period, so no cost was written.
+- KAIST: the 2027 guide PDF first hit the content-size bound, then the single guarded retry failed with `read ECONNRESET` and `requestHandler timed out after 180 seconds`. Indexed text describes English scores as recommended or optional, not a mandatory applicant-wide minimum. No requirement was written.
+- POSTECH: the site says the Fall 2027 guide will be published in late January or early February 2027. No current English minimum was written.
+- DGIST retry ended with `Source request timed out`. Hanyang's homepage became reachable, but its current 11.7 MB guide yielded only 405 characters of page markers and no quotable facts. SNU's 2027 notice was reachable, but it directs applicants to departments about English availability and does not establish an applicant-wide English-taught route. No institution or fact was added for these retries.
+- Scholarship quotations remain current: POSTECH 12/12, UNIST 6/6, Yonsei UIC 6/6 and Korea University 1/1. No new unconditional award was found. POSTECH tuition renewal depends on GPA, UNIST has a non-scholarship track, and UIC/KU awards remain competitive.
+
+**HKUST owner proposal:** 42 `ADMIN_VERIFIED` rows store HKD 21,000 per semester, but the source states a HKD 21,000–51,000 range per residential year. `docs/OWNER_CONFIRM.md` now proposes deleting only those 42 accommodation-only rows while preserving every tuition row and HKD 65,000 annual personal-expenses row. No HKUST row was changed.
+
+**Code and audit fixes:**
+
+- `scripts/curate-gaps.ts` provides one-university dry-run/apply curation for HKU, HKBU, PolyU, POSTECH and UNIST, plus a read-only scholarship recheck.
+- `lib/research/crawler.ts` recognises a standard `%PDF-` signature when an official server labels a PDF `application/octet-stream`. A unit regression covers binary PDF detection.
+- `scripts/curation.ts` now upserts stored page versions by the existing `(universityId, url, contentHash)` unique key. This handles a dynamic page returning an older known hash instead of failing with Prisma `P2002`.
+- Approved-source registry additions cover the cited HKU, HKBU, PolyU, POSTECH and UNIST pages.
+
+**Coverage before and after:** total published programmes remain 286 and `requirementsComplete` remains 119. Before this pass, 23 HKBU and 8 PolyU programmes had no intake; all 31 now have cited 2027 intakes. Five HKU and six POSTECH programmes had no cost; all 11 now have cited cost rows. UNIST and SKKU costs remain unknown. The strict 2027 cost-completeness figure does not increase because HKU still lacks a supported complete living total and POSTECH's cost evidence is explicitly as of 2026. `npm run review:auto` stayed dry: 150 qualification-list gaps, 45 conflicting/outdated-row gaps, 15 English-rule gaps.
+
+**Verification:**
+
+- typecheck and lint: clean; Prettier and `git diff --check`: clean.
+- `npm test`: 14 files, 213/213 passed. Focused PDF regression: 31/31 passed.
+- `npm run test:integration`: 5 files, 9/9 passed. The existing pg warning remains: `Calling client.query() when the client is already executing a query is deprecated and will be removed in pg@9.0.`
+- `scripts/evidence-report.ts`: every published requirement, intake, cost and document quotation is verbatim; 0 failures. One pre-existing Debrecen candidate remains pending.
+- `npm run catalog:export`: 287 stored programmes and 9,105,212 bytes. This is 286 enabled Hong Kong/South Korea programmes plus the disabled Debrecen record.
+- Snapshot production build passed with unreachable DB and Redis URLs. Turbopack still warns that dynamic `path.resolve` in `lib/catalog.ts` traces the whole project.
+- `npm run smoke` passed all 4 personas against `next start` on port 3112. The server was stopped afterward; port 3000 was not touched.
+- `npm run test:e2e` was not requested or run in this pass.
+
+## 2026-11-11 09:20: POSTECH tuition marked CONFLICTING
+
+**Reason:** the cited table "Estimated Essential Expenses (as of 2026)" states "Tuition Fees 2,790,000 2,790,000 5,580,000", but its own note states "First semester tuition fee of 2026 : KRW 2,924,000 (automatically waived)". These are two tuition figures for the same semester. The table's tuition is gross, because the waiver is subtracted separately in "POSTECH Scholarship" (B). The stored tuition therefore did not double-count the POSTECH Tuition Scholarship.
+
+**Change:** `scripts/postech-costs.ts` (APPLY) follows the `polyu-costs.ts` pattern.
+
+- On each of the 6 POSTECH rows added in the gap pass, the tuition part moved to its own `CONFLICTING` row, with the same quotation and KRW 5,580,000 annual.
+- Housing, phone and food (KRW 7,235,000) and NHI (KRW 951,840) stay `SOURCE_BACKED`.
+- Each change has a `POSTECH_COST_SPLIT_CONFLICTING_TUITION` review record.
+- Backup: `unimatch-before-postech-costs.dump` in the session scratchpad.
+
+**Effect:** POSTECH has no complete trusted annual cost, so its financial match stays UNKNOWN, as it was before the gap pass.
+
+**Checks:**
+
+- typecheck and lint: clean.
+- Prettier: clean on the new script.
+- `npm test`: 213/213.
+- `npm run test:integration`: 9/9.
+- `scripts/evidence-report.ts`: 0 quotations not verbatim.
+- `npm run catalog:export`: 287 programmes.
+- Not run: snapshot build, `npm run smoke`, `npm run test:e2e`.

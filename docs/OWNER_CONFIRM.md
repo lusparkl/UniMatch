@@ -60,3 +60,17 @@ Status: **answered 2026-11-11 by lusparkl**, applied with `ONLY=` for the confir
 - Item 4, GIST tuition waiver: confirmed. 6 rows are `ADMIN_VERIFIED`.
 
 Each promotion has an `OWNER_CONFIRMED_GUARANTEED` review record naming lusparkl.
+
+## 5. HKUST accommodation cost correction
+
+Listed 2026-11-11. No database change has been made.
+
+- Source: https://join.hkust.edu.hk/fees-and-scholarships
+- Current state: 42 published programmes each have an `ADMIN_VERIFIED` accommodation-only cost with `livingCostAmount: 21000`, `period: SEMESTER`, and currency `HKD`.
+- Quote: "Accommodation Fee (Non-local Students)^ ** University-provided Accommodation (excl. meals, air-conditioning and laundry charges) ~HKD 21,000 – HKD 51,000 (~USD 2,700 – USD 6,500) per residential year"
+- Problem: the stored value selects the lower endpoint of a range and changes `per residential year` to `SEMESTER`. The source supports neither transformation.
+- Proposed correction: delete only those 42 exact accommodation-only rows. Do not replace the range with its lower endpoint, upper endpoint, or midpoint because the current cost schema cannot store a range.
+- Preserve: every HKUST tuition row and every `HKD 65,000` annual personal-expenses row, including the two combined `ADMIN_VERIFIED` annual cost rows.
+- Question: Do you confirm deletion of those 42 incorrect accommodation rows while preserving all other HKUST costs?
+
+Status: **pending owner confirmation**.

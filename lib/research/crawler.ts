@@ -73,6 +73,8 @@ export async function extractPdf(buffer: Buffer) {
     await parser.destroy();
   }
 }
+export const isPdfDownload = (type: string, body: Buffer) =>
+  type.includes("pdf") || body.subarray(0, 5).toString("ascii") === "%PDF-";
 export type CrawledDocument = {
   url: string;
   title: string;
@@ -168,7 +170,9 @@ export async function crawlSources(
         // Custom pinned-IP transport deliberately replaces Crawlee's unrestricted navigation.
         if (seenUrls.has(request.url)) return;
         const d = await fetcher.fetch(request.url);
-        const pdf = d.type.includes("pdf");
+        // Some university download endpoints label PDFs as application/octet-stream.
+        // Keep the guarded transport and identify the standard PDF signature instead.
+        const pdf = isPdfDownload(d.type, d.body);
         let parsed = pdf
           ? {
               title: new URL(d.url).pathname.split("/").at(-1) ?? "PDF",

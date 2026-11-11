@@ -204,6 +204,7 @@ export const pages: {
     "https://www.admissions.hku.hk/apply/international-qualifications",
     "https://www.admissions.hku.hk/fees-and-scholarships/scholarships",
     "https://admissions.hku.hk/apply/international-qualifications/english-language-requirement",
+    "https://admissions.hku.hk/sites/default/files/2026-09/HKU_General_Information_NJ_2027.pdf",
   ].map((url) => ({ universityId: "hku", url })),
   // Tuition differs by faculty: STEM, non-STEM, and MBBS/BDS.
   {
@@ -232,6 +233,7 @@ export const pages: {
   ...[
     "https://admissions.hkbu.edu.hk/admissions/international-qualifications.html",
     "https://admissions.hkbu.edu.hk/fees-and-scholarships.html",
+    "https://iss.hkbu.edu.hk/amsappl_nj/eventcalendar.jsf",
   ].map((url) => ({ universityId: "hkbu", url })),
   ...[
     "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications",
@@ -245,6 +247,10 @@ export const pages: {
     "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-additional",
     "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-tuition-fees",
     "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications/international-other-qualifications-other-fees-and",
+    "https://www.polyu.edu.hk/study/2027/international-other-qualifications-other-fees-and-expenses",
+    "https://www.polyu.edu.hk/study/ug/admissions/jee/frequently-asked-questions",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications?page=1",
+    "https://www.polyu.edu.hk/study/ug/admissions/international-other-qualifications?page=2",
   ].map((url) => ({ universityId: "polyu", url })),
   ...[
     "https://admission.kaist.ac.kr/intl-undergraduate/before/sub01",
@@ -257,10 +263,12 @@ export const pages: {
     "https://adm-iu.postech.ac.kr/user/comm/menu/3317587a17a23d4dacdb9ffc4762bf4a/content/index.do",
     "https://adm-iu.postech.ac.kr/user/comm/menu/b7f8c54d6eaff431c253db1c8b9bcb45/content/index.do",
     "https://adm-iu.postech.ac.kr/user/comm/menu/e2afb97fa1b8f43c574be0dabef78f87/content/index.do",
+    "https://adm-iu.postech.ac.kr/user/comm/menu/4a69b7aee6a156d3c2ddb7413544ab2c/content/index.do",
   ].map((url) => ({ universityId: "postech", url })),
   ...[
     "https://admu-intl.unist.ac.kr/admission-eng/admissions/admissions.do?articleNo=306812&attachNo=591437&mode=download",
     "https://admu-intl.unist.ac.kr/admission-eng/life/scholarships.do",
+    "https://admg-intl.unist.ac.kr/wp-content/uploads/2025/08/6.-Fall-2025-Notice-of-Enrollment_1.pdf",
   ].map((url) => ({ universityId: "unist", url })),
   ...[
     "https://oia.korea.ac.kr/_attach/file/2026/08/lpZzpFXiuEfpfIZPBrYB.pdf",

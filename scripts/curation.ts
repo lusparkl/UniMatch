@@ -50,13 +50,16 @@ export async function fetchApproved(universityId: string, url: string) {
   if (!fetched)
     throw new Error("Nothing retrieved: " + url + " " + messages.join("; "));
   const before = await latestDocument(universityId, fetched.url);
-  if (before?.contentHash === fetched.contentHash)
-    return db.sourceDocument.update({
-      where: { id: before.id },
-      data: { lastCheckedAt: new Date() },
-    });
-  return db.sourceDocument.create({
-    data: { ...fetched, universityId, previousVersionId: before?.id },
+  return db.sourceDocument.upsert({
+    where: {
+      universityId_url_contentHash: {
+        universityId,
+        url: fetched.url,
+        contentHash: fetched.contentHash,
+      },
+    },
+    create: { ...fetched, universityId, previousVersionId: before?.id },
+    update: { lastCheckedAt: new Date() },
   });
 }
 

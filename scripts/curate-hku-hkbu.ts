@@ -233,13 +233,23 @@ for (const plan of plans) {
   const program = await db.degreeProgram.findUniqueOrThrow({
     where: { id: plan.id },
   });
-  const base = await db.extractionCandidate.findFirstOrThrow({
-    where: {
-      programId: plan.id,
-      status: { in: ["ADMIN_VERIFIED", "SOURCE_BACKED"] },
-    },
-    orderBy: { reviewedAt: "desc" },
-  });
+  const base = (
+    await db.extractionCandidate.findMany({
+      where: {
+        programId: plan.id,
+        status: { in: ["ADMIN_VERIFIED", "SOURCE_BACKED"] },
+      },
+      orderBy: { reviewedAt: "desc" },
+    })
+  )
+    .map((candidate) => ({
+      candidate,
+      parsed: extractionSchema.safeParse(candidate.payload),
+    }))
+    .find(
+      (entry) => entry.parsed.success && entry.parsed.data.program,
+    )?.candidate;
+  if (!base) throw new Error("No approved candidate names " + program.title);
   const payload = extractionSchema.parse({
     ...extractionSchema.parse(base.payload),
     academicYear: "2027",
