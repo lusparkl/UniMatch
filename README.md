@@ -1,12 +1,18 @@
 # UniMatch AI
 
-A university research and matching MVP for international applicants. The real catalog covers first-year bachelor's programmes in Hong Kong and South Korea (286 published programmes at 12 institutions on 2026-11-11). The engine also handles master's profiles. Next.js 16 / React 19 / TypeScript / Tailwind 4 with a shadcn-style Radix button, PostgreSQL + Prisma 7, Redis + BullMQ, Crawlee, local Playwright and PDF extraction, and a server-only OpenAI provider.
+University research and matching for international applicants. The real catalog covers first-year bachelor's programmes in Hong Kong and South Korea: 286 published programmes at 12 institutions (as of 2026-11-11). The matching engine also handles master's profiles.
 
-Student matching is deterministic. It never predicts an admission probability. Public browsing cannot start a crawl or a model call. A public deployment (`PUBLIC_MODE=true`, `CATALOG_SOURCE=snapshot`) needs no PostgreSQL, Redis or OpenAI key: it serves `data/catalog-snapshot.json` and hides the admin and account pages.
+**Live demo:** https://unimatch-inky.vercel.app
 
-## Start the offline demo
+- **Deterministic matching.** Each requirement resolves to PASS, FAIL or UNKNOWN. UniMatch never predicts an admission probability.
+- **Sourced facts.** Every published fact quotes an official university page and passes administrator review before students see it.
+- **Safe public browsing.** Public pages cannot start a crawl or a model call. The public deployment needs no PostgreSQL, Redis or OpenAI key.
 
-Use Node.js 22.13+ (tested on Node 24) and npm.
+**Stack:** Next.js 16, React 19, TypeScript, Tailwind 4 with a shadcn-style Radix button, PostgreSQL + Prisma 7, Redis + BullMQ, Crawlee, local Playwright and PDF extraction, and a server-only OpenAI provider.
+
+## Quick start: offline demo
+
+Requires Node.js 22.13+ (tested on Node 24) and npm.
 
 ```bash
 npm ci
@@ -15,11 +21,15 @@ npm run db:generate
 npm run dev
 ```
 
-Open **http://localhost:3000** → **Find my universities**. No OpenAI key, database, Redis, or student account is needed for the student-facing fictional demo. The default `DEMO_MODE=DEMO_FIXTURES` is displayed prominently. Admin features, and optional student accounts (saved profile, documents, priorities), require PostgreSQL and Redis.
+Open **http://localhost:3000** and choose **Find my universities**. The student-facing demo uses a fictional catalog and needs no OpenAI key, database, Redis or student account. The default `DEMO_MODE=DEMO_FIXTURES` is shown prominently. Admin features and optional student accounts (saved profile, documents, priorities) require PostgreSQL and Redis.
 
-The profile is stored under `unimatch-profile-v2` in browser local storage; an older `unimatch-profile-v1` profile is migrated automatically. The shortlist, document checklist and compare selection also stay in local storage. Edit the profile on **My profile**, or use **Delete my saved profile**. No identity documents are collected.
+Student data stays in the browser:
 
-## Start the real catalog and research workspace
+- The profile is stored under `unimatch-profile-v2` in local storage; an older `unimatch-profile-v1` profile migrates automatically.
+- The shortlist, document checklist and compare selection also stay in local storage.
+- Edit the profile on **My profile**, or remove it with **Delete my saved profile**. No identity documents are collected.
+
+## Real catalog and research workspace
 
 ```bash
 docker compose up -d
@@ -29,42 +39,88 @@ npx playwright install chromium
 npm run admin:password
 ```
 
-1. Set `ADMIN_EMAIL` in `.env`.
-2. Copy the generated `ADMIN_PASSWORD_HASH=base64:...` line into `.env`. The base64 wrapper protects bcrypt's dollar signs from Next.js environment-variable expansion; it is still a bcrypt hash, not an encoded plaintext password.
-3. Set `DEMO_MODE=false` for the real PostgreSQL catalog.
+Then configure `.env`:
+
+1. Set `ADMIN_EMAIL`.
+2. Copy the generated `ADMIN_PASSWORD_HASH=base64:...` line. The base64 wrapper protects bcrypt's dollar signs from Next.js environment-variable expansion; it is still a bcrypt hash, not an encoded plaintext password.
+3. Set `DEMO_MODE=false` to use the PostgreSQL catalog.
 4. Optionally set `OPENAI_API_KEY` to enable live research.
-5. Start both processes:
+
+Start the web app and the worker together:
 
 ```bash
 npm run dev:all
 ```
 
-Alternatively, run `npm run dev` and `npm run worker` in separate terminals. For a production-mode local run: `npm run build && npm start`, with the worker in a separate terminal. Restart processes after editing environment variables. In production mode, rebuild after changing DEMO_MODE so the landing/profile banners use the same mode as the catalog.
+Or run `npm run dev` and `npm run worker` in separate terminals. For a production-mode local run, use `npm run build && npm start` with the worker in a separate terminal.
 
-PostgreSQL and Redis bind to loopback ports **5434** and **6381**, avoiding typical local defaults. Docker credentials are for local development. Browser/admin origin checking uses `NEXT_PUBLIC_APP_URL`; its scheme, host and port must match the URL you visit.
+- Restart both processes after editing environment variables.
+- In production mode, rebuild after changing `DEMO_MODE` so the landing and profile banners match the catalog mode.
+- PostgreSQL and Redis bind to loopback ports **5434** and **6381** to avoid typical local defaults. The Docker credentials are for local development only.
+- Browser and admin origin checks use `NEXT_PUBLIC_APP_URL`. Its scheme, host and port must match the URL you visit.
 
-## Run one real research job
+## Run a research job
 
 1. Sign in at **/admin** with your configured credentials.
 2. Select a registered university such as **HKUST**; its official programme pages are pre-approved.
-3. Use a specific target such as “Computer Science BSc admission requirements and tuition”.
-4. Click **Research / refresh**. Keep the worker running.
-5. Watch actual stages, logs, pages, errors and returned token usage. The dashboard polls every four seconds.
-6. Open the candidate's retrieved source and editable JSON. Confirm the program, year, scope, exact quotations and conditions.
-7. Approve to publish, or reject. Mark the completeness checkbox only when you actually checked the full mandatory requirement set.
-8. Open **/results** in real mode. Published facts immediately affect deterministic matching.
+3. Enter a specific target such as "Computer Science BSc admission requirements and tuition".
+4. Click **Research / refresh** and keep the worker running.
+5. Watch the stages, logs, pages, errors and token usage. The dashboard polls every four seconds.
+6. Open the candidate's retrieved source and editable JSON. Confirm the programme, year, scope, exact quotations and conditions.
+7. Approve to publish, or reject. Tick the completeness checkbox only after checking the full mandatory requirement set.
+8. Open **/results** in real mode. Published facts affect matching immediately.
 
-Set `MAX_CRAWL_PAGES=1` and `MAX_AI_CALLS_PER_JOB=2` for the first experiment. Expand after inspecting results. For universities in `prisma/registry.ts` (HKU, HKUST, CUHK, PolyU, HKBU, KAIST, POSTECH, UNIST and Korea University; programs listed in `prisma/registry-programs.json` and `prisma/registry-programs-kr.json`) research reads the institution's international-admission, fee and scholarship pages once per university, then makes one model call per registered program over that program's own pages and merges the shared facts into its candidate. A fee page whose tuition differs by program is registered with `fees: "per-program"` and read by every program call instead. When only the institution facts change, candidates are rebuilt without new model calls. Add a degree there with its official page. Elsewhere pages are gated before any model call: noise URLs and pages without amounts, deadlines, test scores, funding or admission wording are saved but skipped, and an extraction that yields a program with no facts creates no candidate. Candidates whose program title is generic or absent from the source are flagged for review. Institution-wide scholarship pages may return `program:null`; these may publish scholarship options but cannot create institution-wide admission rules. Institution-wide funding still needs explicit review of scope and restrictions.
+For a first experiment, set `MAX_CRAWL_PAGES=1` and `MAX_AI_CALLS_PER_JOB=2`, then expand after inspecting the results.
 
-A missing key disables submission and scheduling. A failed source or model request produces real errors, never substitute facts. Already-extracted unchanged source versions do not cause additional model calls.
+**Registered universities** (HKU, HKUST, CUHK, PolyU, HKBU, KAIST, POSTECH, UNIST and Korea University, in `prisma/registry.ts`; programmes in `prisma/registry-programs.json` and `prisma/registry-programs-kr.json`):
 
-## Initial data
+- Research reads the institution's international-admission, fee and scholarship pages once per university.
+- It then makes one model call per registered programme over that programme's own pages and merges the shared facts into its candidate.
+- A fee page whose tuition differs by programme is registered with `fees: "per-program"` and read by every programme call instead.
+- When only institution facts change, candidates are rebuilt without new model calls.
+- To add a degree, register it there with its official page.
 
-The idempotent seed (`npm run db:seed`) creates the Hong Kong and South Korean institutions, registered programmes and approved source URLs from `prisma/curated.ts` and `prisma/registry.ts`. Yonsei UIC, GIST and SKKU are added by `scripts/import-browser.ts`. Discovering a degree does not establish admission eligibility: facts come only from reviewed research, and seed scripts do not overwrite existing reviewed facts.
+**Other universities:**
 
-HKU's supplied research URL is an explicitly historical 2026 page. It is useful for demonstrating source retrieval, not confirming a future intake. Replace it with the applicable intake source during review.
+- Pages are gated before any model call. Noise URLs and pages without amounts, deadlines, test scores, funding or admission wording are saved but skipped.
+- An extraction that yields a programme with no facts creates no candidate.
+- Candidates whose programme title is generic or absent from the source are flagged for review.
+- Institution-wide scholarship pages may return `program:null`. These can publish scholarship options but cannot create institution-wide admission rules, and their scope and restrictions still need explicit review.
 
-The fictional fixture catalog exists only in `lib/demo.ts`, never in the real database. It exercises missing scores, missing deadlines, nationality restrictions, conflicting requirements, tuition-only funding, competitive full coverage, guaranteed terms and master's prerequisites.
+A missing key disables submission and scheduling. A failed source or model request produces real errors, never substitute facts. Unchanged source versions that were already extracted cause no further model calls.
+
+## Catalog data
+
+`npm run db:seed` is idempotent. It creates the Hong Kong and South Korean institutions, registered programmes and approved source URLs from `prisma/curated.ts` and `prisma/registry.ts`. `scripts/import-browser.ts` adds Yonsei UIC, GIST and SKKU. Discovering a degree does not establish admission eligibility: facts come only from reviewed research, and seed scripts never overwrite reviewed facts.
+
+HKU's supplied research URL is an explicitly historical 2026 page. It demonstrates source retrieval but does not confirm a future intake; replace it with the applicable intake source during review.
+
+The fictional fixture catalog lives only in `lib/demo.ts`, never in the real database. It exercises missing scores, missing deadlines, nationality restrictions, conflicting requirements, tuition-only funding, competitive full coverage, guaranteed terms and master's prerequisites.
+
+### Curation and review scripts
+
+Reviewer scripts in `scripts/` curated most of the published catalog without model calls: the `curate-*.ts` scripts, `add-tuition-hk.ts`, `polyu-costs.ts`, `postech-costs.ts`, `scholarship-rules.ts` and others.
+
+- Each script fetches pages through the guarded crawler, quotes the stored page text verbatim, and writes `SOURCE_BACKED` facts with review records.
+- Scripts are dry runs by default and write only with `APPLY=1`. Back up the database (`pg_dump -Fc`) first.
+- `ADMIN_VERIFIED` comes only from the project owner. `scripts/owner-confirm.ts` and `scripts/hkust-accommodation.ts` require `OWNER_CONFIRMED=1` and `OWNER_NAME`.
+
+```bash
+npm run review:auto                                  # dry run of the requirementsComplete auto-review
+npx tsx --env-file=.env scripts/evidence-report.ts   # every published quotation is verbatim in its page
+npm run coverage                                     # per-university coverage report (Markdown)
+SEED=20261111 npx tsx --env-file=.env scripts/red-team.ts   # read-only red-team spot check against live pages
+```
+
+### Refresh scheduling
+
+```bash
+npm run schedule
+```
+
+This CLI selects stale sources on approved universities, marks old facts outdated and queues bounded jobs. Run it from local cron or your OS scheduler, for example once a day; no paid scheduling service is needed. It requires the OpenAI key, PostgreSQL, Redis and a running worker.
+
+Facts also expire at catalog-read time, even when the scheduler is not running. Unchanged rechecks can restore stale published facts without claiming a new human verification. Conflicting facts stay uncertain until review.
 
 ## Configuration
 
@@ -94,30 +150,11 @@ See [.env.example](.env.example) for all defaults.
 | `FRESHNESS_SCHOLARSHIP_DAYS`              | 30 days; also admissions/cost facts                                  |
 | `FRESHNESS_METADATA_DAYS`                 | 90 days                                                              |
 
-Costs in another currency are converted at dated National Bank of Ukraine reference rates (`lib/fx-rates.json`, refreshed manually with `npm run fx:update`; currently 2026-11-11). A converted amount within 5% of the budget stays UNKNOWN, and a currency without a rate is never converted. The application enforces a **token** budget; it does not report an invented dollar estimate. Provider-reported usage is persisted. Conservative reservations include input bytes plus maximum output tokens, then reconcile to reported usage. Failed requests retain their reservations because upstream billing is unknown.
+**Currency.** Costs in another currency are converted at dated National Bank of Ukraine reference rates (`lib/fx-rates.json`, currently 2026-11-11; refresh manually with `npm run fx:update`). A converted amount within 5% of the budget stays UNKNOWN, and a currency without a rate is never converted.
 
-## Curation and review scripts
+**Model budget.** The application enforces a token budget, not an invented dollar estimate. Provider-reported usage is persisted. Reservations conservatively count input bytes plus maximum output tokens, then reconcile to reported usage. Failed requests keep their reservations because upstream billing is unknown.
 
-Most of the published catalog was curated without model calls by reviewer scripts in `scripts/` (the `curate-*.ts` scripts, `add-tuition-hk.ts`, `polyu-costs.ts`, `postech-costs.ts`, `scholarship-rules.ts` and others). Each fetches pages through the guarded crawler, quotes the stored page text verbatim, and writes `SOURCE_BACKED` facts with review records. They are dry runs by default and write only with `APPLY=1`; back up the database (`pg_dump -Fc`) first. `ADMIN_VERIFIED` comes only from the project owner: `scripts/owner-confirm.ts` and `scripts/hkust-accommodation.ts` require `OWNER_CONFIRMED=1` and `OWNER_NAME`, and the questions are recorded in `docs/OWNER_CONFIRM.md`.
-
-```bash
-npm run review:auto                                  # dry run of the requirementsComplete auto-review
-npx tsx --env-file=.env scripts/evidence-report.ts   # every published quotation is verbatim in its page
-npm run coverage                                     # per-university coverage report (Markdown)
-SEED=20261111 npx tsx --env-file=.env scripts/red-team.ts   # read-only red-team spot check against live pages
-```
-
-## Refresh scheduling
-
-```bash
-npm run schedule
-```
-
-This CLI selects stale sources on existing approved universities, marks old facts outdated, and queues bounded jobs. Run it through local cron or your OS scheduler; for example, from this repository once daily. It requires the key, PostgreSQL, Redis and a running worker. No paid scheduling service is needed.
-
-Facts also expire at catalog-read time even if the scheduler is not running. Unchanged rechecks can restore stale published facts without claiming a new human verification. Existing conflicting facts stay uncertain until review.
-
-## Tests and verification
+## Testing
 
 ```bash
 npm test                    # unit + mocked transport; no services or credits
@@ -128,18 +165,14 @@ npm run test:integration     # real PostgreSQL/Redis + local fixtures + Chromium
 npm run test:e2e             # Chromium; starts its own test app on port 3001
 ```
 
-Snapshot deployment (no PostgreSQL or Redis on the host):
+Integration and E2E tests need Compose running, migrations applied, the seed loaded and Chromium installed.
 
-```bash
-npm run catalog:export       # data/catalog-snapshot.json from the published catalog
-CATALOG_SOURCE=snapshot PUBLIC_MODE=true DEMO_MODE=false npm run build && npm start
-npm run smoke -- <url>       # pages, browser errors and sample-student results against the snapshot
-npm run screens -- <url>     # output/screens/ at 390 and 1440 px, with an overflow check
-```
+- Tests never call OpenAI or real universities.
+- Integration tests use unique temporary records and queues, then clean them up.
+- E2E credentials exist only in the test-server environment and are not a deployed login.
+- E2E screenshots go to the git-ignored `output/playwright/`.
 
-`/api/health` reports the catalog source, counts, last verification and commit. Freshness still expires at read time, so set `FRESHNESS_DEADLINE_DAYS` on the host as well.
-
-Integration/E2E prerequisites: start Compose, apply migrations, seed, and install Chromium. Tests never call OpenAI or real universities. Integration tests use unique temporary records/queues and clean them up. E2E credentials exist only in the test-server environment and are not a deployed login. E2E screenshots are written to ignored `output/playwright/`.
+HTML and PDF fixture extraction, browser fallback, PostgreSQL publication, BullMQ retry and the student and admin browser flows were exercised during implementation. Fixture responses cover request format, usage parsing, schema rejection, retries and budgets.
 
 Optional live tests:
 
@@ -156,9 +189,22 @@ LIVE_OPENAI_TEST=1 npm run test:live
 LIVE_OPENAI_TEST=1 npm run test:model
 ```
 
-The OpenAI smoke creates an actual research job for `LIVE_UNIVERSITY_ID` (default HKUST), limits it to one page and two model attempts, and requires a metered extraction candidate to succeed. It does not approve the result.
+The OpenAI smoke test creates a real research job for `LIVE_UNIVERSITY_ID` (default HKUST), limits it to one page and two model attempts, and requires a metered extraction candidate to succeed. It does not approve the result.
 
-During implementation, HTML and PDF fixture extraction, browser fallback, PostgreSQL publication, BullMQ retry and student/admin browser flows were exercised. Request format, usage parsing, schema rejection, retries and budgets are covered with fixture responses. Dated verification results are recorded in `docs/HACKATHON_LOG.md` and `docs/VERIFICATION_LOG.md`.
+## Deployment
+
+The public site serves a frozen catalog snapshot, so the host needs no PostgreSQL, Redis or OpenAI key. `PUBLIC_MODE=true` hides the admin and account pages.
+
+```bash
+npm run catalog:export       # data/catalog-snapshot.json from the published catalog
+CATALOG_SOURCE=snapshot PUBLIC_MODE=true DEMO_MODE=false npm run build && npm start
+npm run smoke -- <url>       # pages, browser errors and sample-student results against the snapshot
+npm run screens -- <url>     # output/screens/ at 390 and 1440 px, with an overflow check
+```
+
+Production runs on Vercel (project `unimatch`). The project sets `PUBLIC_MODE=true`, `CATALOG_SOURCE=snapshot`, `DEMO_MODE=false`, `ENABLED_COUNTRIES`, `FRESHNESS_DEADLINE_DAYS=30` and `NEXT_PUBLIC_APP_URL`. Deploy with `vercel deploy --prod`, then run `npm run smoke -- https://unimatch-inky.vercel.app`. `.vercelignore` keeps `.env` files and local artifacts out of uploads.
+
+`/api/health` reports the catalog source, counts, last verification and commit. Freshness still expires at read time, so set `FRESHNESS_DEADLINE_DAYS` on the host as well.
 
 ## Repository map
 
@@ -181,20 +227,28 @@ tests/                Offline unit, local integration and browser tests
 docs/                 AI handoff notes
 ```
 
-## Boundaries and next improvements
+## Limitations and roadmap
 
-This is an MVP with deliberately conservative eligibility decisions. It does not cover every qualification equivalency, legal/visa pathway or scholarship rule. Complex OR conditions, credential recognition, service obligations and need-based calculations remain manual-review conditions; the model is instructed not to turn alternatives into independent mandatory failures.
+Eligibility decisions are deliberately conservative.
 
-The real catalog is not a complete admissions database. Most seed facts are unknown until researched and reviewed. Real scholarships are researched through approved funding sources; the seed does not fabricate scholarship amounts or awards. Scanned/image-only PDFs need OCR, which is not included. Browser fallback only loads approved resources and can fail on sites dependent on unapproved third-party scripts. The browser is for public rendering, not bypassing access controls.
+- **Coverage.** UniMatch does not cover every qualification equivalency, legal or visa pathway, or scholarship rule. Complex OR conditions, credential recognition, service obligations and need-based calculations remain manual-review conditions. The model is instructed not to turn alternatives into independent mandatory failures.
+- **Catalog.** The real catalog is not a complete admissions database. Most seed facts stay unknown until researched and reviewed. Real scholarships are researched through approved funding sources; the seed never fabricates scholarship amounts or awards.
+- **Retrieval.** Scanned or image-only PDFs need OCR, which is not included. Browser fallback loads only approved resources and can fail on sites that depend on unapproved third-party scripts. The browser renders public pages; it never bypasses access controls.
+- **Extraction and review.** Extraction handles one explicit programme, or institution-wide scholarships, per document. Semantic verification remains a human responsibility: a matching quotation does not prove the interpretation is correct. Conflict detection finds overlapping structured fields, not every contradiction in prose. Review uses editable JSON rather than a full admissions editor.
+- **Explanations.** The administrator-only `POST /api/admin/explain` endpoint accepts `{ programId, profile }` and explains deterministic results with OpenAI. Students get local deterministic explanations and never send profiles to an LLM.
 
-Extraction handles one explicit program or institution-wide scholarships per document. Semantic verification remains a human responsibility; matching a quotation does not prove the interpretation is correct. Conflict detection identifies overlapping structured fields, not every possible contradiction in prose. Review uses editable JSON rather than a comprehensive admissions editor. The administrator-only `POST /api/admin/explain` endpoint accepts `{ programId, profile }` and explains deterministic results with OpenAI; ordinary students use local deterministic explanations and do not send profiles to an LLM.
+Next priorities:
 
-Next priorities: deploy the frozen snapshot; complete Korean requirements once institutions publish accepted-qualification lists and 2027 English rules; resolve the conflicting PolyU living costs and POSTECH tuition; build a friendlier field-level review editor; add verified qualification/OR-pathway rules. Before hosting the admin workspace publicly, add deployment-specific network isolation for browsers, stronger administrator identity management, and operational monitoring.
+- Complete Korean requirements once institutions publish accepted-qualification lists and 2027 English rules.
+- Resolve the conflicting PolyU living costs and POSTECH tuition.
+- Build a friendlier field-level review editor.
+- Add verified qualification and OR-pathway rules.
+- Before hosting the admin workspace publicly, add network isolation for browsers, stronger administrator identity management and operational monitoring.
 
-## Provider documentation
+## OpenAI provider
 
-The provider uses OpenAI's [Chat Completions API](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create) with [strict structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), `max_completion_tokens`, `store:false`, and Zod runtime validation. Crawling and PDF extraction remain local.
+The provider uses OpenAI's [Chat Completions API](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create) with [strict structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs), `max_completion_tokens`, `store:false` and Zod runtime validation. Crawling and PDF extraction stay local.
 
-The default is [GPT-5.4 mini](https://developers.openai.com/api/docs/models/gpt-5.4-mini), a non-frontier model suited to bounded extraction and explanation. Standard text pricing checked October 27, 2026: $0.75 per million input tokens, $0.075 cached input, and $4.50 output. For illustration, 6,000 uncached input + 1,500 output tokens costs about $0.0113 per successful call; actual length and retries vary. `reasoning_effort:low` gives extraction a small reasoning budget within the output cap. No automatic fallback to a larger model exists. `OPENAI_MODEL` can pin a compatible snapshot if needed.
+The default model is [GPT-5.4 mini](https://developers.openai.com/api/docs/models/gpt-5.4-mini), a non-frontier model suited to bounded extraction and explanation. Standard text pricing, checked 2026-10-27: $0.75 per million input tokens, $0.075 cached input and $4.50 output. For illustration, 6,000 uncached input plus 1,500 output tokens costs about $0.0113 per successful call; actual length and retries vary. `reasoning_effort:low` gives extraction a small reasoning budget within the output cap. There is no automatic fallback to a larger model. `OPENAI_MODEL` can pin a compatible snapshot.
 
-Provider credentials use `OPENAI_API_KEY` and an optional `OPENAI_BASE_URL` (the official endpoint by default). Research limits use provider-neutral `MAX_AI_*`, `DAILY_AI_TOKEN_LIMIT`, and `AI_TIMEOUT_MS` names. These variables are server-only; restart both web and worker processes after changing them.
+Credentials use `OPENAI_API_KEY` and an optional `OPENAI_BASE_URL` (the official endpoint by default). Research limits use the provider-neutral `MAX_AI_*`, `DAILY_AI_TOKEN_LIMIT` and `AI_TIMEOUT_MS` names. These variables are server-only; restart both the web and worker processes after changing them.
