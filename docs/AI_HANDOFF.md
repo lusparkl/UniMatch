@@ -1,15 +1,11 @@
 # AI Handoff
 
-Updated: 2026-11-11T14:31:47Z
-Base commit: ed75d1e78574fe253d1e9b2ff8d14e8c955ac21b
-Branch: main (in sync with origin/main at the base commit)
-Working tree: uncommitted docs update.
+Updated: 2026-11-12T07:20:51Z
+Base commit: 575ac4f91642df50224c6cb143128e604d526f5a
+Branch: main (pushed; in sync with origin/main)
+Working tree: clean.
 
-- Changed docs: README, AGENTS.md, `docs/ARCHITECTURE.md`, `docs/PRODUCT_OVERVIEW.md`, `docs/OWNER_CONFIRM.md` and `docs/hackathon/README.md`.
-- Regenerated: 7 files in `docs/screens/`.
-- Script fix: the `season()` rule in `scripts/coverage-report.ts`.
-
-Uncommitted content is a snapshot. The commit hash cannot prove it is current. Curated data lives in PostgreSQL; `data/catalog-snapshot.json` is its committed export.
+Any later uncommitted content is a snapshot. The commit hash cannot prove it is current. Curated data lives in PostgreSQL; `data/catalog-snapshot.json` is its committed export.
 
 ## Purpose and architecture
 
@@ -26,7 +22,7 @@ UniMatch matches international applicants to first-year bachelor's programmes in
 ## Implemented state
 
 - **Catalog:** 286 published programmes at 12 institutions (5 in Hong Kong, 7 in Korea). 119 have `requirementsComplete` (CUHK 73, HKUST 44, PolyU 2). 79 have a complete 2027 cost (CUHK 73, KAIST 6). 73 are fully checked.
-- **Done today:**
+- **Done 2026-11-11 (docs committed 2026-11-12 as `575ac4f`):**
   - **Gap curation:** HKBU and PolyU intakes, and HKU Business tuition.
   - **POSTECH tuition** split into CONFLICTING rows.
   - **HKUST:** owner-confirmed deletion of 42 misparsed accommodation rows.
@@ -57,7 +53,7 @@ UniMatch matches international applicants to first-year bachelor's programmes in
     4. Stop the `next-server` process listening on port 3112. Killing the `npx` wrapper does not stop it.
   - Never run `pkill -f "next dev"`. Running e2e rewrites `next-env.d.ts`; restore the build version before committing.
 - **Environment variable names:** in `.env.example`.
-- **DB backups (temporary):** in the session scratchpad `/tmp/claude-1000/-mnt-data-Projects-UniMatch/b4316dfc-333e-44a1-a81c-c86d17515996/scratchpad/`: `unimatch-before-{postech-costs,hkust-accommodation,debrecen-removal}.dump`.
+- **DB backups:** none exist. The 2026-11-11 dumps were in a session scratchpad under `/tmp` and were gone on 2026-11-12. Take a fresh backup before any `APPLY=1` run.
 
 ## Validation
 
@@ -70,13 +66,17 @@ UniMatch matches international applicants to first-year bachelor's programmes in
   - `npm run test:e2e`: 14/14.
   - `scripts/evidence-report.ts`: 0 failures, 0 pending candidates.
   - `npm run db:seed`: ok.
-- After the docs update (uncommitted tree):
+- After the docs update (then uncommitted):
   - Snapshot build: ok.
   - `/api/health`: 286 programmes, 12 institutions.
   - `npm run screens`: no overflow or errors.
   - `npm run smoke`: 4/4.
   - `npm run coverage`: PolyU now reports 0 programmes without a Fall intake.
-- Not re-run after the docs edits: unit, integration and e2e. Only a script line and docs changed.
+
+2026-11-12, before commit `575ac4f`:
+
+- `npm test`: 213/213. typecheck and lint: clean.
+- Not re-run: integration and e2e. Only docs, screenshots and one script line changed since `4498481`.
 - The snapshot's `commit` field is `1660270`, the HEAD at export time. Re-export at the freeze.
 
 ## Known issues and uncertainties
@@ -97,12 +97,11 @@ UniMatch matches international applicants to first-year bachelor's programmes in
 
 ## Next actions
 
-1. Commit and push the docs update. Check that `git status` shows only the intended files.
-2. Deploy once the owner provides a host. Set `PUBLIC_MODE=true`, `CATALOG_SOURCE=snapshot`, `ENABLED_COUNTRIES=Hong Kong,South Korea`, `FRESHNESS_DEADLINE_DAYS=30` and `NEXT_PUBLIC_APP_URL`. Then run `npm run smoke -- <live url>`.
-3. Freeze:
+1. Deploy once the owner provides a host. Set `PUBLIC_MODE=true`, `CATALOG_SOURCE=snapshot`, `ENABLED_COUNTRIES=Hong Kong,South Korea`, `FRESHNESS_DEADLINE_DAYS=30` and `NEXT_PUBLIC_APP_URL`. Then run `npm run smoke -- <live url>`.
+2. Freeze:
    1. Run `npm run catalog:export`.
    2. Commit `data/`.
    3. Tag `demo-freeze`.
    4. After that, allow only logged fixes to proven errors.
-4. Write `docs/DEMO_SCRIPT.md` from the frozen snapshot (plan §7). The owner records the video.
-5. Before about 2026-12-10: rerun `scripts/curate-hku-hkbu.ts` (dry run, then `APPLY=1`).
+3. Write `docs/DEMO_SCRIPT.md` from the frozen snapshot (plan §7). The owner records the video.
+4. Before about 2026-12-10: back up the DB, then rerun `scripts/curate-hku-hkbu.ts` (dry run, then `APPLY=1`).
