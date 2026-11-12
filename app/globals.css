@@ -931,6 +931,7 @@ a.back:hover {
 }
 .cities .lbl {
   margin-bottom: 14px;
+  text-align: center;
 }
 .cities ul {
   list-style: none;
@@ -941,10 +942,12 @@ a.back:hover {
   border-top: 1px solid var(--crimson-200);
 }
 .cities li {
-  padding: 16px 12px 8px 0;
+  padding: 16px 12px 8px;
   border-bottom: 1px solid var(--crimson-100);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   font-size: 13px;
 }
 .cities .cjk {
