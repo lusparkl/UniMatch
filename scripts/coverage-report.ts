@@ -6,8 +6,9 @@ import type { Program } from "../lib/domain";
 // Prints Markdown: per university and intake, how much of the data matching needs is verified.
 // INTAKE (default 2027-Fall) is the intake the year-mismatch table is computed for.
 const [year, term] = (process.env.INTAKE ?? "2027-Fall").split("-");
+// Same season rule as matching (lib/matching.ts): Autumn and Sept/September terms are Fall.
 const season = (t: string) =>
-  t.toLowerCase() === "autumn" ? "fall" : t.toLowerCase();
+  /^\s*(autumn|fall|sept(ember)?)\b/i.test(t) ? "fall" : t.toLowerCase();
 // Rows combine by part (tuition, living, other), as in matching.
 const completeCost = (p: Program, y: string) => annualCost(p, y).total !== null;
 const otherYear = (y: string, evidenceYear?: string | null) =>

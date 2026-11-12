@@ -12,13 +12,15 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Architecture
 
-University research and matching MVP for international bachelor's and master's applicants. Node.js 22.13+ and npm; Next.js 16.4.3 App Router, React 19, TypeScript, Tailwind 4, Prisma 7/PostgreSQL, Redis/BullMQ.
+University research and matching MVP for international applicants. The real catalog covers first-year bachelor's programmes in Hong Kong and South Korea (`ENABLED_COUNTRIES`); the engine also handles master's profiles. Node.js 22.13+ and npm; Next.js 16.4.3 App Router, React 19, TypeScript, Tailwind 4, Prisma 7/PostgreSQL, Redis/BullMQ.
 
 - `app/`, `components/`: student/admin interfaces and protected admin APIs.
-- `lib/domain.ts`, `lib/matching.ts`: contracts and deterministic PASS/FAIL/UNKNOWN matching; `lib/catalog.ts` reads published data.
+- `lib/domain.ts`, `lib/matching.ts`: contracts and deterministic PASS/FAIL/UNKNOWN matching; `lib/catalog.ts` reads published data from PostgreSQL or, with `CATALOG_SOURCE=snapshot`, from `data/catalog-snapshot.json`.
+- `lib/trust.ts`, `lib/whatif.ts`, `lib/arithmetic.ts`, `lib/actions.ts`, `lib/fx.ts`: trust tiers, "what would change this", cost arithmetic, next steps and dated exchange rates. `lib/personas.ts`: sample students whose stories tests enforce.
 - `lib/research/`: guarded retrieval, extraction, evidence validation and review; `lib/ai/openai.ts` is the server-only model provider.
-- `prisma/`: schema, migrations and seed; `worker/`: queued research processing.
-- `tests/`: unit, integration and browser coverage. Consult `docs/ARCHITECTURE.md` for relevant details, `docs/HACKATHON_LOG.md` for dated verification evidence and `docs/VERIFICATION_LOG.md` for the red-team check.
+- `prisma/`: schema, migrations, seed and programme registry (`registry.ts`, `registry-programs*.json`); `worker/`: queued research processing.
+- `scripts/`: reviewer curation and review scripts (dry run by default, `APPLY=1` writes), catalog export, smoke test, screenshots, evidence/coverage reports and the red-team check.
+- `tests/`: unit, integration and browser coverage. Consult `docs/ARCHITECTURE.md` for relevant details, `docs/PRODUCT_OVERVIEW.md` for features and catalog figures, `docs/HACKATHON_LOG.md` for dated work and verification evidence, `docs/VERIFICATION_LOG.md` for the red-team check, `docs/OWNER_CONFIRM.md` for owner decisions and `docs/hackathon/` for the plan.
 
 ## Development commands
 
@@ -28,7 +30,8 @@ Commands below come from `package.json`; listing them does not imply they have p
 - Develop: `npm run dev`; web plus worker: `npm run dev:all`.
 - Offline checks: `npm test`, `npm run typecheck`, `npm run lint`.
 - Build: `npm run build`; production server: `npm start`.
-- Service-backed checks: `npm run test:integration`, `npm run test:e2e`. Follow README prerequisites for PostgreSQL, Redis, migrations, seed and Chromium; E2E uses port 3001.
+- Service-backed checks: `npm run test:integration`, `npm run test:e2e`.
+- Catalog: `npm run catalog:export` writes the snapshot; `npm run smoke -- <url>` checks a running snapshot build; `npm run coverage` and `scripts/evidence-report.ts` audit the data. Follow README prerequisites for PostgreSQL, Redis, migrations, seed and Chromium; E2E uses port 3001.
 - Database setup: `docker compose up -d`, `npm run db:migrate`, `npm run db:seed`. Check the target environment before database operations.
 
 Use README for environment setup. Preserve an existing `.env`; never copy credentials into documentation. Live crawl/model smoke checks are opt-in: obtain authorization before external crawling or paid model calls.
@@ -37,7 +40,7 @@ Use README for environment setup. Preserve an existing `.env`; never copy creden
 
 Use narrow searches and relevant reads; reuse existing dependencies and patterns. Keep changes small and responses concise without omitting meaningful errors, warnings or test results. Run relevant checks and report failures or checks not run. Never sacrifice correctness to save tokens. Preserve unrelated work; obtain approval for destructive or external actions not already authorized.
 
-Keep student matching deterministic, unknown evidence UNKNOWN, and fictional demo data separate from real records. Extraction produces candidates; publication requires explicit administrator review. Preserve crawler safeguards, authentication and model budget controls. Public browsing must not start crawls or model requests.
+Keep student matching deterministic, unknown evidence UNKNOWN, and fictional demo data separate from real records. Extraction produces candidates; publication requires explicit administrator review. Agents set only `SOURCE_BACKED` or `CONFLICTING`; `ADMIN_VERIFIED` requires the owner's explicit confirmation, recorded in `docs/OWNER_CONFIRM.md` and review records. Quote official pages verbatim, and back up the database before any `APPLY=1` run. Preserve crawler safeguards, authentication and model budget controls. Public browsing must not start crawls or model requests.
 
 ## Project context
 

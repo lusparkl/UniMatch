@@ -487,3 +487,17 @@ README and AGENTS.md links were updated.
 - `npm run test:e2e`: 14/14.
 - `scripts/evidence-report.ts`: 0 quotations not verbatim.
 - `npm run db:seed`: runs, and the counts are unchanged.
+
+## 2026-11-11 14:35: Documentation update
+
+- **Rewrites and updates:**
+  - `docs/PRODUCT_OVERVIEW.md`, which dated from 2026-11-04: rewritten against current code and data. It covers public mode, the snapshot catalog, Hong Kong and Korea only, current pages and features, the financial rules (lower bound, ceiling, `ON_ADMISSION`, FX at NBU 2026-11-11), personas, catalog figures, owner decisions and known issues.
+  - `README.md`: scope, public mode, storage keys, configuration variables (`ENABLED_COUNTRIES`, `PUBLIC_MODE`, `CATALOG_SOURCE`), FX conversion, curation scripts, repository map and next priorities.
+  - `AGENTS.md`: scope, architecture pointers and curation rules.
+  - `docs/ARCHITECTURE.md`: new sections on the public deployment and snapshot, reviewer curation, and student features; the financial rules are updated.
+- **Summaries:**
+  - `docs/OWNER_CONFIRM.md` has a summary of all five decisions.
+  - `docs/hackathon/README.md` has a status column.
+  - `docs/AI_HANDOFF.md` was refreshed at the owner's request.
+- **Screenshots:** `docs/screens/` was regenerated from a snapshot build (`npm run screens`): no overflow or console errors. Smoke passed 4/4.
+- **Fix:** `scripts/coverage-report.ts` now uses matching's season rule ("Sept" and "September" count as Fall). PolyU now reports 0 programmes without a 2027 Fall intake.

@@ -1,4 +1,16 @@
-# Owner confirmation: guaranteed scholarships
+# Owner confirmations
+
+Status on 2026-11-11: all five items are answered, and none is pending.
+
+| Item | Subject                             | Decision                                                         |
+| ---- | ----------------------------------- | ---------------------------------------------------------------- |
+| 1    | KAIST Scholarship                   | Confirmed: 6 rows `ADMIN_VERIFIED`                               |
+| 2    | POSTECH Tuition Scholarship         | Not confirmed (semester 2 depends on GPA): stays `SOURCE_BACKED` |
+| 3    | POSTECH Living Allowance            | Confirmed: 6 rows `ADMIN_VERIFIED`                               |
+| 4    | GIST tuition waiver                 | Confirmed: 6 rows `ADMIN_VERIFIED`                               |
+| 5    | HKUST accommodation cost correction | Confirmed: 42 misparsed rows deleted                             |
+
+## Guaranteed scholarships (items 1–4)
 
 Plan section 3.7. Matching uses a GUARANTEED scholarship scenario only when the scholarship is `ADMIN_VERIFIED`, and Claude Code never sets that status. The scholarships below are stored as `SOURCE_BACKED` with `fundingCategory: GUARANTEED`, because their official pages say every admitted international student receives them. Until you confirm them, they count as unverified, so they never produce a PASS.
 
