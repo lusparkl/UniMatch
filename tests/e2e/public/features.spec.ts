@@ -45,7 +45,9 @@ test("the drawer re-ranks live, saves, and the detail page explains what would c
       "If your IELTS were 6.5 (now 6), the English check would pass.",
     ),
   ).toBeVisible();
-  await expect(page.locator(".ledger")).toContainText("Total per year");
+  await expect(page.locator(".arith-lines").first()).toContainText(
+    "Total per year",
+  );
 });
 
 test("compare two programmes from the results", async ({ page }) => {
@@ -62,10 +64,15 @@ test("compare two programmes from the results", async ({ page }) => {
     .nth(1)
     .getByRole("button", { name: /^Compare / })
     .click();
-  await page.getByRole("link", { name: "Compare now" }).click();
+  await page
+    .locator(".compare-dock")
+    .getByRole("link", { name: "Compare" })
+    .click();
   await expect(page).toHaveURL(/compare\?ids=/);
   await expect(page.locator(".compare thead th")).toHaveCount(3);
-  await expect(page.locator(".compare")).toContainText("Cost arithmetic");
+  await expect(page.locator(".compare")).toContainText(
+    "Annual cost · before aid",
+  );
 });
 
 test("a shared shortlist link shows its programmes and can be saved", async ({
@@ -75,7 +82,7 @@ test("a shared shortlist link shows its programmes and can be saved", async ({
   await expect(
     page.getByRole("heading", { name: "Shared shortlist" }),
   ).toBeVisible();
-  await expect(page.locator("section.panel h2")).toHaveCount(2);
+  await expect(page.locator("section.sl-card h2")).toHaveCount(2);
   await page.getByRole("button", { name: "Save to my shortlist" }).click();
   await expect(page).toHaveURL(/\/shortlist$/);
   expect(

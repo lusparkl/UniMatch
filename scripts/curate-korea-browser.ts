@@ -8,7 +8,7 @@ import { curationJob, latestDocument, quoter } from "./curation";
 // accepted-qualification list is published, so nothing is marked requirementsComplete. Tuition is stored per
 // semester where the page says so (UIC 2026, GIST 2027); SKKU's tuition table names no period and is not stored.
 // GIST's tuition waiver is "Granted to all international students without any conditions": GUARANTEED, listed
-// in docs/OWNER_CONFIRM.md. Programmes that already have rules are skipped. SOURCE_BACKED. APPLY=1 writes.
+// in docs/OWNER_CONFIRM.md at commit 9a198b0. Programmes that already have rules are skipped. SOURCE_BACKED. APPLY=1 writes.
 const apply = process.env.APPLY === "1";
 const reviewer =
   "claude-code (UIC, GIST and SKKU pages opened in a browser at the owner's request on 2026-11-10)";

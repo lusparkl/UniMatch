@@ -8,6 +8,13 @@ import { arithmetic } from "../lib/arithmetic";
 import { fullyChecked, programTier } from "../lib/trust";
 import { convert } from "../lib/fx";
 import { personas } from "../lib/personas";
+import {
+  COUNTRY_OPTIONS,
+  QUALIFICATION_OPTIONS,
+  canonical,
+  sameQualification,
+} from "../lib/profile-options";
+import { documentScope } from "../lib/documents";
 import { profileSchema } from "../lib/domain";
 
 const now = new Date("2026-10-27");
@@ -211,5 +218,63 @@ describe("sample students (7.1)", () => {
     for (const p of personas)
       expect(profileSchema.parse(p.profile)).toBeTruthy();
     expect(new Set(personas.map((p) => p.id)).size).toBe(personas.length);
+  });
+  it("use only values the profile pickers offer", () => {
+    for (const { profile } of personas) {
+      expect(COUNTRY_OPTIONS).toContain(profile.nationality);
+      expect(COUNTRY_OPTIONS).toContain(profile.educationCountry);
+      if (profile.qualification)
+        expect(QUALIFICATION_OPTIONS).toContain(profile.qualification);
+    }
+  });
+});
+
+describe("profile pickers", () => {
+  it("accept a listed value in any case and nothing else", () => {
+    expect(canonical(COUNTRY_OPTIONS, "  south korea ")).toBe("South Korea");
+    expect(canonical(QUALIFICATION_OPTIONS, "ib diploma")).toBe("IB Diploma");
+    expect(canonical(COUNTRY_OPTIONS, "Korea")).toBeNull();
+    expect(canonical(QUALIFICATION_OPTIONS, "IB")).toBeNull();
+  });
+  it("offer the qualification names published rules use", () => {
+    for (const q of ["IB Diploma", "GCE A-Level", "International A-Level"])
+      expect(QUALIFICATION_OPTIONS).toContain(q);
+    expect(new Set(COUNTRY_OPTIONS).size).toBe(COUNTRY_OPTIONS.length);
+  });
+  it("match the names official pages use for the same qualification", () => {
+    expect(sameQualification("International Baccalaureate", "IB Diploma")).toBe(
+      true,
+    );
+    expect(sameQualification("IB", "ib diploma")).toBe(true);
+    for (const q of ["GCE A-Level", "International A-Level"])
+      expect(sameQualification("GCE A-level /International A-level", q)).toBe(
+        true,
+      );
+    expect(sameQualification("SAT/AP", "SAT / ACT / AP")).toBe(true);
+    expect(sameQualification("New Zealand", "New Zealand NCEA")).toBe(true);
+    expect(
+      sameQualification("Other overseas qualifications", "Other qualification"),
+    ).toBe(true);
+    expect(
+      sameQualification("International Baccalaureate", "GCE A-Level"),
+    ).toBe(false);
+    expect(
+      sameQualification("International Qualifications", "IB Diploma"),
+    ).toBe(false);
+    expect(sameQualification("Some local diploma", "some  local diploma")).toBe(
+      true,
+    );
+  });
+  it("scope school-system documents to the picked qualification", () => {
+    expect(
+      documentScope(
+        "CBSE Standard XII marksheet",
+        "Indian board exams (CBSE / CISCE / state)",
+      ),
+    ).toBe("APPLIES");
+    expect(documentScope("Gaokao results", "Chinese Gaokao")).toBe("APPLIES");
+    expect(documentScope("Gaokao results", "Russian Attestat")).toBe(
+      "NOT_APPLICABLE",
+    );
   });
 });

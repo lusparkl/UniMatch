@@ -1,5 +1,6 @@
 import type { Profile, Program, Requirement, Verification } from "./domain";
 import { convert, fxSource } from "./fx";
+import { sameQualification } from "./profile-options";
 export type Truth = "PASS" | "FAIL" | "UNKNOWN";
 export const FX_MARGIN = 0.05;
 export type Check = {
@@ -147,7 +148,9 @@ export function evaluateRule(rule: Requirement, p: Profile): Check | null {
     };
   if (
     rule.appliesToQualifications.length &&
-    !rule.appliesToQualifications.some((q) => eq(q, p.qualification))
+    !rule.appliesToQualifications.some((q) =>
+      sameQualification(q, p.qualification),
+    )
   )
     return null;
   const result = (state: Truth, reason: string): Check => ({
@@ -219,7 +222,8 @@ export function evaluateRule(rule: Requirement, p: Profile): Check | null {
         "Qualification, equivalency or eligibility list needs verification.",
       );
     // Only explicit published equivalencies belong in allowed.
-    const accepted = rule.allowed.some((a) => eq(a, value));
+    const same = rule.type === "QUALIFICATION" ? sameQualification : eq;
+    const accepted = rule.allowed.some((a) => same(a, value));
     return result(
       accepted ? "PASS" : rule.type === "QUALIFICATION" ? "UNKNOWN" : "FAIL",
       !accepted && rule.type === "QUALIFICATION"

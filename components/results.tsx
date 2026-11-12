@@ -1,18 +1,10 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  GraduationCap,
-  MapPin,
-  SlidersHorizontal,
-  UserRound,
-} from "lucide-react";
-import { ActionLink, StatusTag, TrustBadge } from "./status";
+import { MapPin, PlaneTakeoff } from "lucide-react";
 import { ProfileDrawer } from "./profile-drawer";
-import { actionsFor } from "@/lib/actions";
-import { fullyChecked, programTier } from "@/lib/trust";
+import { fullyChecked } from "@/lib/trust";
 import { Button } from "./ui/button";
-import { convert } from "@/lib/fx";
 import { money as formatMoney } from "@/lib/arithmetic";
 import {
   readProfile,
@@ -22,46 +14,27 @@ import {
 } from "./local-store";
 import { ShortlistButton } from "./shortlist-button";
 import {
+  costFact,
+  deadlineFact,
+  fundingFact,
+  programTrust,
+  routeOf,
+  statusLabel,
+  statusText,
+} from "./program-facts";
+import {
   countries,
   defaultProfile,
   type Profile,
   type Program,
 } from "@/lib/domain";
 import {
-  trusted,
   compareMatches,
   matchProgram,
-  sameTerm,
   type Match,
   type Truth,
 } from "@/lib/matching";
-export const statusLabel: Record<Truth, string> = {
-  PASS: "Published minimums met",
-  UNKNOWN: "Needs verification",
-  FAIL: "Requirements not met",
-};
-export const money = (amount: number | null, currency: string | null) =>
-  amount === null || !currency
-    ? "Information unavailable"
-    : formatMoney(amount, currency);
-/** A date as the institution states it: in its own time zone, else as stored (UTC). */
-export const formatDate = (
-  iso: string,
-  timezone: string | null,
-  options: Intl.DateTimeFormatOptions,
-) => {
-  try {
-    return new Date(iso).toLocaleDateString("en", {
-      ...options,
-      timeZone: timezone ?? "UTC",
-    });
-  } catch {
-    return new Date(iso).toLocaleDateString("en", {
-      ...options,
-      timeZone: "UTC",
-    });
-  }
-};
+import { nativeCity, placeName } from "@/lib/places";
 /** Annual cost before aid in the budget currency, for sorting; unknown or unconvertible sorts last. */
 const budgetCost = (m: Match, profile: Profile | null) => {
   const s = m.scenarios[0];
@@ -69,74 +42,6 @@ const budgetCost = (m: Match, profile: Profile | null) => {
     s.converted ??
     (!profile || s.currency === profile.currency ? s.remaining : null) ??
     Infinity
-  );
-};
-/** " (≈ US$30,590)" when an amount is charged in a currency other than the student's budget currency. */
-export const approx = (
-  amount: number,
-  currency: string | null,
-  target: string | null | undefined,
-) => {
-  const value =
-    currency && target && currency !== target
-      ? convert(amount, currency, target)
-      : null;
-  return value === null ? "" : " (≈ " + money(value, target!) + ")";
-};
-/** Annual cost headline: the full total when known, otherwise only the verified parts, never a guess. */
-export const costHeadline = (
-  program: Program,
-  remaining: number | null,
-  currency: string | null,
-  target?: string | null,
-) => {
-  if (remaining !== null)
-    return money(remaining, currency) + approx(remaining, currency, target);
-  const annual = program.costs.filter(
-    (c) => trusted(c.status) && c.period === "ANNUAL",
-  );
-  // Separate quotes for tuition, living and fees are never added up; only a single tuition figure is surfaced.
-  const tuitions = [
-    ...new Set(annual.flatMap((c) => (c.tuition === null ? [] : [c.tuition]))),
-  ];
-  const tuitionCurrency =
-    annual.find((c) => c.tuition !== null)?.currency ?? null;
-  return tuitions.length === 1
-    ? "Partial · tuition " +
-        money(tuitions[0], tuitionCurrency) +
-        approx(tuitions[0], tuitionCurrency, target) +
-        " only; total not verified"
-    : "Information unavailable";
-};
-
-/**
- * Next verified application deadline for the student's intake (any intake without a profile). A date the
- * source gives without a time zone is still shown, marked as such; the matching engine keeps requiring one.
- */
-export const nextDeadline = (program: Program, profile: Profile | null) => {
-  const [year, term] = profile ? profile.intake.split("-") : [];
-  const dated = program.intakes
-    .filter(
-      (i) =>
-        trusted(i.status) &&
-        i.deadline &&
-        (!profile ||
-          (i.academicYear === year &&
-            (i.term.toUpperCase() === "UNKNOWN" || sameTerm(i.term, term)))),
-    )
-    .sort((a, b) => a.deadline!.localeCompare(b.deadline!));
-  const now = new Date().toISOString();
-  const intake = dated.find((i) => i.deadline! >= now) ?? dated.at(-1);
-  if (!intake?.deadline) return "Not verified";
-  const label = formatDate(intake.deadline, intake.timezone, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-  return (
-    label +
-    (intake.deadline < now ? " (passed)" : "") +
-    (intake.timezone ? "" : " · time zone not stated")
   );
 };
 export function Results({
@@ -148,6 +53,7 @@ export function Results({
 }) {
   const [profile, setProfile] = useState<Profile | null>(null),
     [ready, setReady] = useState(false),
+    [now, setNow] = useState<Date | null>(null),
     [country, setCountry] = useState(initialCountry),
     [search, setSearch] = useState(""),
     [funding, setFunding] = useState(""),
@@ -160,6 +66,7 @@ export function Results({
   const compare = useCompare();
   useEffect(() => {
     setProfile(readProfile());
+    setNow(new Date());
     setReady(true);
   }, []);
   // Drawer edits re-rank at once; storage is written 250 ms after the last change.
@@ -191,7 +98,7 @@ export function Results({
           (!country || p.country === country) &&
           (!checkedOnly || fullyChecked(p, intakeYear)) &&
           (!search ||
-            (p.title + " " + p.university + " " + p.fieldOfStudy)
+            (p.title + " " + p.university + " " + p.city + " " + p.fieldOfStudy)
               .toLowerCase()
               .includes(search.toLowerCase())),
       )
@@ -257,35 +164,39 @@ export function Results({
   return (
     <>
       <div className="page-head">
-        <div>
-          <div className="eyebrow">Your possibilities, made clearer</div>
-          <h1>
-            {profile
-              ? "A world of possibilities."
-              : "Explore your next chapter."}
-          </h1>
-          <p className="muted">
-            Look beyond the name. Find a program that fits your life.
-          </p>
+        <div className="eyebrow">
+          Hong Kong · South Korea · International routes
         </div>
+        <h1>
+          {profile
+            ? "Programs for applicants from " +
+              (profile.nationality || "abroad") +
+              "."
+            : "Explore Asia’s universities."}
+        </h1>
+        <p>
+          {profile
+            ? "Results re-rank as you adjust your profile. Statuses show published minimums, never your chances."
+            : "Create a profile to see which programs you meet the published minimums for, and what each would cost you."}
+        </p>
       </div>
       {ready && (
         <div className="profile-bar">
           <span>
             {profile
               ? [
-                  "Bachelor’s",
+                  "From " + (profile.nationality || "—"),
                   profile.fieldOfStudy,
                   profile.intake,
                   profile.budget > 0
-                    ? money(profile.budget, profile.currency) + " budget"
-                    : null,
+                    ? formatMoney(profile.budget, profile.currency) + " budget"
+                    : "no budget set",
                 ]
                   .filter(Boolean)
                   .join(" · ")
               : "You’re exploring the catalog. Complete a profile for personalised eligibility and funding scenarios."}
           </span>
-          <div className="actions" style={{ gap: 8 }}>
+          <div className="actions" style={{ gap: 10 }}>
             {profile && (
               <Button
                 variant="outline"
@@ -293,14 +204,12 @@ export function Results({
                 aria-expanded={drawerOpen}
                 onClick={() => setDrawerOpen(true)}
               >
-                <SlidersHorizontal size={16} />
-                Adjust scores and budget
+                Adjust Scores And Budget
               </Button>
             )}
             <Button asChild variant="outline" size="sm">
               <Link href="/profile">
-                <UserRound size={16} />
-                {profile ? "Edit my profile" : "Create my profile"}
+                {profile ? "Edit My Profile" : "Create My Profile"}
               </Link>
             </Button>
           </div>
@@ -309,18 +218,17 @@ export function Results({
       {drawerOpen && profile && (
         <ProfileDrawer
           profile={profile}
+          count={results.length}
           onChange={editProfile}
           onClose={closeDrawer}
         />
       )}
       <div className="layout">
         <aside
-          className={"panel filters" + (filtersOpen ? " open" : "")}
+          className={"card filters" + (filtersOpen ? " open" : "")}
           aria-label="Filters"
         >
-          <h3>
-            <SlidersHorizontal size={16} /> Refine your shortlist
-          </h3>
+          <h2>Refine your shortlist</h2>
           <label>
             Program or university
             <input
@@ -356,7 +264,7 @@ export function Results({
             </select>
           </label>
           <label>
-            Eligibility
+            {"Eligibility" + (profile ? "" : " (needs profile)")}
             <select
               value={eligibility}
               onChange={(e) => setEligibility(e.target.value)}
@@ -376,17 +284,18 @@ export function Results({
               checked={checkedOnly}
               onChange={(e) => setCheckedOnly(e.target.checked)}
             />
-            Fully checked only
+            <span>
+              Fully checked only
+              <small>
+                Requirements reviewed and a complete {intakeYear} annual cost.
+              </small>
+            </span>
           </label>
-          <p className="tiny muted" style={{ margin: 0 }}>
-            Complete requirements reviewed and a complete annual cost verified
-            for {intakeYear}.
-          </p>
-          <button className="link-btn" onClick={resetFilters}>
+          <button type="button" className="link-btn" onClick={resetFilters}>
             Reset filters
           </button>
         </aside>
-        <section>
+        <section style={{ minWidth: 0 }}>
           <div className="results-bar">
             <div className="actions">
               <Button
@@ -396,15 +305,14 @@ export function Results({
                 aria-expanded={filtersOpen}
                 onClick={() => setFiltersOpen((o) => !o)}
               >
-                <SlidersHorizontal size={14} />
-                {(filtersOpen ? "Hide filters" : "Filters") +
+                {(filtersOpen ? "Hide Filters" : "Filters") +
                   (chips.length ? " (" + chips.length + ")" : "")}
               </Button>
               <span>
                 <strong>{results.length}</strong> programs to explore
               </span>
             </div>
-            <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <label>
               Sort by
               <select value={sort} onChange={(e) => setSort(e.target.value)}>
                 <option value="fit">Relevant fit</option>
@@ -428,164 +336,157 @@ export function Results({
               ))}
             </div>
           )}
-          {compare.ids.length > 0 && (
-            <div className="notice compare-bar">
-              {compare.ids.length} of 3 picked to compare.{" "}
-              {compare.ids.length >= 2 ? (
-                <Link href={"/compare?ids=" + compare.ids.join(",")}>
-                  Compare now
-                </Link>
-              ) : (
-                "Pick one more."
-              )}
-            </div>
-          )}
           {!results.length && (
             <div className="empty">
-              <GraduationCap size={32} style={{ margin: "0 auto 15px" }} />
-              <h3>No programs found yet.</h3>
-              <p className="muted">
-                Try broader filters. Real records appear after research and
-                administrator review.
+              <h3>No programs match these filters.</h3>
+              <p>
+                Try broader filters. Programs appear here only after their facts
+                have been reviewed.
               </p>
               <Button variant="outline" onClick={resetFilters}>
-                Clear filters
+                Clear Filters
               </Button>
             </div>
           )}
-          {results.map((m) => (
-            <article className="program-card" key={m.program.id}>
-              <div className="card-top">
-                <div className="uni-icon">
-                  <GraduationCap size={24} />
-                </div>
-                <div>
-                  <p className="card-uni">{m.program.university}</p>
-                  <p className="muted">
-                    <MapPin size={11} style={{ display: "inline" }} />{" "}
-                    {m.program.city}, {m.program.country}
-                  </p>
-                </div>
-                <StatusTag state={profile ? m.status : "UNKNOWN"}>
-                  {profile ? statusLabel[m.status] : "Profile needed"}
-                </StatusTag>
-              </div>
-              <h2 className="program-title">{m.program.title}</h2>
-              <div className="actions" style={{ gap: 7, marginBottom: 17 }}>
-                <span className="tag">
-                  {m.program.degreeLevel === "MASTER"
-                    ? "Master’s"
-                    : "Bachelor’s"}
-                </span>
-                <span className="tag">
-                  {m.program.teachingLanguage ?? "Language not verified"}
-                </span>
-                <span className="tag">
-                  {m.program.duration ?? "Duration not verified"}
-                </span>
-                {m.program.demo && (
-                  <span className="tag UNKNOWN">Fictional demo</span>
-                )}
-              </div>
-              <div className="card-metrics">
-                <div>
-                  <div className="metric-label">Academic fit</div>
-                  <div className="metric-value">
-                    {profile
-                      ? statusLabel[m.academicState]
-                      : "Add your qualifications"}
-                  </div>
-                </div>
-                <div>
-                  <div className="metric-label">Annual cost · before aid</div>
-                  <div className="metric-value">
-                    {costHeadline(
-                      m.program,
-                      m.scenarios[0].remaining,
-                      m.scenarios[0].currency,
-                      profile?.currency,
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <div className="metric-label">Financial assistance</div>
-                  <div className="metric-value">
-                    {m.program.scholarships.length
-                      ? m.program.scholarships.length +
-                        " funding option · conditions apply"
-                      : "Not verified"}
-                  </div>
-                </div>
-                <div>
-                  <div className="metric-label">Application deadline</div>
-                  <div className="metric-value">
-                    {nextDeadline(m.program, profile)}
-                  </div>
-                </div>
-              </div>
-              {profile &&
-                (() => {
-                  const next = actionsFor(
-                    [...m.academic, ...m.application],
-                    m.program,
-                    profile,
-                  )[0];
-                  return next ? (
-                    <p className="card-action">
-                      <span>Next step:</span>
-                      <ActionLink action={next} />
-                    </p>
-                  ) : null;
-                })()}
-              <div className="card-bottom">
-                <TrustBadge
-                  programme
-                  tier={programTier(m.program)}
-                  date={m.program.lastResearched}
-                />
-                <div className="actions" style={{ gap: 8 }}>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    aria-pressed={compare.ids.includes(m.program.id)}
-                    disabled={
-                      compare.full && !compare.ids.includes(m.program.id)
-                    }
-                    aria-label={
-                      "Compare " +
-                      m.program.title +
-                      " at " +
-                      m.program.university
-                    }
-                    onClick={() => compare.toggle(m.program.id)}
-                  >
-                    {compare.ids.includes(m.program.id)
-                      ? "Comparing"
-                      : "Compare"}
-                  </Button>
-                  <ShortlistButton
-                    saved={shortlist.ids.includes(m.program.id)}
-                    ready={shortlist.ready}
-                    onToggle={() => shortlist.toggle(m.program.id)}
-                  />
-                  <Button asChild variant="dark" size="sm">
-                    <Link
-                      href={
-                        "/universities/" +
-                        m.program.universityId +
-                        "?program=" +
-                        m.program.id
-                      }
-                    >
-                      View details
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </article>
-          ))}
+          <div className="program-list">
+            {results.map((m) => (
+              <ProgramCard
+                key={m.program.id}
+                match={m}
+                profile={profile}
+                now={now}
+                intakeYear={intakeYear}
+                compared={compare.ids.includes(m.program.id)}
+                compareFull={compare.full}
+                onCompare={() => compare.toggle(m.program.id)}
+                saved={shortlist.ids.includes(m.program.id)}
+                savedReady={shortlist.ready}
+                onSave={() => shortlist.toggle(m.program.id)}
+              />
+            ))}
+          </div>
         </section>
       </div>
     </>
+  );
+}
+function ProgramCard({
+  match: m,
+  profile,
+  now,
+  intakeYear,
+  compared,
+  compareFull,
+  onCompare,
+  saved,
+  savedReady,
+  onSave,
+}: {
+  match: Match;
+  profile: Profile | null;
+  now: Date | null;
+  intakeYear: string;
+  compared: boolean;
+  compareFull: boolean;
+  onCompare: () => void;
+  saved: boolean;
+  savedReady: boolean;
+  onSave: () => void;
+}) {
+  const p = m.program;
+  const cost = costFact(p, intakeYear, profile?.currency);
+  const fund = fundingFact(p);
+  const deadline = deadlineFact(p, profile, now);
+  const trust = programTrust(p);
+  const issue = profile && m.academic.find((c) => c.state !== "PASS");
+  const status = profile ? m.status : "UNKNOWN";
+  const native = nativeCity(p.city);
+  return (
+    <article className="card lift program-card">
+      <div className="card-top">
+        <div className="card-id">
+          <span className="uni-avatar cjk" aria-hidden="true">
+            {native.slice(0, 2) || p.university.charAt(0)}
+          </span>
+          <div>
+            <p className="card-uni">{p.university}</p>
+            <p className="card-place">
+              <MapPin size={13} aria-hidden />
+              {placeName(p)}
+            </p>
+          </div>
+        </div>
+        <span className={"tag " + status}>
+          {profile ? statusText(m) : "Profile needed"}
+        </span>
+      </div>
+      <h2 className="program-title">{p.title}</h2>
+      <div className="card-tags">
+        <span className="chip-outline">
+          {p.degreeLevel === "MASTER" ? "Master’s" : "Bachelor’s"}
+        </span>
+        <span className="chip-outline">
+          {p.teachingLanguage ?? "Language not verified"}
+        </span>
+        <span className="chip-outline">
+          {p.duration ?? "Duration not verified"}
+        </span>
+        {p.demo && <span className="tag UNKNOWN">Fictional demo</span>}
+      </div>
+      <p className="card-route">
+        <PlaneTakeoff size={15} aria-hidden />
+        <span>
+          <strong>International route:</strong> {routeOf(p, profile)}
+        </span>
+      </p>
+      <div className="card-metrics">
+        <div>
+          <div className="metric-label">Academic fit</div>
+          <div className="metric-value">
+            {profile ? statusLabel[m.academicState] : "Add your qualifications"}
+          </div>
+          {issue && <div className="metric-sub">{issue.reason}</div>}
+        </div>
+        <div>
+          <div className="metric-label">Annual cost · before aid</div>
+          <div className="metric-value">{cost.value}</div>
+          <div className="metric-sub">{cost.sub}</div>
+        </div>
+        <div>
+          <div className="metric-label">Financial assistance</div>
+          <div className="metric-value">{fund.value}</div>
+          <div className="metric-sub">{fund.sub}</div>
+        </div>
+        <div>
+          <div className="metric-label">Application deadline</div>
+          <div className="metric-value">{deadline.value}</div>
+          <div className="metric-sub">{deadline.sub}</div>
+        </div>
+      </div>
+      <div className="card-bottom">
+        <span className={"trust trust-" + trust.tier}>
+          <trust.Icon size={15} aria-hidden />
+          {trust.label}
+        </span>
+        <div className="actions">
+          <Button
+            variant="outline"
+            size="sm"
+            aria-pressed={compared}
+            disabled={compareFull && !compared}
+            aria-label={"Compare " + p.title + " at " + p.university}
+            onClick={onCompare}
+          >
+            {compared ? "Selected" : "Compare"}
+          </Button>
+          <ShortlistButton saved={saved} ready={savedReady} onToggle={onSave} />
+          <Button asChild variant="dark" size="sm">
+            <Link href={"/universities/" + p.universityId + "?program=" + p.id}>
+              View Details
+            </Link>
+          </Button>
+        </div>
+      </div>
+    </article>
   );
 }

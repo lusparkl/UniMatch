@@ -24,6 +24,7 @@ async function completeWizard(page: Page) {
   await page.goto("/profile");
   await page.getByLabel("Nationality / citizenship").fill("Ukraine");
   await page.getByLabel("Country of education").fill("Ukraine");
+  await page.getByLabel("Field of study").fill("Computer Science");
   await page.getByRole("button", { name: "Continue" }).click();
   await page.getByLabel("IELTS overall").fill("7");
   await page.getByRole("button", { name: "Continue" }).click();
@@ -37,7 +38,7 @@ test("wizard without destination or degree, results toggle, detail evidence", as
 }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /Your next chapter/ }),
+    page.getByRole("heading", { name: /Asia’s universities\. Open to you/ }),
   ).toBeVisible();
   await page.screenshot({
     path: "output/playwright/landing.png",
@@ -48,6 +49,7 @@ test("wizard without destination or degree, results toggle, detail evidence", as
   await expect(page.getByText("Preferred study destinations")).toHaveCount(0);
   await page.getByLabel("Nationality / citizenship").fill("Ukraine");
   await page.getByLabel("Country of education").fill("Ukraine");
+  await page.getByLabel("Field of study").fill("Computer Science");
   await page.getByRole("button", { name: "Continue" }).click();
   await page.getByLabel("IELTS overall").fill("7");
   await page.getByRole("button", { name: "Continue" }).click();
@@ -60,6 +62,9 @@ test("wizard without destination or degree, results toggle, detail evidence", as
       .getByLabel("Available annual budget")
       .evaluate((el: HTMLInputElement) => el.validity.valueMissing),
   ).toBe(true);
+  await expect(
+    page.getByText("Enter your available annual budget."),
+  ).toBeVisible();
   await page.getByLabel("Available annual budget").fill("40000");
   await page.getByRole("button", { name: "Show my matches" }).click();
   await expect(page).toHaveURL(/results/);
@@ -77,7 +82,9 @@ test("wizard without destination or degree, results toggle, detail evidence", as
   await expect(
     page.getByRole("heading", { name: "Your financial scenarios" }),
   ).toBeVisible();
-  await expect(page.getByText("CONFLICTING", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Conflicting sources", { exact: true }).first(),
+  ).toBeVisible();
   await page.goto("/profile");
   await expect(page.getByLabel("Nationality / citizenship")).toHaveValue(
     "Ukraine",
@@ -101,7 +108,7 @@ test("shortlist works without an account: add, reorder, remove, persist", async 
   await cards.nth(0).getByRole("button", { name: "Add to shortlist" }).click();
   await cards.nth(1).getByRole("button", { name: "Add to shortlist" }).click();
   await expect(
-    page.getByRole("button", { name: "Remove from shortlist" }),
+    page.getByRole("button", { name: "On your shortlist" }),
   ).toHaveCount(2);
   const firstUni = await cards
     .nth(0)
@@ -114,7 +121,7 @@ test("shortlist works without an account: add, reorder, remove, persist", async 
     page.getByRole("heading", { name: "My shortlist" }),
   ).toBeVisible();
   const ranked = (n: number) =>
-    page.locator("section.panel", { hasText: "#" + n + " ·" });
+    page.locator("section.sl-card", { hasText: "#" + n + " ·" });
   await expect(ranked(1)).toContainText(firstUni!);
   await expect(ranked(2)).toBeVisible();
   await expect(
@@ -167,7 +174,7 @@ test("a stored v1 profile is migrated without errors", async ({ page }) => {
     ),
   );
   await page.goto("/results");
-  await expect(page.locator(".profile-bar")).toContainText("Bachelor’s");
+  await expect(page.locator(".profile-bar")).toContainText("From India");
   await expect(page.locator(".program-card")).toHaveCount(5);
   expect(
     await page.evaluate(() => localStorage.getItem("unimatch-profile-v1")),
@@ -229,4 +236,43 @@ test("mobile layout has no horizontal scroll", async ({ page }) => {
       path,
     ).toBe(true);
   }
+});
+
+test("country and qualification pickers offer only listed values", async ({
+  page,
+}) => {
+  await page.goto("/profile");
+  const nationality = page.getByRole("combobox", {
+    name: "Nationality / citizenship",
+  });
+  await nationality.fill("indo");
+  await page.getByRole("option", { name: "Indonesia" }).click();
+  await expect(nationality).toHaveValue("Indonesia");
+  const education = page.getByRole("combobox", {
+    name: "Country of education",
+  });
+  await education.fill("Narnia");
+  await expect(education).toHaveAttribute("aria-expanded", "false");
+  await page.getByLabel("Field of study").fill("Economics");
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page.getByText("Choose a country from the list.")).toBeVisible();
+  await education.fill("south ko");
+  await education.press("ArrowDown");
+  await education.press("Enter");
+  await expect(education).toHaveValue("South Korea");
+  await page.getByRole("button", { name: "Continue" }).click();
+  const qualification = page.getByRole("combobox", {
+    name: /Current qualification/,
+  });
+  await qualification.fill("IB");
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(
+    page.getByText("Choose a qualification from the list", { exact: false }),
+  ).toBeVisible();
+  // Typed in another case, a listed value is stored in its listed spelling.
+  await qualification.fill("ib diploma");
+  await page.getByRole("button", { name: "Continue" }).click();
+  await expect(page.getByLabel("Available annual budget")).toBeVisible();
+  await page.getByRole("button", { name: /^2/ }).click();
+  await expect(qualification).toHaveValue("IB Diploma");
 });

@@ -20,7 +20,7 @@ University research and matching MVP for international applicants. The real cata
 - `lib/research/`: guarded retrieval, extraction, evidence validation and review; `lib/ai/openai.ts` is the server-only model provider.
 - `prisma/`: schema, migrations, seed and programme registry (`registry.ts`, `registry-programs*.json`); `worker/`: queued research processing.
 - `scripts/`: reviewer curation and review scripts (dry run by default, `APPLY=1` writes), catalog export, smoke test, screenshots, evidence/coverage reports and the red-team check.
-- `tests/`: unit, integration and browser coverage. Consult `docs/ARCHITECTURE.md` for relevant details, `docs/PRODUCT_OVERVIEW.md` for features and catalog figures, `docs/HACKATHON_LOG.md` for dated work and verification evidence, `docs/VERIFICATION_LOG.md` for the red-team check, `docs/OWNER_CONFIRM.md` for owner decisions and `docs/hackathon/` for the plan.
+- `tests/`: unit, integration and browser coverage.
 
 ## Development commands
 
@@ -40,7 +40,7 @@ Use README for environment setup. Preserve an existing `.env`; never copy creden
 
 Use narrow searches and relevant reads; reuse existing dependencies and patterns. Keep changes small and responses concise without omitting meaningful errors, warnings or test results. Run relevant checks and report failures or checks not run. Never sacrifice correctness to save tokens. Preserve unrelated work; obtain approval for destructive or external actions not already authorized.
 
-Keep student matching deterministic, unknown evidence UNKNOWN, and fictional demo data separate from real records. Extraction produces candidates; publication requires explicit administrator review. Agents set only `SOURCE_BACKED` or `CONFLICTING`; `ADMIN_VERIFIED` requires the owner's explicit confirmation, recorded in `docs/OWNER_CONFIRM.md` and review records. Quote official pages verbatim, and back up the database before any `APPLY=1` run. Preserve crawler safeguards, authentication and model budget controls. Public browsing must not start crawls or model requests.
+Keep student matching deterministic, unknown evidence UNKNOWN, and fictional demo data separate from real records. Extraction produces candidates; publication requires explicit administrator review. Agents set only `SOURCE_BACKED` or `CONFLICTING`; `ADMIN_VERIFIED` requires the owner's explicit confirmation, recorded in review records. Quote official pages verbatim, and back up the database before any `APPLY=1` run. Preserve crawler safeguards, authentication and model budget controls. Public browsing must not start crawls or model requests.
 
 ## Project context
 

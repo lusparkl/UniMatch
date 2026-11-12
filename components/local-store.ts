@@ -148,31 +148,46 @@ export function useTrackedDocuments() {
   return { tracked, mark };
 }
 
-/** Up to three programme IDs picked for /compare. */
+const COMPARE_EVENT = "unimatch-compare";
+function readCompare(): string[] {
+  const value = read(COMPARE_KEY);
+  return Array.isArray(value)
+    ? value
+        .filter((v): v is string => typeof v === "string")
+        .slice(0, COMPARE_MAX)
+    : [];
+}
+/** Up to three programme IDs picked for /compare; every component using it sees the same list. */
 export function useCompare() {
   const [ids, setIds] = useState<string[]>([]);
   useEffect(() => {
-    const value = read(COMPARE_KEY);
-    setIds(
-      Array.isArray(value)
-        ? value
-            .filter((v): v is string => typeof v === "string")
-            .slice(0, COMPARE_MAX)
-        : [],
-    );
+    const sync = () => setIds(readCompare());
+    sync();
+    window.addEventListener(COMPARE_EVENT, sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener(COMPARE_EVENT, sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
+  const save = useCallback((next: string[]) => {
+    write(COMPARE_KEY, next);
+    setIds(next);
+    window.dispatchEvent(new Event(COMPARE_EVENT));
   }, []);
   const toggle = useCallback(
-    (id: string) =>
-      setIds((list) => {
-        const next = list.includes(id)
+    (id: string) => {
+      const list = readCompare();
+      save(
+        list.includes(id)
           ? list.filter((i) => i !== id)
           : list.length < COMPARE_MAX
             ? [...list, id]
-            : list;
-        write(COMPARE_KEY, next);
-        return next;
-      }),
-    [],
+            : list,
+      );
+    },
+    [save],
   );
-  return { ids, toggle, full: ids.length >= COMPARE_MAX };
+  const clear = useCallback(() => save([]), [save]);
+  return { ids, toggle, clear, full: ids.length >= COMPARE_MAX };
 }

@@ -1,0 +1,14 @@
+# Keep credentials and local artifacts out of Vercel uploads.
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+generated/
+storage/
+test-results/
+playwright-report/
+coverage/
+output/
+*.tsbuildinfo
+docs/screens/

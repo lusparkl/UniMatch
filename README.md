@@ -134,7 +134,7 @@ Snapshot deployment (no PostgreSQL or Redis on the host):
 npm run catalog:export       # data/catalog-snapshot.json from the published catalog
 CATALOG_SOURCE=snapshot PUBLIC_MODE=true DEMO_MODE=false npm run build && npm start
 npm run smoke -- <url>       # pages, browser errors and sample-student results against the snapshot
-npm run screens -- <url>     # docs/screens/ at 390 and 1440 px, with an overflow check
+npm run screens -- <url>     # output/screens/ at 390 and 1440 px, with an overflow check
 ```
 
 `/api/health` reports the catalog source, counts, last verification and commit. Freshness still expires at read time, so set `FRESHNESS_DEADLINE_DAYS` on the host as well.
@@ -178,7 +178,7 @@ data/                 Catalog snapshot served by the public deployment
 worker/               BullMQ worker and retry processor
 scripts/              Curation, review, export, smoke, screenshots, scheduling and opt-in live checks
 tests/                Offline unit, local integration and browser tests
-docs/                 Architecture, product overview, hackathon plan and log, owner decisions, verification
+docs/                 AI handoff notes
 ```
 
 ## Boundaries and next improvements

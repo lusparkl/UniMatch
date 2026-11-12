@@ -1,6 +1,6 @@
 import { db } from "../lib/db";
 // Plan 3.7: GUARANTEED scholarships count in matching only when ADMIN_VERIFIED, which Claude Code never sets.
-// This script promotes only the scholarships listed in docs/OWNER_CONFIRM.md (by name, every programme's copy),
+// This script promotes only the scholarships listed in docs/OWNER_CONFIRM.md at commit 9a198b0 (by name, every programme's copy),
 // and only after the owner has answered the question there and runs it with OWNER_CONFIRMED=1 and
 // OWNER_NAME="<name>". Each promotion is recorded as a ReviewRecord naming the owner. A row whose category is no
 // longer GUARANTEED, or whose status is no longer SOURCE_BACKED, is left alone. Without OWNER_CONFIRMED=1 it only lists.

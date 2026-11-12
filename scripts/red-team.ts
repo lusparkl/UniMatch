@@ -6,7 +6,7 @@ import { AUTO_REVIEWER } from "../lib/research/auto-review";
 import { crawlSources, extractHtml, extractPdf } from "../lib/research/crawler";
 import { allowedUrl } from "../lib/research/security";
 import { squash } from "./curation";
-// Plan 3.3 red-team spot check (docs/hackathon/05-deploy-freeze-demo.md §5). Read-only: nothing is written to the
+// Plan 3.3 red-team spot check (docs/hackathon/05-deploy-freeze-demo.md §5 at commit 9a198b0). Read-only: nothing is written to the
 // database. A seeded RNG samples 8 Hong Kong programmes (at least 3 auto-approved and PASS for some persona) and
 // 7 Korean ones. Every trusted rule, tuition figure and deadline is checked against its cited page fetched live:
 // approved hosts go through the guarded crawler; owner-requested browser copies are opened one at a time in plain

@@ -1,5 +1,5 @@
 import { db } from "../lib/db";
-// docs/OWNER_CONFIRM.md item 5: 42 ADMIN_VERIFIED HKUST accommodation-only rows store HKD 21,000 per SEMESTER, but
+// docs/OWNER_CONFIRM.md at commit 9a198b0 item 5: 42 ADMIN_VERIFIED HKUST accommodation-only rows store HKD 21,000 per SEMESTER, but
 // the source states "~HKD 21,000 – HKD 51,000 ... per residential year". The cost schema cannot store a range, so
 // the owner confirmed deleting exactly those rows. Tuition rows and HKD 65,000 personal-expense rows (including the
 // two combined annual rows) are untouched. Lists only unless OWNER_CONFIRMED=1 and OWNER_NAME="<name>" are set;

@@ -1,19 +1,14 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
-import { Button } from "./ui/button";
+import { Button, IconButton } from "./ui/button";
 import type { Profile } from "@/lib/domain";
 
 const scores: [keyof Profile, string, number][] = [
   ["ielts", "IELTS overall", 9],
   ["toefl", "TOEFL iBT", 120],
-  ["duolingo", "Duolingo English Test", 160],
-  ["pte", "PTE Academic", 90],
   ["sat", "SAT", 1600],
-  ["act", "ACT", 36],
-  ["grade", "Academic grade", 1000],
 ];
-const intakes = ["2027-Fall", "2027-Spring", "2028-Spring", "2028-Fall"];
 export const budgetCurrencies = [
   "USD",
   "EUR",
@@ -27,10 +22,13 @@ export const budgetCurrencies = [
 /** Edit the scores and money that drive the results, and watch them re-rank. Saved in this browser only. */
 export function ProfileDrawer({
   profile,
+  count,
   onChange,
   onClose,
 }: {
   profile: Profile;
+  /** Programmes currently shown behind the drawer. */
+  count: number;
   onChange: (profile: Profile) => void;
   onClose: () => void;
 }) {
@@ -52,106 +50,84 @@ export function ProfileDrawer({
         aria-modal="true"
         aria-labelledby="drawer-title"
       >
-        <header>
-          <h2 id="drawer-title" style={{ fontSize: 22 }}>
-            Adjust your profile
-          </h2>
-          <Button
-            variant="outline"
-            size="sm"
-            aria-label="Close"
-            onClick={onClose}
-          >
-            <X size={16} />
-          </Button>
-        </header>
-        <p className="tiny muted">
-          Results update as you type. Changes are saved in this browser.
+        <div className="row">
+          <div>
+            <div className="eyebrow">Live adjustments</div>
+            <h2 id="drawer-title">Scores and budget</h2>
+          </div>
+          <IconButton label="Close" onClick={onClose}>
+            <X size={18} aria-hidden />
+          </IconButton>
+        </div>
+        <p>
+          Change a number and the matches behind this panel re-rank at once.
+          Nothing is saved anywhere except this browser.
         </p>
-        <div className="form-grid">
-          {scores.map(([key, label, max], i) => (
-            <label key={key}>
-              {label}
-              <input
-                ref={i === 0 ? first : undefined}
-                type="number"
-                min="0"
-                max={max}
-                step="any"
-                value={profile[key] === null ? "" : String(profile[key])}
-                onChange={(e) =>
-                  set(
-                    key,
-                    (e.target.value === ""
-                      ? null
-                      : Math.min(max, Number(e.target.value))) as never,
-                  )
-                }
-              />
-            </label>
-          ))}
-          <label>
-            Grading scale
-            <input
-              value={profile.gradingScale}
-              placeholder="e.g. IB Diploma points"
-              onChange={(e) => set("gradingScale", e.target.value)}
-            />
-          </label>
-          <label>
-            Annual budget
+        <label className="field">
+          Annual budget
+          <input
+            ref={first}
+            type="number"
+            inputMode="decimal"
+            min="0"
+            step="500"
+            value={profile.budget}
+            onChange={(e) =>
+              set("budget", Math.max(0, Number(e.target.value) || 0))
+            }
+          />
+        </label>
+        <label className="field">
+          Budget currency
+          <select
+            value={profile.currency}
+            onChange={(e) => set("currency", e.target.value)}
+          >
+            {[...new Set([profile.currency, ...budgetCurrencies])].map((c) => (
+              <option key={c}>{c}</option>
+            ))}
+          </select>
+        </label>
+        <label className="field">
+          Funding preference
+          <select
+            value={profile.funding}
+            onChange={(e) =>
+              set("funding", e.target.value as Profile["funding"])
+            }
+          >
+            <option value="FULL_RIDE">Full ride required</option>
+            <option value="TUITION">Tuition scholarship required</option>
+            <option value="PARTIAL">Partial funding acceptable</option>
+            <option value="NONE">No scholarship required</option>
+          </select>
+        </label>
+        {scores.map(([key, label, max]) => (
+          <label className="field" key={key}>
+            {label}
             <input
               type="number"
+              inputMode="decimal"
               min="0"
-              step="500"
-              value={profile.budget}
+              max={max}
+              step="any"
+              value={profile[key] === null ? "" : String(profile[key])}
               onChange={(e) =>
-                set("budget", Math.max(0, Number(e.target.value) || 0))
+                set(
+                  key,
+                  (e.target.value === ""
+                    ? null
+                    : Math.min(max, Number(e.target.value))) as never,
+                )
               }
             />
           </label>
-          <label>
-            Currency
-            <select
-              value={profile.currency}
-              onChange={(e) => set("currency", e.target.value)}
-            >
-              {[...new Set([profile.currency, ...budgetCurrencies])].map(
-                (c) => (
-                  <option key={c}>{c}</option>
-                ),
-              )}
-            </select>
-          </label>
-          <label>
-            Funding you need
-            <select
-              value={profile.funding}
-              onChange={(e) =>
-                set("funding", e.target.value as Profile["funding"])
-              }
-            >
-              <option value="FULL_RIDE">Full ride</option>
-              <option value="TUITION">Full tuition</option>
-              <option value="PARTIAL">Partial aid</option>
-              <option value="NONE">No aid</option>
-            </select>
-          </label>
-          <label>
-            Intake
-            <select
-              value={profile.intake}
-              onChange={(e) => set("intake", e.target.value)}
-            >
-              {[...new Set([profile.intake, ...intakes])].map((i) => (
-                <option key={i} value={i}>
-                  {i.replace("-", " ")}
-                </option>
-              ))}
-            </select>
-          </label>
+        ))}
+        <div className="drawer-cta">
+          <Button className="w-full" onClick={onClose}>
+            Show {count} matches
+          </Button>
         </div>
-        <Button onClick={onClose}>Show results</Button>
       </aside>
     </>
   );

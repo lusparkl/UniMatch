@@ -1,10 +1,10 @@
 import { mkdirSync } from "node:fs";
 import { chromium } from "playwright";
 import { personaById } from "../lib/personas";
-// Screenshots of the public pages at 390 px and 1440 px into docs/screens/, with the "ib" sample student
+// Screenshots of the public pages at 390 px and 1440 px into output/screens/, with the "ib" sample student
 // loaded. Also reports horizontal overflow and console errors. Usage: npm run screens -- <base url>
 const base = (process.argv[2] ?? "http://localhost:3000").replace(/\/$/, "");
-const out = "docs/screens";
+const out = "output/screens";
 mkdirSync(out, { recursive: true });
 const browser = await chromium.launch();
 const problems: string[] = [];

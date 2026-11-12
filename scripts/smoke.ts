@@ -2,7 +2,7 @@ import { chromium, type Page } from "playwright";
 import { getPrograms } from "../lib/catalog";
 import { compareMatches, matchProgram } from "../lib/matching";
 import { personas } from "../lib/personas";
-import { statusLabel } from "../components/results";
+import { statusText } from "../components/program-facts";
 // Smoke test of a running site: npm run smoke -- <url>. Expectations come from the local catalog snapshot,
 // which must be the one deployed (CATALOG_SOURCE=snapshot, same freshness settings as the host).
 // Checks HTTP 200 and no console or page errors on every page, that each persona's story holds for the
@@ -57,9 +57,9 @@ for (const persona of personas) {
     fail(
       `${persona.id}: top result "${title}", expected "${top.program.title}"`,
     );
-  if (status.trim() !== statusLabel[top.status])
+  if (status.trim() !== statusText(top))
     fail(
-      `${persona.id}: top status "${status}", expected "${statusLabel[top.status]}"`,
+      `${persona.id}: top status "${status}", expected "${statusText(top)}"`,
     );
   await visit(
     page,

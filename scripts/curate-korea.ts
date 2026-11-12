@@ -14,7 +14,7 @@ import { curationJob, fetchApproved, quoter } from "./curation";
 // - Costs: KAIST's cost of attendance (annual, no academic year stated); KU tuition per semester for 2026.
 //   UNIST tuition is given without a period, so it is not stored. POSTECH publishes no cost table on these pages.
 // - Scholarships: GUARANTEED only where the page says every admitted international student receives it (KAIST
-//   Scholarship, POSTECH tuition waiver and living allowance); these need the owner (docs/OWNER_CONFIRM.md).
+//   Scholarship, POSTECH tuition waiver and living allowance); these need the owner (docs/OWNER_CONFIRM.md at commit 9a198b0).
 // Each programme gets one candidate per evidence year. Programmes that already have rules are skipped
 // (idempotent). SOURCE_BACKED. Dry run by default; APPLY=1 writes.
 const apply = process.env.APPLY === "1";

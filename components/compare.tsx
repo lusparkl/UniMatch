@@ -1,174 +1,145 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { readProfile } from "./local-store";
-import { costHeadline, nextDeadline, statusLabel } from "./results";
-import { StatusTag, TrustBadge } from "./status";
-import { arithmetic } from "@/lib/arithmetic";
+import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
+import { readProfile, useCompare } from "./local-store";
+import {
+  costFact,
+  fundingFact,
+  nextRound,
+  programTrust,
+  routeOf,
+  statusLabel,
+} from "./program-facts";
 import { defaultProfile, type Profile, type Program } from "@/lib/domain";
 import { matchProgram } from "@/lib/matching";
-import { programTier } from "@/lib/trust";
+import { placeName } from "@/lib/places";
 
 /** Two or three programmes side by side, matched in the browser against the stored profile. */
 export function Compare({ programs }: { programs: Program[] }) {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  useEffect(() => setProfile(readProfile()), []);
+  const [profile, setProfile] = useState<Profile | null>(null),
+    [now, setNow] = useState<Date | null>(null);
+  const compare = useCompare();
+  const router = useRouter();
+  useEffect(() => {
+    setProfile(readProfile());
+    setNow(new Date());
+  }, []);
+  // Opened without IDs (the footer link): show the programmes picked on this device.
+  useEffect(() => {
+    if (!programs.length && compare.ids.length)
+      router.replace("/compare?ids=" + compare.ids.join(","));
+  }, [programs.length, compare.ids, router]);
   const student = profile ?? defaultProfile;
-  const cols = programs.map((p) => {
-    const match = matchProgram(p, student);
-    return { p, match, sums: arithmetic(p, student, match) };
-  });
-  const rows: [string, (c: (typeof cols)[number]) => React.ReactNode][] = [
+  const year = student.intake.slice(0, 4);
+  const remove = (id: string) => {
+    if (compare.ids.includes(id)) compare.toggle(id);
+    const rest = programs.filter((p) => p.id !== id).map((p) => p.id);
+    router.replace(rest.length ? "/compare?ids=" + rest.join(",") : "/compare");
+  };
+  const rows: [string, (p: Program) => string][] = [
+    ["Destination", (p) => placeName(p)],
+    ["International route", (p) => routeOf(p, profile)],
     [
-      "Overall",
-      ({ match }) =>
-        profile ? (
-          <StatusTag state={match.status}>
-            {statusLabel[match.status]}
-          </StatusTag>
-        ) : (
-          "Add a profile"
-        ),
+      "Academic fit",
+      (p) =>
+        profile
+          ? statusLabel[matchProgram(p, student).academicState]
+          : "Add your qualifications",
     ],
     [
-      "Academic",
-      ({ match }) => (
-        <StatusTag state={match.academicState}>
-          {statusLabel[match.academicState]}
-        </StatusTag>
-      ),
+      "Annual cost · before aid",
+      (p) => costFact(p, year, profile?.currency).value,
     ],
     [
-      "Application",
-      ({ match }) => (
-        <StatusTag state={match.applicationState}>
-          {statusLabel[match.applicationState]}
-        </StatusTag>
-      ),
-    ],
-    [
-      "Financial",
-      ({ match }) => (
-        <StatusTag state={match.financial}>
-          {statusLabel[match.financial]}
-        </StatusTag>
-      ),
-    ],
-    [
-      "Annual cost before aid",
-      ({ p, match }) =>
-        costHeadline(
-          p,
-          match.scenarios[0].remaining,
-          match.scenarios[0].currency,
-          profile?.currency,
-        ),
-    ],
-    [
-      "Cost arithmetic",
-      ({ sums }) =>
-        sums.scenarios[0].lines.map((l) => <div key={l.label}>{l.value}</div>),
-    ],
-    [
-      "Scholarships",
-      ({ p }) =>
-        p.scholarships.length
-          ? p.scholarships.map((s) => (
-              <div key={s.id}>
-                {s.name} (
-                {s.fundingCategory === "GUARANTEED"
-                  ? "guaranteed"
-                  : "competitive"}
-                )
-              </div>
-            ))
-          : "None verified",
-    ],
-    ["Next deadline", ({ p }) => nextDeadline(p, profile)],
-    [
-      profile?.qualification
-        ? "Requirements for " + profile.qualification
-        : "Requirements",
-      ({ p }) => {
-        const rules = p.requirements.filter(
-          (r) =>
-            r.mandatory &&
-            (!r.appliesToQualifications.length ||
-              r.appliesToQualifications.some(
-                (q) => q.toLowerCase() === student.qualification.toLowerCase(),
-              )),
-        );
-        return rules.length ? (
-          <ul style={{ margin: 0, paddingLeft: 18 }}>
-            {rules.map((r, i) => (
-              <li key={i}>{r.label}</li>
-            ))}
-          </ul>
-        ) : (
-          "None verified"
-        );
+      "Financial assistance",
+      (p) => {
+        const f = fundingFact(p);
+        return f.value + " · " + f.sub;
       },
     ],
     [
-      "Checked by",
-      ({ p }) => (
-        <TrustBadge programme tier={programTier(p)} date={p.lastResearched} />
-      ),
+      "Next deadline",
+      (p) => {
+        const n = now && nextRound(p, profile, now);
+        return n ? n.when.date + " · " + n.when.time : "Not verified";
+      },
     ],
+    ["Teaching language", (p) => p.teachingLanguage ?? "Not verified"],
+    ["Duration", (p) => p.duration ?? "Not verified"],
+    ["Evidence", (p) => programTrust(p).label],
   ];
   return (
     <>
-      <Link href="/results" className="back">
-        <ArrowLeft size={14} /> Back to results
-      </Link>
-      <h1>Compare programmes</h1>
+      <div className="eyebrow">Side by side</div>
+      <h1>Compare programs</h1>
+      <p className="page-lede" style={{ marginBottom: 24 }}>
+        Two or three programs on the same facts. Anything unverified is shown as
+        unknown, never filled in.
+      </p>
       {programs.length < 2 ? (
         <div className="empty">
-          <h3>Pick two or three programmes to compare.</h3>
-          <p className="muted">
-            Use “Compare” on the results or on your shortlist.
-          </p>
+          <h2>
+            {programs.length
+              ? "Choose one more program to compare."
+              : "Nothing to compare yet."}
+          </h2>
+          <p>Choose “Compare” on two or three programs in your results.</p>
+          <Button asChild>
+            <Link href="/results">Explore Programs</Link>
+          </Button>
         </div>
       ) : (
-        <div className="compare-scroll panel">
-          <table className="compare">
-            <thead>
-              <tr>
-                <th scope="col">
-                  <span className="sr-only">Field</span>
-                </th>
-                {cols.map(({ p }) => (
-                  <th scope="col" key={p.id}>
-                    <Link
-                      href={
-                        "/universities/" + p.universityId + "?program=" + p.id
-                      }
-                    >
-                      {p.title}
-                    </Link>
-                    <div className="tiny muted">{p.university}</div>
+        <>
+          <div className="card compare-scroll">
+            <table
+              className="compare"
+              style={{ minWidth: 170 + programs.length * 260 }}
+            >
+              <thead>
+                <tr>
+                  <th scope="col">
+                    <span className="sr-only">Fact</span>
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map(([label, cell]) => (
-                <tr key={label}>
-                  <th scope="row">{label}</th>
-                  {cols.map((c) => (
-                    <td key={c.p.id}>{cell(c)}</td>
+                  {programs.map((p) => (
+                    <th scope="col" key={p.id}>
+                      <div className="eyebrow">{placeName(p)}</div>
+                      <div className="serif compare-uni">{p.university}</div>
+                      <div className="compare-title">{p.title}</div>
+                      <button
+                        type="button"
+                        className="link-btn"
+                        aria-label={
+                          "Remove " + p.title + " from the comparison"
+                        }
+                        onClick={() => remove(p.id)}
+                      >
+                        Remove
+                      </button>
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {rows.map(([label, cell]) => (
+                  <tr key={label}>
+                    <th scope="row">
+                      <span className="lbl">{label}</span>
+                    </th>
+                    {programs.map((p) => (
+                      <td key={p.id}>{cell(p)}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="note">
+            Two to three programs at a time. Costs are before any scholarship.
+          </p>
+        </>
       )}
-      <p className="tiny muted">
-        Meeting the published minimums is a starting point, not a prediction of
-        admission.
-      </p>
     </>
   );
 }
